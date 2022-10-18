@@ -9,6 +9,16 @@ const int PORT = 4500;
 
 #define STRESS_TEST_LOOP_COUNT 200000 // 200,000
 
+// Uncomment this line if you want to print debug
+// info about the client-server connection.
+//#define DBGPRINT_NETWORK_CONNECTION
+
+#ifdef DBGPRINT_NETWORK_CONNECTION
+	#define dbg_print(fmt, ...) printf(fmt, ##__VA_ARGS__)
+#else
+	#define dbg_print 
+#endif
+
 void stress_test(int loop_cap) {
 	// Used to track the number of valid responses that were received
 	int responses_received = 0;
@@ -24,7 +34,7 @@ void stress_test(int loop_cap) {
 		//
 		// Sending an echo to the server
 		//
-    		net_send_bytes((void*)echo, strlen(echo));
+    	net_send_bytes((void*)echo, strlen(echo));
 
 		//
 		// Receiving a response from the server
@@ -43,20 +53,20 @@ void stress_test(int loop_cap) {
   	long microseconds = end.tv_usec - begin.tv_usec;
  	double elapsed = seconds + microseconds*1e-6;
 
-	printf("Received responses: %i / %i\n\n", responses_received, loop_cap);
-    printf("Time measured: %.8f seconds.\n", elapsed);
+	printf("Received responses: %i / %i\n", responses_received, loop_cap);
+  	printf("Time measured: %.8f seconds.\n", elapsed);
 }
 
 int main() {
-	printf("Connecting client to %s:%i...\n", HOST, PORT);
+	dbg_print("Connecting client to %s:%i...\n", HOST, PORT);
 	if (net_connect(HOST, PORT)) {
 		return -1;
 	}
-	printf("Connected to server!\n");
+	dbg_print("Connected to server!\n");
 
 	stress_test(STRESS_TEST_LOOP_COUNT);
 
 	net_close();
-	printf("Disconnected from the server\n");
+	dbg_print("Disconnected from the server\n");
 	return 0;
 }
