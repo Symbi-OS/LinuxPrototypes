@@ -13,7 +13,7 @@ do
 	ret_val=$?
 	if [ $ret_val -ne 0 ]; then
 		kill $server_pid
-		echo "rerunning the server..."
+		# echo "rerunning the server..."
 		continue
 	fi
 
