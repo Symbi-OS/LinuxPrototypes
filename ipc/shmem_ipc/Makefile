@@ -26,7 +26,13 @@ export KALLSYMDIR KALLSYMLIB DEPENDENCY_LIBS
 
 .SILENT: clean
 
-all: memwriter memreader
+all: memwriter memreader server client
+
+server: server.c
+	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
+
+client: client.c
+	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
 
 memwriter: memwriter.c
 	$(CC) $(CFLAGS) -o memwriter memwriter.c $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
@@ -35,4 +41,4 @@ memreader: memreader.c
 	gcc -o memreader memreader.c -lrt -lpthread
 
 clean:
-	rm -rf memreader memwriter *\~
+	rm -rf memreader memwriter server client
