@@ -33,7 +33,6 @@ int main() {
 #ifdef ELEVATED_MODE
 	// Init symbiote library and kallsymlib
 	sym_lib_init();
-	//sym_elevate();
 #endif
 
 	// Create the backing file
@@ -79,6 +78,10 @@ int main() {
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
 	int resp = 1;
 
+#ifdef ELEVATED_MODE
+	sym_elevate();
+#endif
+
 	// Begin stress testing
 	for (int i = 0; i < STRESS_TEST_ITERATIONS; ++i) {
 		// Wait until we get the job
@@ -90,11 +93,9 @@ int main() {
 		switch (job_buffer->cmd) {
 		case 1: {
 #ifdef ELEVATED_MODE
-			sym_elevate();
-			my_ksys_write(logfd, "ksys_write\n", 11);
-			sym_lower();
+			my_ksys_write(logfd, "ksys_write\r", 11);
 #else
-			write(logfd, "ksys_write\n", 11);
+			write(logfd, "ksys_write\r", 11);
 #endif
 			break;
 		}
@@ -109,13 +110,12 @@ int main() {
 		job_buffer->status = JOB_COMPLETED;
 	}
 
+#ifdef ELEVATED_MODE
+	sym_lower();
+#endif
+
 	// Close the log file
 	fclose(log);
-
-#ifdef ELEVATED_MODE
-	// Don't forget to lower
-	//sym_lower();
-#endif
 
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);

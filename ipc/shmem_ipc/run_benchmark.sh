@@ -18,7 +18,7 @@ do
 done
 
 printf "\n"
-printf "Approach 2: Client + Elevated Server\n"
+printf "Approach 2: Client + Elevated and Shortcutted Server\n"
 
 i=0
 while [ $i -lt $LOOP_COUNT ]
