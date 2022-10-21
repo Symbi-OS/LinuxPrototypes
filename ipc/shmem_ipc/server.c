@@ -5,6 +5,9 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "LINF/sym_all.h"
+
+#define STRESS_TEST_ITERATIONS 200000
 
 static const char* BackingFileName = "sym_server_shm";
 static const int BackingFileSize = 512;
@@ -19,9 +22,15 @@ typedef struct JobRequestBuffer {
 	int response;      // Response from the server
 	int status;        // Flag indicating which stage the job is at
 } JobRequestBuffer_t;
-		
+
+typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
+
+static ksys_write_t my_ksys_write = NULL;
 
 int main() {
+	// Init symbiote library and kallsymlib
+	sym_lib_init();
+
 	// Create the backing file
 	int fd = shm_open(
 		BackingFileName,
@@ -51,17 +60,36 @@ int main() {
 	// Zero out the backing file
 	memset(shared_memory, 0, BackingFileSize);
 
-	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
-	int resp = 5;
+	// Get the adress of ksys_write
+	my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
+	fprintf(stderr, "ksys_write: %p\n", my_ksys_write);
 
-	for (int i = 0; i < 3; ++i) {
+	// Create a file to write to
+	FILE* log = fopen("ksys_write.log", "w");
+	int logfd = fileno(log);
+
+	// Prepare the job buffer
+	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
+	int resp = 1;
+
+	// Elevate before starting the test
+	sym_elevate();
+
+	// Begin stress testing
+	for (int i = 0; i < STRESS_TEST_ITERATIONS; ++i) {
 		// Wait until we get the job
         while (job_buffer->status != JOB_REQUESTED) {
         	continue;
         }
 
-        // Read the requested command
-        printf("REQUESTED_CMD: %i\n", job_buffer->cmd);
+        // Process the requested command
+		switch (job_buffer->cmd) {
+		case 1: {
+			my_ksys_write(logfd, "ksys_write\n", 11);
+			break;
+		}
+		default: break;
+		}
 
 		// Writing in a response
 		job_buffer->response = resp;
@@ -70,6 +98,12 @@ int main() {
         // Updating the job status flag
 		job_buffer->status = JOB_COMPLETED;
 	}
+
+	// Close the log file
+	fclose(log);
+
+	// Don't forget to lower
+	sym_lower();
 
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);

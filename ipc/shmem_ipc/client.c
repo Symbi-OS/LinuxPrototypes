@@ -5,6 +5,9 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <time.h>
+
+#define STRESS_TEST_ITERATIONS 200000
 
 static const char* BackingFileName = "sym_server_shm";
 static const int BackingFileSize = 512;
@@ -19,6 +22,38 @@ typedef struct JobRequestBuffer {
     int response;      // Response from the server
     int status;        // Flag indicating which stage the job is at
 } JobRequestBuffer_t;
+
+void stress_test(int iterations, void* shared_memory) {
+	clock_t start, end;
+	double cpu_time_used = 0;
+
+	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
+
+	int command = 1; // ksys_write
+	job_buffer->cmd = command; // set the request command
+
+	// Start the performance timer
+	start = clock();
+
+	for (int i = 0; i < iterations; ++i) {
+		// Indicate that the job was requested
+		job_buffer->status = JOB_REQUESTED;
+
+		// Wait for the job to be completed
+		while (job_buffer->status != JOB_COMPLETED) {
+			continue;
+		}
+
+		// Hand the response... (job_buffer->response)
+	}
+
+	// Stop the performance timer
+	end = clock();
+	
+	// Print the results
+	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  	printf("Time used: %f\n", cpu_time_used);
+}
 
 int main() {
 	// Open the backing file
@@ -39,25 +74,8 @@ int main() {
 		return -1;
 	}
 
-	JobRequestBuffer_t job_buffer;
-
-	printf("Enter the cmd (int): ");
-	scanf("%i", &job_buffer.cmd);
-	printf("\n");
-
-	job_buffer.status = JOB_REQUESTED;
-
-	// Write the job into the shared memory
-	memcpy(shared_memory, &job_buffer, sizeof(JobRequestBuffer_t));
-
-	// Wait for the server response
-	JobRequestBuffer_t* live_buffer = (JobRequestBuffer_t*)shared_memory;
-	
-	while (live_buffer->status != JOB_COMPLETED) {
-    	continue;
-  	}
-
-	printf("Server response: %i\n", live_buffer->response);
+	// Run the stress test
+	stress_test(STRESS_TEST_ITERATIONS, shared_memory);
 
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);
