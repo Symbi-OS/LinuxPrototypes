@@ -54,7 +54,7 @@ int main (int argc, char **argv)
     strcpy(my_message.message_text.buf, "aaaaaaaaaa");
 
     start = clock();
-    for (int i=0; i<30000; i++) {
+    for (int i=0; i<200000; i++) {
         // remove newline from string
         int length = strlen (my_message.message_text.buf);
         if (my_message.message_text.buf [length - 1] == '\n')

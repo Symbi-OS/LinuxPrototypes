@@ -20,7 +20,7 @@ int main()
     // write to the text file
 
     start = clock();
-    for (int i = 0; i < 30000; i++){
+    for (int i = 0; i < 200000; i++){
         write(fd, "aaaaaaaaaa",10);
     }
 
