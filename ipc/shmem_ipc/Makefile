@@ -23,7 +23,7 @@ KALLSYMLIB=../../../kallsymlib/libkallsym.a
 DEPENDENCY_LIBS=$(KALLSYMLIB) $(SYMLIB)
 export KALLSYMDIR KALLSYMLIB DEPENDENCY_LIBS
 
-all: server server_elevated client independent_client
+all: server server_elevated client independent_client independent_client_elevated
 
 server: server.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
@@ -37,5 +37,12 @@ client: client.c
 independent_client: independent_client.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
 
+independent_client_elevated: independent_client.c
+	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR) -D ELEVATED_MODE
+
+independent_client_shortcut: independent_client.c
+	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):/home/sym/Symbi-OS/Tools/bin/shortcut/ LD_PRELOAD="sc_lib.so" $(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
+
 clean:
-	rm -rf server server_elevated client independent_client ksys_write.log stress_test_log
+	rm -rf server server_elevated client independent_client stress_test_log \
+		independent_client_elevated
