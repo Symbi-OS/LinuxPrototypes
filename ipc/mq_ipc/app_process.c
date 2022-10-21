@@ -44,10 +44,12 @@ int main (int argc, char **argv)
     my_message.message_type = 1;
     my_message.message_text.qid = myqid;
 
-    printf ("Please type a message: ");
 
-    while (fgets (my_message.message_text.buf, 198, stdin)) {
+    for (int i = 0; i < 30000; i++) {
         // remove newline from string
+	
+	
+	
         int length = strlen (my_message.message_text.buf);
         if (my_message.message_text.buf [length - 1] == '\n')
            my_message.message_text.buf [length - 1] = '\0';
