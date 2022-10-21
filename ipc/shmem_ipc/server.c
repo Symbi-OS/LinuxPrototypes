@@ -71,7 +71,7 @@ int main() {
 #endif
 
 	// Create a file to write to
-	FILE* log = fopen("ksys_write.log", "w");
+	FILE* log = fopen("stress_test_log", "w");
 	int logfd = fileno(log);
 
 	// Prepare the job buffer
