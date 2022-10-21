@@ -23,7 +23,7 @@ KALLSYMLIB=../../../kallsymlib/libkallsym.a
 DEPENDENCY_LIBS=$(KALLSYMLIB) $(SYMLIB)
 export KALLSYMDIR KALLSYMLIB DEPENDENCY_LIBS
 
-all: server server_elevated client
+all: server server_elevated client independent_client
 
 server: server.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
@@ -34,5 +34,8 @@ server_elevated: server.c
 client: client.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
 
+independent_client: independent_client.c
+	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) $(KALLSYMLIB) -I $(SYMLIB_INCLUDE_DIR)
+
 clean:
-	rm -rf server server_elevated client ksys_write.log
+	rm -rf server server_elevated client independent_client ksys_write.log stress_test_log
