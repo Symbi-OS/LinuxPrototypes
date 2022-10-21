@@ -41,4 +41,4 @@ memreader: memreader.c
 	gcc -o memreader memreader.c -lrt -lpthread
 
 clean:
-	rm -rf memreader memwriter server client
+	rm -rf memreader memwriter server client ksys_write.log
