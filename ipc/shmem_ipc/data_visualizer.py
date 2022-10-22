@@ -24,6 +24,7 @@ if __name__ == '__main__':
     (iterations3, time_data3) = extract_time_data('data/approach3_log.txt')    
     (iterations4, time_data4) = extract_time_data('data/approach4_log.txt')    
 
+    print('"Iteration", "Independent Client (normal)", "Independent Client (elevated)", "Client + Server (normal)", "Client + Server (elevated)"')
     for i in range(0, len(iterations)):
         print((i + 1), end='')
         print(', ', end='')
