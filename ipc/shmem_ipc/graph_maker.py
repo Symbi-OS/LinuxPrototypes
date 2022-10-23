@@ -3,8 +3,10 @@ import matplotlib.pyplot as mp
  
 import pandas as pd
 import matplotlib.pyplot as mp
- 
-data = pd.read_csv('data/results.csv')
+
+data_dir = input('Enter the data directory: ')
+
+data = pd.read_csv('{}/results.csv'.format(data_dir))
 
 iterations = data['Iteration']
 client_normal = data['Independent Client (normal)']
