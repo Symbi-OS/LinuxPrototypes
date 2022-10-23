@@ -19,22 +19,23 @@ def extract_time_data(filename: str):
 
 
 if __name__ == '__main__':
-    (iterations, time_data) = extract_time_data('data/approach1_log.txt')
-    (iterations2, time_data2) = extract_time_data('data/approach2_log.txt')    
-    (iterations3, time_data3) = extract_time_data('data/approach3_log.txt')    
-    (iterations4, time_data4) = extract_time_data('data/approach4_log.txt')    
+    data_dir = input('enter the path to the data directory: ')
+    (iterations, time_data) = extract_time_data('{}/approach1_log.txt'.format(data_dir))
+    (iterations2, time_data2) = extract_time_data('{}/approach2_log.txt'.format(data_dir))
+    (iterations3, time_data3) = extract_time_data('{}/approach3_log.txt'.format(data_dir))
+    (iterations4, time_data4) = extract_time_data('{}/approach4_log.txt'.format(data_dir))
 
-    print('Iteration,Independent Client (normal),Independent Client (elevated),Client + Server (normal),Client + Server (elevated)')
-    for i in range(0, len(iterations)):
-        print((i + 1), end='')
-        print(',', end='')
-        print(time_data[i], end='')
-        print(',', end='')
-        print(time_data2[i], end='')
-        print(',', end='')
-        print(time_data3[i], end='')
-        print(',', end='')
-        print(time_data4[i], end='')
-        print()
-
+    with open('{}/results.csv'.format(data_dir), 'w') as f:
+        f.write('Iteration,Independent Client (normal),Independent Client (elevated),Client + Server (normal),Client + Server (elevated)\n')
+        for i in range(0, len(iterations)):
+            f.write(str(i + 1))
+            f.write(',')
+            f.write(str(time_data[i]))
+            f.write(',')
+            f.write(str(time_data2[i]))
+            f.write(',')
+            f.write(str(time_data3[i]))
+            f.write(',')
+            f.write(str(time_data4[i]))
+            f.write('\n')
 

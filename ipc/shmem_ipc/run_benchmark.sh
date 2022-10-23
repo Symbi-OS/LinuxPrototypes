@@ -76,15 +76,14 @@ printf "\t[3] Client + un-elevated Server\n"
 printf "\t[4] Client + elevated and shortcutted Server\n\n"
 
 read -p "Select your choice: " test_choice
-read -p "Log file: " log_file
 
 if [ $test_choice == "1" ]; then
-	RunApproach1 > $log_file
+	RunApproach1 > approach1_log.txt
 elif [ $test_choice == "2" ]; then
-    RunApproach2 > $log_file
+    RunApproach2 > approach2_log.txt
 elif [ $test_choice == "3" ]; then
-    RunApproach3 > $log_file
+    RunApproach3 > approach3_log.txt
 elif [ $test_choice == "4" ]; then
-    RunApproach4 > $log_file
+    RunApproach4 >approach4_log.txt
 fi
 
