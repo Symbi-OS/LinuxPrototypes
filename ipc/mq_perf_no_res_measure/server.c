@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -6,7 +5,13 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include "LINF/sym_all.h"
+#include <time.h>
 
+#define STRESS_TEST_ITERATIONS 200000
 
 #define SERVER_KEY_PATHNAME "key-file"
 #define PROJECT_ID 'M'
@@ -22,15 +27,30 @@ struct message {
     struct message_text message_text;
 };
 
+#ifdef ELEVATED_MODE
+typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 
-int main (int argc, char **argv)
+static ksys_write_t my_ksys_write = NULL;
+#endif
+
+
+int main ()
 {
     key_t msg_queue_key;
     int qid;
     struct message message;
     char *filename = "tmp.txt";
+    
+    
+    #ifdef ELEVATED_MODE
+	// Init symbiote library and kallsymlib
+	sym_lib_init();
+	// Get the adress of ksys_write
+	my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
+	sym_elevate();
 
-    printf("server is up\n");
+    #endif
+
     if ((msg_queue_key = ftok (SERVER_KEY_PATHNAME, PROJECT_ID)) == -1) {
         perror ("ftok");
         exit (1);
@@ -48,33 +68,39 @@ int main (int argc, char **argv)
         return -1;
     }
 
+    clock_t start, end;
+    double cpu_time_used = 0;
+
+    int i = 0;
     while (1) {
         // read an incoming message
         if (msgrcv (qid, &message, sizeof (struct message_text), 0, 0) == -1) {
             perror ("msgrcv");
             exit (1);
         }
+	
+	if (i == 0){
+            start = clock();
+	}
 
-       
         // process message
         int length = strlen (message.message_text.buf);
         
-	write(fd, message.message_text.buf, length);
-
-	/*
-	strcpy(message.message_text.buf, "request completed");
-        
-
-        int client_qid = message.message_text.qid;
-        message.message_text.qid = qid;
-
-        // send reply message to client
-        if (msgsnd (client_qid, &message, sizeof (struct message_text), 0) == -1) {  
-            perror ("msgget");
-            exit (1);
+	#ifdef ELEVATED_MODE
+			my_ksys_write(fd, message.message_text.buf, length);
+	#else
+			write(fd, message.message_text.buf, length);
+	#endif
+	
+	i++;
+        if (i == STRESS_TEST_ITERATIONS){
+            end = clock();
+	    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  	    printf("server time used: %f\n", cpu_time_used);
+                exit(0);
         }
 
-        printf ("Responded to the app.\n");
-	*/
+
     }
 }
+
