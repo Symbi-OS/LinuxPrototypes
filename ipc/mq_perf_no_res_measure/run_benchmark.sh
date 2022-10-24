@@ -5,6 +5,8 @@ LOOP_COUNT=10
 make clean
 make
 
+touch key-file
+
 printf "Approach 1: Independent client (Un-elevated)\n"
 
 i=0

@@ -44,6 +44,5 @@ independent_elevated: independent_write.c
 
 clean:
 	rm -rf *~
-	rm -f server client server_elevated independent independent_elevated tmp.txt
-	touch tmp.txt
+	rm -f server client server_elevated independent independent_elevated tmp.txt stress_test_log
 
