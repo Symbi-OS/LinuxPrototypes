@@ -13,22 +13,23 @@
 typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 
 int main() {
-#ifdef ELEVATED_MODE
-	// Init symbiote library and kallsymlib
-	sym_lib_init();
-
-	// Get the address of ksys_write
-	ksys_write_t my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");;
-
-	// Elevate
-	sym_elevate();
-#endif
-
 	clock_t start, end;
 	double cpu_time_used = 0;
 
 	FILE* log = fopen("stress_test_log", "w");
 	int logfd = fileno(log);
+
+#ifdef ELEVATED_MODE
+    // Init symbiote library and kallsymlib
+    sym_lib_init();
+    sym_touch_every_page_text();
+
+    // Get the address of ksys_write
+    ksys_write_t my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
+
+    // Elevate
+    sym_elevate();
+#endif
 
 	// Start performance timer
 	start = clock();
