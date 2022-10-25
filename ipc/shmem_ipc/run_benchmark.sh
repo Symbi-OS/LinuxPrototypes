@@ -1,6 +1,7 @@
 #!/bin/bash
 
-LOOP_COUNT=100
+LOOP_COUNT=50
+ITERATIONS=0
 
 function RunApproach1 {
 	log_file=approach1_log.txt
@@ -12,8 +13,8 @@ function RunApproach1 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./independent_client >> approach1_log.txt
-		sleep 0.2
+    	taskset -c 0 ./independent_client $ITERATIONS >> approach1_log.txt
+		sleep 0.02
 
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
@@ -32,7 +33,7 @@ function RunApproach2 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./independent_client_elevated >> $log_file
+    	taskset -c 0 ./independent_client_elevated $ITERATIONS >> $log_file
 		sleep 0.02
 
     	i=$(( $i + 1 ))
@@ -52,16 +53,16 @@ function RunApproach3 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-		taskset -c 0 ./server &> /dev/null &
+		taskset -c 0 ./server $ITERATIONS &> /dev/null &
 		server_pid=$!
 
-		sleep 0.5
-		taskset -c 1 ./client >> $log_file
+		sleep 0.08
+		taskset -c 1 ./client $ITERATIONS >> $log_file
 
 		wait
 		i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-		sleep 0.2
+		sleep 0.06
 	done
 	printf "\n"
 }
@@ -77,11 +78,11 @@ function RunApproach4 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./server_elevated &> /dev/null &
+    	taskset -c 0 ./server_elevated $ITERATIONS &> /dev/null &
     	server_pid=$!
 
     	sleep 0.08
-    	taskset -c 1 ./client >> $log_file
+    	taskset -c 1 ./client $ITERATIONS >> $log_file
 
     	wait
     	i=$(( $i + 1 ))
@@ -98,6 +99,7 @@ printf "\t[3] Client + un-elevated Server\n"
 printf "\t[4] Client + elevated and shortcutted Server\n\n"
 
 read -p "Select your choice: " test_choice
+read -p "Enter each run's iteration count: " ITERATIONS
 
 if [ $test_choice == "1" ]; then
 	RunApproach1

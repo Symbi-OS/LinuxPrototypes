@@ -1,39 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "common.h"
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include <string.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include "LINF/sym_all.h"
-
-#define STRESS_TEST_ITERATIONS 2000000
 
 static const char* BackingFileName = "sym_server_shm";
 static const int BackingFileSize = 512;
 
-#define JOB_NO_REQUEST 0
-#define JOB_REQUESTED  1
-#define JOB_COMPLETED  2
-
-typedef struct JobRequestBuffer {
-	int fd;            // File descriptor
-	int cmd;           // Job command requested by the client
-	int response;      // Response from the server
-	int status;        // Flag indicating which stage the job is at
-} JobRequestBuffer_t;
-
 #ifdef ELEVATED_MODE
-typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
-
 static ksys_write_t my_ksys_write = NULL;
 #endif
 
-int main() {
-#ifdef ELEVATED_MODE
-	// Init symbiote library and kallsymlib
-	sym_lib_init();
-#endif
+int main(int argc, char** argv) {
+	UNUSED_PARAM(argc)
+
+	// Get the number of stress test iterations from the command line
+	int iteration_count = atoi(argv[1]);
 
 	// Create the backing file
 	int fd = shm_open(
@@ -71,7 +53,7 @@ int main() {
 #endif
 
 	// Create a file to write to
-	FILE* log = fopen("stress_test_log", "w");
+	FILE* log = fopen("stress_test_shared_memory_log", "w");
 	int logfd = fileno(log);
 
 	// Prepare the job buffer
@@ -83,7 +65,7 @@ int main() {
 #endif
 
 	// Begin stress testing
-	for (int i = 0; i < STRESS_TEST_ITERATIONS; ++i) {
+	for (int i = 0; i < iteration_count; ++i) {
 		// Wait until we get the job
         while (job_buffer->status != JOB_REQUESTED) {
         	continue;
