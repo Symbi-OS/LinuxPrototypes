@@ -10,7 +10,7 @@ void stress_test_shared_memory_client(int iterations, void* shared_memory) {
 	clock_t start, end;
 	double cpu_time_used = 0;
 
-	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
+	volatile JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
 
 	int command = 1; // ksys_write
 	job_buffer->cmd = command; // set the request command
@@ -29,7 +29,7 @@ void stress_test_shared_memory_client(int iterations, void* shared_memory) {
 
 		// Hand the response... (job_buffer->response)
 	}
-
+	
 	// Stop the performance timer
 	end = clock();
 	
@@ -81,8 +81,9 @@ int stress_test_independent_client(int iteration_count) {
 
 int start_shared_memory_test(int iteration_count) {
 	// Open the backing file
-    int fd = shm_open(BackingFileName, O_RDWR, S_IRUSR | S_IWUSR);
-    if (fd < 0) {
+
+	int fd = shm_open(BackingFileName, O_RDWR, S_IRUSR | S_IWUSR);
+	if (fd < 0) {
         printf("Failed to open the backing file\n");
         return -1;
     }
@@ -90,7 +91,6 @@ int start_shared_memory_test(int iteration_count) {
     // Access the shared memory
     void* shared_memory =
         mmap(NULL, BackingFileSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-
 
     if (shared_memory == (void*)-1) {
         printf("Failed to mmap shared memory\n");

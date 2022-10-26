@@ -55,9 +55,9 @@ int main(int argc, char** argv) {
 	// Create a file to write to
 	FILE* log = fopen("stress_test_shared_memory_log", "w");
 	int logfd = fileno(log);
-
+	
 	// Prepare the job buffer
-	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
+	volatile JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
 	int resp = 1;
 
 #ifdef ELEVATED_MODE
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < iteration_count; ++i) {
 		// Wait until we get the job
         while (job_buffer->status != JOB_REQUESTED) {
-        	continue;
+			continue;
         }
 
         // Process the requested command
