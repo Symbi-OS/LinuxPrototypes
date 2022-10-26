@@ -10,18 +10,18 @@ Function that initalize the server and workspace
 */
 void* server_init(){
 
-    int fd = shm_open(BACKING_FILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+	int fd = shm_open(BACKING_FILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
 
-    if (fd < 0) {
+	if (fd < 0) {
 		printf("Can't open shared memory segment\n");
 		shm_unlink(BACKING_FILE);
 		return (void*)-1;
 	}
 
-    // Resize the backing file
+	// Resize the backing file
 	ftruncate(fd, BACKING_FILE_SIZE);
 
-    // Get access to the shared memory
+	// Get access to the shared memory
 	void* shared_memory_ptr =
 		mmap(NULL, BACKING_FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 
@@ -31,13 +31,13 @@ void* server_init(){
 		return (void*)-1;
 	}
 
-    memset(shared_memory_ptr, 0x0, BACKING_FILE_SIZE);
+	memset(shared_memory_ptr, 0x0, BACKING_FILE_SIZE);
 
-    // points to the next available spot
+	// points to the next available spot
 
-    workspace_t * workspace = (workspace_t *)shared_memory_ptr;
+	workspace_t * workspace = (workspace_t *)shared_memory_ptr;
 
-    return workspace;
+	return workspace;
 }
 
 
@@ -61,21 +61,21 @@ void* connect_server(){
 
 	int fd = shm_open(BACKING_FILE, O_RDWR, S_IRUSR | S_IWUSR);
 
-    if (fd < 0) {
-        printf("Failed to connect shared memory\n");
-        return (void*)-1;
-    }
+	if (fd < 0) {
+		printf("Failed to connect shared memory\n");
+		return (void*)-1;
+	}
 
-    // Access the shared memory
-    void* shared_memory =
-        mmap(NULL, BACKING_FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+	// Access the shared memory
+	void* shared_memory =
+		mmap(NULL, BACKING_FILE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 
 
-    if (shared_memory == (void*)-1) {
-        printf("Failed to mmap shared memory\n");
-        shm_unlink(BACKING_FILE);
-        return (void*)-1;
-    }
+	if (shared_memory == (void*)-1) {
+		printf("Failed to mmap shared memory\n");
+		shm_unlink(BACKING_FILE);
+		return (void*)-1;
+	}
 
 	return shared_memory;
 }
@@ -95,8 +95,8 @@ void* slot_thread(void *slot){
 
 		//wait for request
 		while (request_slot->status != REQUEST_SENT) {
-        	continue;
-        }
+			continue;
+		}
 
 		request_slot->status = REQUEST_RECEIVED;
 		if (DEBUG) printf("Thread at slot %p recevied a request\n", request_slot);
