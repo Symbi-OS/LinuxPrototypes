@@ -18,14 +18,21 @@ void stress_test_shared_memory_client(int iterations, void* shared_memory) {
 	// Start the performance timer
 	start = clock();
 
+	double wait_times[10000];
+
 	for (int i = 0; i < iterations; ++i) {
 		// Indicate that the job was requested
 		job_buffer->status = JOB_REQUESTED;
+
+		clock_t iter_start = clock();
 
 		// Wait for the job to be completed
 		while (job_buffer->status != JOB_COMPLETED) {
 			continue;
 		}
+
+		clock_t iter_end = clock();
+		wait_times[i] = ((double) (iter_end - iter_start)) / CLOCKS_PER_SEC;
 
 		// Hand the response... (job_buffer->response)
 	}
@@ -33,6 +40,10 @@ void stress_test_shared_memory_client(int iterations, void* shared_memory) {
 	// Stop the performance timer
 	end = clock();
 	
+	for (int i = 0; i < 10000; ++i) {
+                printf("Iter: %i\nClient wait time: %f\n\n", i, wait_times[i]);
+	}
+
 	// Print the results
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   	printf("Time used: %f\n", cpu_time_used);
