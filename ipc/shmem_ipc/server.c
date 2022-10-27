@@ -64,34 +64,29 @@ int main(int argc, char** argv) {
 	sym_elevate();
 #endif
 
-	double request_wait_times[10000];
-	double request_process_times[10000];
-
 	// Begin stress testing
 	for (int i = 0; i < iteration_count; ++i) {
-		clock_t start = clock();
 		// Wait until we get the job
         	while (job_buffer->status != JOB_REQUESTED) {
 			continue;
        		}
-		clock_t end = clock();
-		request_wait_times[i] = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-		start = clock();
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case 1: {
 #ifdef ELEVATED_MODE
-			my_ksys_write(logfd, "ksys_write\r", 11);
+			if (i % 20 == 0) {
+				write(logfd, "ksys_write\r", 11);
+			} else {
+				my_ksys_write(logfd, "ksys_write\r", 11);
+			}
 #else
-			write(logfd, "ksys_write\r", 11);
+				write(logfd, "ksys_write\r", 11);
 #endif
 			break;
 		}
 		default: break;
 		}
-		end = clock();
-		request_process_times[i] = ((double) (end - start)) / CLOCKS_PER_SEC;
 
 		// Writing in a response
 		job_buffer->response = resp;
@@ -112,10 +107,6 @@ int main(int argc, char** argv) {
 	munmap(shared_memory, BackingFileSize);
 	close(fd);
 	shm_unlink(BackingFileName);
-
-	for (int i = 0; i < 10000; ++i) {
-		printf("Iter: %i\nRequest wait time: %f\nJob processing time: %f\n\n", i, request_wait_times[i], request_process_times[i]);
-	}
 
 	return 0;
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOOP_COUNT=50
+LOOP_COUNT=5
 ITERATIONS=0
 
 function RunApproach1 {

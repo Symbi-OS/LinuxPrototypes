@@ -1,0 +1,5 @@
+Time used: 2.232786
+Time used: 1.909979
+Time used: 1.920525
+Time used: 1.898315
+Time used: 1.912873
