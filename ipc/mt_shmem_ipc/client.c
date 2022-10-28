@@ -6,11 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 #define WRITE_BUF "BlackMagic\n"
 #define WRITE_LOC "tmp.txt"
 
-void write_task(int iteration, slot_t *work_slot){
+#define DEBUG 0
+
+void write_task(int iteration, job_buffer_t *work_job_buffer){
 
     FILE * fp;
     int fd;
@@ -18,24 +21,23 @@ void write_task(int iteration, slot_t *work_slot){
     fp = fopen(WRITE_LOC, "a");
     fd = fileno(fp);
 
-    //printf("%p\n", work_slot);
     
     for (int i = 0; i < iteration; i++){
         
-        if (work_slot == NULL){
+        if (work_job_buffer == NULL){
             write(fd, WRITE_BUF, strlen(WRITE_BUF));
         }else{
             //initialze the request
-            work_slot->status = REQUEST_CREATED;
-            work_slot->cmd = CMD_WRITE;
-            work_slot->buf_len = strlen(WRITE_BUF);
-            strcpy(work_slot->buf, WRITE_BUF);
-            strcpy(work_slot->filename, WRITE_LOC);
+            work_job_buffer->status = REQUEST_CREATED;
+            work_job_buffer->cmd = CMD_WRITE;
+            work_job_buffer->buf_len = strlen(WRITE_BUF);
+            strcpy(work_job_buffer->buf, WRITE_BUF);
+            strcpy(work_job_buffer->filename, WRITE_LOC);
             //send request
-            work_slot->status = REQUEST_SENT;
-            if (DEBUG) printf("request %ld byte to write in %s\n", work_slot->buf_len, work_slot->filename);
+            work_job_buffer->status = REQUEST_SENT;
+            if (DEBUG) printf("request %ld byte to write in %s\n", work_job_buffer->buf_len, work_job_buffer->filename);
             // Wait for the job to be completed
-            while (work_slot->status != REQUEST_COMPLETED ) {
+            while (work_job_buffer->status != REQUEST_COMPLETED ) {
                 continue;
             }
 
@@ -44,8 +46,8 @@ void write_task(int iteration, slot_t *work_slot){
     }
 
     //complete work
-    if (work_slot != NULL){
-        work_slot->status = EMPTY_SLOT;
+    if (work_job_buffer != NULL){
+        work_job_buffer->status = EMPTY_JOB_BUFFER;
     }
 
     return;
@@ -56,6 +58,8 @@ int main(int argc, char** argv){
 
     int iterations;
     int if_connect;
+    clock_t start, end;
+    double cpu_time_used;
 
     if (argc == 3){
         iterations = atoi(argv[1]);
@@ -66,7 +70,11 @@ int main(int argc, char** argv){
     }
 
     if (!if_connect){
+        start = clock();
         write_task(iterations, NULL);
+        end = clock();
+        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  	    printf("Time used: %f\n", cpu_time_used);
         return 0;
     }
 
@@ -77,17 +85,20 @@ int main(int argc, char** argv){
         return -1;
     }
 
-    slot_t * work_slot = get_slot(workspace);
-    if (work_slot == (void *)-1) {
-        printf("Fail to request working slot...\n");
+    job_buffer_t * work_job_buffer = get_job_buffer(workspace);
+    if (work_job_buffer == (void *)-1) {
+        printf("Fail to request working job_buffer...\n");
         return 1;
     }
 
-    if (DEBUG) printf("connected to slot at %p\n", work_slot);
+    if (DEBUG) printf("connected to job_buffer at %p\n", work_job_buffer);
 
-    
-    write_task(iterations, work_slot);
-	
+    start = clock();
+    write_task(iterations, work_job_buffer);
+    end = clock();
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Time used: %f\n", cpu_time_used);
+
 
     //printf("Server c at: %p\n", workspace);
 

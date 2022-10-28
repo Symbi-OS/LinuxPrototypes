@@ -42,15 +42,15 @@ void* server_init(){
 
 
 /*
-Function that for client to get empty slot to communicate
+Function that for client to get empty job_buffer to communicate
 */
-slot_t * get_slot(workspace_t * workspace){
+job_buffer_t * get_job_buffer(workspace_t * workspace){
 
-	for (int i = 0; i < NUM_SLOTS; i++){
-		if (workspace->slot[i].status == EMPTY_SLOT){
+	for (int i = 0; i < NUM_JOB_BUFFERS; i++){
+		if (workspace->job_buffers[i].status == EMPTY_JOB_BUFFER){
 			//find a free spot!
-			workspace->slot[i].status = SLOT_IN_USE;
-			return &workspace->slot[i];
+			workspace->job_buffers[i].status = JOB_BUFFER_IN_USE;
+			return &workspace->job_buffers[i];
 		}
 	}
 
@@ -80,53 +80,49 @@ void* connect_server(){
 	return shared_memory;
 }
 
-void* slot_thread(void *slot){
+void* job_buffer_thread(void *job_buffer){
 	
-	slot_t *request_slot = slot;
+	job_buffer_t *request_job_buffer = job_buffer;
 
 	FILE * fp = NULL;
 	int fd = -1;
 	char * last_filename = "";
 
-	if (DEBUG) printf("Thread at slot %p is up\n", request_slot);
-
 	while (1){ // ever running thread
 
 
 		//wait for request
-		while (request_slot->status != REQUEST_SENT) {
+		while (request_job_buffer->status != REQUEST_SENT) {
 			continue;
 		}
 
-		request_slot->status = REQUEST_RECEIVED;
-		if (DEBUG) printf("Thread at slot %p recevied a request\n", request_slot);
+		request_job_buffer->status = REQUEST_RECEIVED;
 
-		request_slot->status = REQUEST_PROCESSING;
-		switch(request_slot->cmd){
-			case CMD_WRITE:{
+		request_job_buffer->status = REQUEST_PROCESSING;
 
-				if ((fd == -1) | strcmp(request_slot->filename, last_filename)){
-					fp = fopen(request_slot->filename, "a");
+		switch(request_job_buffer->cmd){
+			case 0x1: {
+
+				if ((fd == -1) | strcmp(request_job_buffer->filename, last_filename)){
+					fp = fopen(request_job_buffer->filename, "a");
 					fd = fileno(fp);
-					last_filename = request_slot->filename;
+					last_filename = request_job_buffer->filename;
 				}
 				
-				if (DEBUG) printf("Writing %ld byte to %s\n", request_slot->buf_len, request_slot->filename);
-				ssize_t result = write(fd, request_slot->buf, request_slot->buf_len);
-				if (result != (ssize_t)request_slot->buf_len){
+				ssize_t result = write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				if (result != (ssize_t)request_job_buffer->buf_len){
 					printf("Write failed, only write %ld\n", result);
 				}
 				break;
 			}
-			default:{
+			default: {
 				break;
 			}
 
 		}
-
-		if (DEBUG) printf("Thread at slot %p completed a request\n", request_slot);
-		request_slot->status = REQUEST_COMPLETED;
-
+		
+		request_job_buffer->status = REQUEST_COMPLETED;
+		
 		
 	}
 
