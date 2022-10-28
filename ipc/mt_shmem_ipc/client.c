@@ -50,6 +50,8 @@ void write_task(int iteration, job_buffer_t *work_job_buffer){
         work_job_buffer->status = EMPTY_JOB_BUFFER;
     }
 
+    close(fd);
+
     return;
 }
 
@@ -98,6 +100,8 @@ int main(int argc, char** argv){
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("Time used: %f\n", cpu_time_used);
+
+    munmap(workspace, BACKING_FILE_SIZE);
 
 
     //printf("Server c at: %p\n", workspace);

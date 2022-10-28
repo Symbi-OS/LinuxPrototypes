@@ -104,6 +104,9 @@ void* job_buffer_thread(void *job_buffer){
 			case 0x1: {
 
 				if ((fd == -1) | strcmp(request_job_buffer->filename, last_filename)){
+					if (fd != -1){
+						close(fd);
+					}
 					fp = fopen(request_job_buffer->filename, "a");
 					fd = fileno(fp);
 					last_filename = request_job_buffer->filename;

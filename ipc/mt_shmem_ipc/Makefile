@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS= -O3 -ggdb -Wall -Wextra -mno-red-zone -lrt -lpthread
+BACKFILE = "process_shared_memory"
 
 .SILENT: clean
 
@@ -13,3 +14,4 @@ client: client.c shmem.c
 
 clean:
 	rm -f server client tmp.txt
+	rm -f /dev/shm/$(BACKFILE)
