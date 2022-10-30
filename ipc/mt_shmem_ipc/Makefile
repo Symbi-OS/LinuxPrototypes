@@ -13,5 +13,5 @@ client: client.c shmem.c
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm -f server client tmp.txt
+	rm -f server client *.txt
 	rm -f /dev/shm/$(BACKFILE)

@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 pthread_t tid[NUM_JOB_BUFFERS];
 

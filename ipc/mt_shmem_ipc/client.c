@@ -60,12 +60,14 @@ int main(int argc, char** argv){
 
     int iterations;
     int if_connect;
+    int client_id = 0;
     clock_t start, end;
     double cpu_time_used;
 
-    if (argc == 3){
+    if (argc == 4){
         iterations = atoi(argv[1]);
         if_connect = atoi(argv[2]);
+	client_id = atoi(argv[3]);
     }else{
         iterations = 50;
         if_connect = 0;
@@ -99,7 +101,7 @@ int main(int argc, char** argv){
     write_task(iterations, work_job_buffer);
     end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("Time used: %f\n", cpu_time_used);
+    printf("Time used: %f at client %d\n", cpu_time_used, client_id);
 
     munmap(workspace, BACKING_FILE_SIZE);
 
