@@ -1,39 +1,30 @@
-CC=gcc
-CFLAGS= -O3 -Wall -Wextra -lpthread
-export CC CFLAGS
+CXX=g++
+CXXFLAGS= -O3 -Wall -Wextra -std=c++17
 
 SYMLIB_DIR=../../../Symlib
-SYMLIB_DYNAM_BUILD_DIR=$(SYMLIB_DIR)/dynam_build
-SYMLIB_STATIC=$(SYMLIB_DIR)/build/libsym.a
-SYMLIB_INCLUDE_DIR=$(SYMLIB_DIR)/include
 SYMLIB_LINK=-lSym
+SYMLIB_INCLUDE=$(SYMLIB_DIR)/include
+SYMLIB_LIB_DIR=$(SYMLIB_DIR)/dynam_build
 
-ifeq ($(TYPE), static)
-	SYMLIB_LINK=$(SYMLIB_STATIC)
-endif
+all: independent_client independent_client_elevated client server server_elevated
 
-export SYMLIB_DIR SYMLIB_STATIC SYMLIB_INCLUDE_DIR SYMLIB_DYNAM_BUILD_DIR SYMLIB_LINK
+independent_client: client.cpp
+	$(CXX) $(CXXFLAGS) -I $(SYMLIB_INCLUDE) $^ -o $@ -D INDEPENDENT_CLIENT
 
-LIBRARY_PATH=$(SYMLIB_DYNAM_BUILD_DIR)
-export LIBRARY_PATH
+independent_client_elevated: client.cpp
+	$(CXX) $(CXXFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D INDEPENDENT_CLIENT -D ELEVATED
 
-all: server server_elevated client independent_client independent_client_elevated
+client: client.cpp
+	$(CXX) $(CXXFLAGS) -I $(SYMLIB_INCLUDE) $^ -o $@
 
-server: server.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
+server: server.cpp
+	$(CXX) $(CXXFLAGS) -I $(SYMLIB_INCLUDE) $^ -o $@
 
-server_elevated: server.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D ELEVATED_MODE
-
-client: client.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
-
-independent_client: client.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D INDEPENDENT_CLIENT
-
-independent_client_elevated: client.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D ELEVATED_MODE -D INDEPENDENT_CLIENT
+server_elevated: server.cpp
+	$(CXX) $(CXXFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED
 
 clean:
-	rm -rf server server_elevated client independent_client stress_test_* \
-		independent_client_elevated
+	rm -rf independent_client independent_client_elevated client server server_elevated run_log
+
+
+

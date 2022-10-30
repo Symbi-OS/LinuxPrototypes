@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOOP_COUNT=5
+LOOP_COUNT=50
 ITERATIONS=0
 
 function RunApproach1 {
@@ -13,7 +13,7 @@ function RunApproach1 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./independent_client $ITERATIONS >> approach1_log.txt
+    	taskset -c 6 ./independent_client $ITERATIONS >> approach1_log.txt
 		sleep 0.02
 
     	i=$(( $i + 1 ))
@@ -33,7 +33,7 @@ function RunApproach2 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./independent_client_elevated $ITERATIONS >> $log_file
+    	taskset -c 6 ./independent_client_elevated $ITERATIONS >> $log_file
 		sleep 0.02
 
     	i=$(( $i + 1 ))
@@ -53,11 +53,11 @@ function RunApproach3 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-		taskset -c 0 ./server $ITERATIONS &> /dev/null &
+		taskset -c 6 ./server $ITERATIONS &> /dev/null &
 		server_pid=$!
 
 		sleep 0.08
-		taskset -c 1 ./client $ITERATIONS >> $log_file
+		taskset -c 7 ./client $ITERATIONS >> $log_file
 
 		wait
 		i=$(( $i + 1 ))
@@ -78,11 +78,11 @@ function RunApproach4 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./server_elevated $ITERATIONS &> /dev/null &
+    	taskset -c 6 ./server_elevated $ITERATIONS &> /dev/null &
     	server_pid=$!
 
     	sleep 0.08
-    	taskset -c 1 ./client $ITERATIONS >> $log_file
+    	taskset -c 7 ./client $ITERATIONS >> $log_file
 
     	wait
     	i=$(( $i + 1 ))
@@ -110,4 +110,3 @@ elif [ $test_choice == "3" ]; then
 elif [ $test_choice == "4" ]; then
     RunApproach4
 fi
-

@@ -1,21 +1,16 @@
 #include "common.h"
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include "LINF/sym_all.h"
+extern "C" {
+#include <LINF/sym_all.h>
+}
 
-static const char* BackingFileName = "sym_server_shm";
-static const int BackingFileSize = 512;
-
-#ifdef ELEVATED_MODE
-static ksys_write_t my_ksys_write = NULL;
-#endif
+constexpr const char* BackingFileName = "sym_server_shm";
+constexpr int BackingFileSize = 512;
 
 int main(int argc, char** argv) {
-	UNUSED_PARAM(argc)
+	UNUSED(argc);
 
 	// Get the number of stress test iterations from the command line
-	int iteration_count = atoi(argv[1]);
+	int iterations = atoi(argv[1]);
 
 	// Create the backing file
 	int fd = shm_open(
@@ -46,42 +41,40 @@ int main(int argc, char** argv) {
 	// Zero out the backing file
 	memset(shared_memory, 0, BackingFileSize);
 
-#ifdef ELEVATED_MODE
+#ifdef ELEVATED
 	// Get the adress of ksys_write
-	my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
-	fprintf(stderr, "ksys_write: %p\n", my_ksys_write);
+	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
+	fprintf(stderr, "ksys_write: %p\n", ksys_write);
+
+	sym_elevate();
 #endif
 
 	// Create a file to write to
-	FILE* log = fopen("stress_test_shared_memory_log", "w");
-	int logfd = fileno(log);
+	auto log = std::unique_ptr<FILE, decltype(&fclose)>(fopen("run_log", "w"), &fclose);
+    int logfd = fileno(log.get());
 	
 	// Prepare the job buffer
 	volatile JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
 	int resp = 1;
 
-#ifdef ELEVATED_MODE
-	sym_elevate();
-#endif
-
 	// Begin stress testing
-	for (int i = 0; i < iteration_count; ++i) {
+	for (int i = 0; i < iterations; ++i) {
 		// Wait until we get the job
-        	while (job_buffer->status != JOB_REQUESTED) {
+        while (job_buffer->status != JOB_REQUESTED) {
 			continue;
-       		}
+       	}
 
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case 1: {
-#ifdef ELEVATED_MODE
+#ifdef ELEVATED
 			if (i % 20 == 0) {
 				write(logfd, "ksys_write\r", 11);
 			} else {
-				my_ksys_write(logfd, "ksys_write\r", 11);
+				ksys_write(logfd, "ksys_write\r", 11);
 			}
 #else
-				write(logfd, "ksys_write\r", 11);
+			write(logfd, "ksys_write\r", 11);
 #endif
 			break;
 		}
@@ -96,12 +89,9 @@ int main(int argc, char** argv) {
 		job_buffer->status = JOB_COMPLETED;
 	}
 
-#ifdef ELEVATED_MODE
+#ifdef ELEVATED
 	sym_lower();
 #endif
-
-	// Close the log file
-	fclose(log);
 
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);
@@ -110,4 +100,3 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-
