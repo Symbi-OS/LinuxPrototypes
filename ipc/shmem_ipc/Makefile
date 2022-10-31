@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS= -O3 -Wall -Wextra -std=c++17
+CXXFLAGS= -O3 -Wall -Wextra -Wno-unused-result -std=c++17
 
 SYMLIB_DIR=../../../Symlib
 SYMLIB_LINK=-lSym
