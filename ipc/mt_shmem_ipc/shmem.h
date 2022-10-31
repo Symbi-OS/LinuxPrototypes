@@ -14,26 +14,27 @@
 #define FILENAME_SIZE 10
 
 // Request status
-#define REQUEST_CREATED  0x1
-#define REQUEST_SENT  0x2
-#define REQUEST_RECEIVED 0x3
-#define REQUEST_PROCESSING 0x4
-#define REQUEST_COMPLETED 0x5
-#define REQUEST_DONE 0x6
+#define REQUEST_CREATED  1
+#define REQUEST_SENT  2
+#define REQUEST_RECEIVED 3
+#define REQUEST_PROCESSING 4
+#define REQUEST_COMPLETED 5
+#define REQUEST_DONE 6
 
 //JOB_BUFFER status
-#define EMPTY_JOB_BUFFER 0x0
-#define JOB_BUFFER_IN_USE 0xa
+#define EMPTY_JOB_BUFFER 0
+#define JOB_BUFFER_IN_USE 10
+#define KILL_SIGNAL 11
 
 // server commands
-#define CMD_WRITE 0x1
+#define CMD_WRITE 1
 
 typedef struct job_buffer {
     char filename[FILENAME_SIZE];            // File descriptor
-    char cmd;           // Job command requested by the client
+    int cmd;           // Job command requested by the client
     size_t buf_len;
     char buf[MAX_BUF_SIZE];
-    volatile char status;        // Flag indicating which stage the job is at
+    volatile int status;        // Flag indicating which stage the job is at
 } job_buffer_t;
 
 typedef struct workspace {

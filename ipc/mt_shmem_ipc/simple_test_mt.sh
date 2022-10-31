@@ -12,11 +12,13 @@ i=0
                 ./server &
             fi
             sleep 0.02
-            taskset -c 0 ./client $ITERATIONS $SERVER 1
-      	    sleep 0.02
+	    taskset -c 1 ./client $ITERATIONS $SERVER 1
+            sleep 0.02
+	    taskset -c 2 ./client $ITERATIONS $SERVER 2
+            sleep 0.02
             i=$(( $i + 1 ))
-            sleep 0.06
-            ./serverkill
+            sleep 0.6
+	    ./serverkill
         done
         printf "\n"
 	wc tmp.txt

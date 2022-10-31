@@ -67,7 +67,10 @@ int main(int argc, char** argv){
     if (argc == 4){
         iterations = atoi(argv[1]);
         if_connect = atoi(argv[2]);
-	client_id = atoi(argv[3]);
+	    client_id = atoi(argv[3]);
+    }else if(argc == 3){
+        iterations = atoi(argv[1]);
+        if_connect = atoi(argv[2]);
     }else{
         iterations = 50;
         if_connect = 0;
@@ -104,9 +107,5 @@ int main(int argc, char** argv){
     printf("Time used: %f at client %d\n", cpu_time_used, client_id);
 
     munmap(workspace, BACKING_FILE_SIZE);
-
-
-    //printf("Server c at: %p\n", workspace);
-
     return 0;
 }

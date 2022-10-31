@@ -4,10 +4,13 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "LINF/sym_all.h"
 
 /*
 Function that initalize the server and workspace
 */
+typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
+
 void* server_init(){
 
 	int fd = shm_open(BACKING_FILE, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
@@ -31,7 +34,7 @@ void* server_init(){
 		return (void*)-1;
 	}
 
-	memset(shared_memory_ptr, 0x0, BACKING_FILE_SIZE);
+	memset(shared_memory_ptr, 0, BACKING_FILE_SIZE);
 
 	// points to the next available spot
 
@@ -47,9 +50,10 @@ Function that for client to get empty job_buffer to communicate
 job_buffer_t * get_job_buffer(workspace_t * workspace){
 
 	for (int i = 0; i < NUM_JOB_BUFFERS; i++){
-		if (workspace->job_buffers[i].status == EMPTY_JOB_BUFFER){
+		job_buffer_t * current = &(workspace->job_buffers[i]);
+		if (current->status == EMPTY_JOB_BUFFER){
 			//find a free spot!
-			workspace->job_buffers[i].status = JOB_BUFFER_IN_USE;
+			current->status = JOB_BUFFER_IN_USE;
 			return &workspace->job_buffers[i];
 		}
 	}
@@ -88,11 +92,26 @@ void* job_buffer_thread(void *job_buffer){
 	int fd = -1;
 	char * last_filename = "";
 
+	#ifdef ELEVATED
+	// Get the adress of ksys_write
+	sym_lib_init();
+	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
+	sym_elevate();
+	#endif
+
+	request_job_buffer->status = EMPTY_JOB_BUFFER;
+
 	while (1){ // ever running thread
 
 
 		//wait for request
 		while (request_job_buffer->status != REQUEST_SENT) {
+			if (request_job_buffer->status == KILL_SIGNAL){
+				#ifdef ELEVATED
+				sym_lower();
+				#endif
+				pthread_exit (NULL);
+			}
 			continue;
 		}
 
@@ -101,7 +120,7 @@ void* job_buffer_thread(void *job_buffer){
 		request_job_buffer->status = REQUEST_PROCESSING;
 
 		switch(request_job_buffer->cmd){
-			case 0x1: {
+			case 1: {
 
 				if ((fd == -1) | strcmp(request_job_buffer->filename, last_filename)){
 					if (fd != -1){
@@ -112,11 +131,11 @@ void* job_buffer_thread(void *job_buffer){
 					last_filename = request_job_buffer->filename;
 				}
 				
-				ssize_t result = write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
-				if (result != (ssize_t)request_job_buffer->buf_len){
-					printf("Write failed, only write %ld\n", result);
-				}
-				break;
+				#ifdef ELEVATED
+				ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				#else
+				write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				#endif
 			}
 			default: {
 				break;
@@ -128,5 +147,4 @@ void* job_buffer_thread(void *job_buffer){
 		
 		
 	}
-
 }
