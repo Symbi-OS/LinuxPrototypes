@@ -19,7 +19,7 @@ function RunApproach1 {
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
 	done
-	printf "\n\n"
+	printf "\n"
 }
 
 
@@ -96,7 +96,8 @@ printf "Choose one of the four approaches to IPC to test\n"
 printf "\t[1] Independent client (un-elevated)\n"
 printf "\t[2] Independent client (elevated + shortcutted)\n"
 printf "\t[3] Client + un-elevated Server\n"
-printf "\t[4] Client + elevated and shortcutted Server\n\n"
+printf "\t[4] Client + elevated and shortcutted Server\n"
+printf "\t[5] All of the above (sequentially)\n\n"
 
 read -p "Select your choice: " test_choice
 read -p "Enter each run's iteration count: " ITERATIONS
@@ -109,4 +110,12 @@ elif [ $test_choice == "3" ]; then
     RunApproach3
 elif [ $test_choice == "4" ]; then
     RunApproach4
+elif [ $test_choice == "5" ]; then
+	RunApproach1
+	printf "\n"
+	RunApproach2
+	printf "\n"
+	RunApproach3
+	printf "\n"
+	RunApproach4
 fi
