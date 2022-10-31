@@ -1,88 +1,53 @@
-LOOP_COUNT=10
-ITERATIONS=0
-INDEPENDENT=0
+LOOP_COUNT=$2	
+ITERATIONS=$1
 SERVER=1
+INDEPENDENT=0
+IF_ELE=0
 
-function RunApproach1 {
-        log_file=approach1_log.txt
+# id 0 is the independent server
+# id 1 is server-client in single thread
+# id 2 is first client in multithread
+# id 3 is second client in multithread
 
-        rm -rf $log_file
-
-        printf "Approach 1: Independent client (Un-elevated)\n"
-
-        i=0
-        while [ $i -lt $LOOP_COUNT ]
-        do
-            taskset -c 0 ./client $ITERATIONS $INDEPENDENT 0 >> approach1_log.txt
-            sleep 0.02
-
-            i=$(( $i + 1 ))
-            echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-        done
-        printf "\n\n"
-}
-
-
-function RunApproach2 {
-        log_file=approach2_log.txt
-
-        rm -rf $log_file
-
-        printf "Approach 2: Server with one client attached\n"
-
-        i=0
-
-        while [ $i -lt $LOOP_COUNT ]
-        do
-            timeout 2s taskset -c 0 ./server &> /dev/null &
-            sleep 0.02
-            taskset -c 1 ./client $ITERATIONS $SERVER 0 >> $log_file
-	    wait
-	    i=$(( $i + 1 ))
-            echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-        done
-        printf "\n"
-}
-
-
-function RunApproach3 {
-        log_file=approach3_log.txt
-
-        rm -rf $log_file
-
-        printf "Approach 3: Server with two client attached\n"
-
-        i=0
-        while [ $i -lt $LOOP_COUNT ]
-        do
-            timeout 2s taskset -c 0 ./server &> /dev/null &
-            sleep 0.02
-            taskset -c 1 ./client $ITERATIONS $SERVER 1 >> $log_file &
-            sleep 0.02
-            taskset -c 2 ./client $ITERATIONS $SERVER 2 >> $log_file &
-	    wait
-            i=$(( $i + 1 ))
-            echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-            sleep 0.06
-        done
-        printf "\n"
-}
-
+# Clean up and init 
 make clean
-make
+make > /dev/null
 
-printf "Choose one of the four approaches to IPC to test\n"
-printf "\t[1] Independent client (Un-elevated)\n"
-printf "\t[2] Server with one client\n"
-printf "\t[3] Server with two client\n"
+i=0
+while [ $i -lt $LOOP_COUNT ]
+    do
+        echo -n -e '  [..........] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        IC=$(taskset -c 0 ./client $ITERATIONS $INDEPENDENT)
+        sleep 0.1
+        echo -n -e '  [**........] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+      	sleep 0.1
 
-read -p "Select your choice: " test_choice
-read -p "Enter each run's iteration count: " ITERATIONS
+        ./server &
+        echo -n -e '  [***.......] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        sleep 0.1
+	      SC=$(taskset -c 1 ./client $ITERATIONS $SERVER)
+        echo -n -e '  [****......] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        sleep 0.1
+        ./serverkill
+        echo -n -e '  [*****.....] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
 
-if [ $test_choice == "1" ]; then
-        RunApproach1
-elif [ $test_choice == "2" ]; then
-    RunApproach2
-elif [ $test_choice == "3" ]; then
-    RunApproach3
-fi
+        ./server &
+        sleep 0.1
+        echo -n -e '  [******....] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+	      SC1=$(taskset -c 2 ./client $ITERATIONS $SERVER)
+        echo -n -e '  [*******...] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        sleep 0.1
+        SC2=$(taskset -c 3 ./client $ITERATIONS $SERVER)
+        echo -n -e '  [********..] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        sleep 0.1
+        ./serverkill
+        echo -n -e '  [*********.] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+
+        echo $i $IC $SC $SC1 $SC2$'\n' >> results.csv
+        i=$(( $i + 1 ))
+        sleep 0.1
+        echo -n -e '  [**********] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        sleep 0.1
+    done
+    printf "\n"
+        

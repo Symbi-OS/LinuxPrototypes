@@ -121,7 +121,9 @@ void* job_buffer_thread(void *job_buffer){
 
 		switch(request_job_buffer->cmd){
 			case 1: {
-
+				volatile int j;
+				for (j = 0; j < 10000; j++);
+				
 				if ((fd == -1) | strcmp(request_job_buffer->filename, last_filename)){
 					if (fd != -1){
 						close(fd);
@@ -147,4 +149,17 @@ void* job_buffer_thread(void *job_buffer){
 		
 		
 	}
+}
+
+int server_write(job_buffer_t * job_buffer, char * floc, char * buf, size_t len){
+
+	job_buffer->status = REQUEST_CREATED;
+	job_buffer->cmd = CMD_WRITE;
+	job_buffer->buf_len = len;
+	strcpy(job_buffer->buf, buf);
+	strcpy(job_buffer->filename, floc);
+	//send request
+	job_buffer->status = REQUEST_SENT;
+
+	return 1;
 }

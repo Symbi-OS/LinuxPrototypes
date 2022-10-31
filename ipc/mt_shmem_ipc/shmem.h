@@ -45,5 +45,6 @@ void* server_init();
 void* connect_server();
 job_buffer_t *get_job_buffer(workspace_t *workspace);
 void* job_buffer_thread(void *request_job_buffer);
+int server_write(job_buffer_t * job_buffer, char * floc, char * buf, size_t len);
 
 #endif

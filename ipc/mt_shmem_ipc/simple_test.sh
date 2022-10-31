@@ -1,6 +1,6 @@
 LOOP_COUNT=10	
 SERVER=1
-ITERATIONS=200000
+ITERATIONS=50000
 IF_ELE=$1
 i=0
         while [ $i -lt $LOOP_COUNT ]
@@ -12,7 +12,7 @@ i=0
                 ./server &
             fi
             sleep 0.02
-            taskset -c 0 ./client $ITERATIONS $SERVER 1
+            taskset -c 0 ./client $ITERATIONS $SERVER
       	    sleep 0.02
             i=$(( $i + 1 ))
             sleep 0.06
