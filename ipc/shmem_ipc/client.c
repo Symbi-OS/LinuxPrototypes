@@ -1,15 +1,12 @@
 #include "common.h"
-extern "C" {
 #include <LINF/sym_all.h>
-}
 
-constexpr const char* BackingFileName = "sym_server_shm";
-constexpr int BackingFileSize = 512;
+static const char* BackingFileName = "sym_server_shm";
+static int BackingFileSize = 512;
 
 #ifdef INDEPENDENT_CLIENT
 void start_independent_client_loop(int iterations) {
-	auto log = std::unique_ptr<FILE, decltype(&fclose)>(fopen("run_log", "w"), &fclose);
-	int logfd = fileno(log.get());
+	int logfd = open("run_log", O_CREAT | O_WRONLY, S_IRUSR);
 
 #ifdef ELEVATED
 	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
@@ -30,12 +27,14 @@ void start_independent_client_loop(int iterations) {
 	}
 	STOP_CLOCK();
 
-	auto time_used = GET_DURATION();
+	double time_used = GET_DURATION();
 	printf("Time used: %f\n", time_used);
 
 #ifdef ELEVATED
 	sym_lower();
 #endif
+
+	close(logfd);
 }
 #else
 void start_shared_memory_client_loop(int iterations) {
@@ -50,7 +49,7 @@ void start_shared_memory_client_loop(int iterations) {
 	void* shm = mmap(NULL, BackingFileSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
 
 	// Start the stress-testing loop
-	volatile auto job_buffer = static_cast<JobRequestBuffer_t*>(shm);
+	volatile JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shm;
 	job_buffer->cmd = 1;
 
 	START_CLOCK();
@@ -64,7 +63,7 @@ void start_shared_memory_client_loop(int iterations) {
 	}
 	STOP_CLOCK();
 
-	auto time_used = GET_DURATION();
+	double time_used = GET_DURATION();
     printf("Time used: %f\n", time_used);
 
 	// Cleanup

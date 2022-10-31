@@ -1,10 +1,8 @@
 #include "common.h"
-extern "C" {
 #include <LINF/sym_all.h>
-}
 
-constexpr const char* BackingFileName = "sym_server_shm";
-constexpr int BackingFileSize = 512;
+static const char* BackingFileName = "sym_server_shm";
+static int BackingFileSize = 512;
 
 int main(int argc, char** argv) {
 	UNUSED(argc);
@@ -50,8 +48,7 @@ int main(int argc, char** argv) {
 #endif
 
 	// Create a file to write to
-	auto log = std::unique_ptr<FILE, decltype(&fclose)>(fopen("run_log", "w"), &fclose);
-    int logfd = fileno(log.get());
+    int logfd = open("run_log", O_CREAT | O_WRONLY, S_IRUSR);
 	
 	// Prepare the job buffer
 	volatile JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
@@ -96,6 +93,7 @@ int main(int argc, char** argv) {
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);
 	close(fd);
+	close(logfd);
 	shm_unlink(BackingFileName);
 
 	return 0;

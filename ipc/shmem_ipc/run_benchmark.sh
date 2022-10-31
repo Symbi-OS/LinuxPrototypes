@@ -53,7 +53,7 @@ function RunApproach3 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-		taskset -c 6 ./server $ITERATIONS &> /dev/null &
+		taskset -c 4 ./server $ITERATIONS &> /dev/null &
 		server_pid=$!
 
 		sleep 0.08
@@ -78,7 +78,7 @@ function RunApproach4 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 6 ./server_elevated $ITERATIONS &> /dev/null &
+    	taskset -c 4 ./server_elevated $ITERATIONS &> /dev/null &
     	server_pid=$!
 
     	sleep 0.08
