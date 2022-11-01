@@ -43,7 +43,7 @@ while [ $i -lt $LOOP_COUNT ]
         ./serverkill
         echo -n -e '  [*********.] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
 
-        echo $i $IC $SC $SC1 $SC2$'\n' >> results.csv
+        echo $i, $IC, $SC, $SC1, $SC2 >> results.csv
         i=$(( $i + 1 ))
         sleep 0.1
         echo -n -e '  [**********] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
