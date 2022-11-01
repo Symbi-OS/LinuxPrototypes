@@ -33,6 +33,8 @@ void write_task_independent(int iteration){
 void write_task(int iteration, job_buffer_t *work_job_buffer){
 
     for (int i = 0; i < iteration; i++){
+        volatile int j;
+        for (j = 0; j < 10000; j++); 
         
         server_write(work_job_buffer, WRITE_LOC, WRITE_BUF, strlen(WRITE_BUF));
         

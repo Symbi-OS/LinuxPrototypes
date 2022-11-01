@@ -121,8 +121,6 @@ void* job_buffer_thread(void *job_buffer){
 
 		switch(request_job_buffer->cmd){
 			case 1: {
-				volatile int j;
-				for (j = 0; j < 10000; j++);
 				
 				if ((fd == -1) | strcmp(request_job_buffer->filename, last_filename)){
 					if (fd != -1){
