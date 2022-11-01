@@ -13,6 +13,8 @@ IF_ELE=0
 make clean
 make > /dev/null
 
+cp template.csv results.csv
+
 i=0
 while [ $i -lt $LOOP_COUNT ]
     do
