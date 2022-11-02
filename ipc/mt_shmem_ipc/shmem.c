@@ -94,7 +94,6 @@ void* job_buffer_thread(void *job_buffer){
 
 	#ifdef ELEVATED
 	// Get the adress of ksys_write
-	sym_lib_init();
 	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
 	sym_elevate();
 	#endif
