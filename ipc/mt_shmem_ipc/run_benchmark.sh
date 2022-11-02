@@ -6,9 +6,6 @@ IF_ELE=0
 
 
 # Clean up and init 
-make clean
-make > /dev/null
-
 cp template.csv results.csv
 
 i=0
@@ -16,9 +13,11 @@ i=0
 while [ $i -lt $LOOP_COUNT ]
     do
         echo -n -e '  [>.........] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-        IC=$(taskset -c 0 ./client $ITERATIONS $INDEPENDENT)
+        make clean
+        make > /dev/null
         sleep 0.1
         echo -n -e '  [=>........] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+        IC=$(taskset -c 0 ./client $ITERATIONS $INDEPENDENT)
       	sleep 0.1
 
         ./server &
