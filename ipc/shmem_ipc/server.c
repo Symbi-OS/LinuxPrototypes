@@ -41,14 +41,17 @@ int main(int argc, char** argv) {
 
 #ifdef ELEVATED
 	// Get the adress of ksys_write
-	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
-	fprintf(stderr, "ksys_write: %p\n", ksys_write);
+	//ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
+	//fprintf(stderr, "ksys_write: %p\n", ksys_write);
+
+	getppid_t getppid_elevated = (getppid_t)sym_get_fn_address((char*)"__x64_sys_getppid");
+	fprintf(stderr, "getppid: %p\n", getppid);
 
 	sym_elevate();
 #endif
 
 	// Create a file to write to
-    int logfd = open("run_log", O_CREAT | O_WRONLY, S_IRUSR);
+    //int logfd = open("run_log", O_CREAT | O_WRONLY, S_IRUSR);
 	
 	// Prepare the job buffer
 	volatile JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
@@ -65,13 +68,16 @@ int main(int argc, char** argv) {
 		switch (job_buffer->cmd) {
 		case 1: {
 #ifdef ELEVATED
+			/*
 			if (i % 20 == 0) {
 				write(logfd, "ksys_write\r", 11);
 			} else {
 				ksys_write(logfd, "ksys_write\r", 11);
-			}
+			}*/
+			getppid_elevated();
 #else
-			write(logfd, "ksys_write\r", 11);
+			//write(logfd, "ksys_write\r", 11);
+			getppid();
 #endif
 			break;
 		}
@@ -93,7 +99,7 @@ int main(int argc, char** argv) {
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);
 	close(fd);
-	close(logfd);
+	//close(logfd);
 	shm_unlink(BackingFileName);
 
 	return 0;

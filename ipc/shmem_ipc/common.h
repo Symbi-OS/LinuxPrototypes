@@ -24,4 +24,6 @@ typedef struct __attribute__((__packed__)) JobRequestBuffer {
 #define GET_DURATION() ((double)(_end_time - _start_time)) / CLOCKS_PER_SEC;
 
 typedef int(*ksys_write_t)(unsigned int fd, const char* buf, size_t count);
+typedef int (*getppid_t)(void);
+
 

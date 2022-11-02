@@ -6,23 +6,27 @@ static int BackingFileSize = 512;
 
 #ifdef INDEPENDENT_CLIENT
 void start_independent_client_loop(int iterations) {
-	int logfd = open("run_log", O_CREAT | O_WRONLY, S_IRUSR);
+	//int logfd = open("run_log", O_CREAT | O_WRONLY, S_IRUSR);
 
 #ifdef ELEVATED
-	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
+	//ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
+	getppid_t getppid_elevated = (getppid_t)sym_get_fn_address((char*)"__x64_sys_getppid");
 	sym_elevate();
 #endif
 
 	START_CLOCK();
 	for (int i = 0; i < iterations; ++i) {
 #ifdef ELEVATED
-        if (i % 20 == 0) {
+        /*
+		if (i % 20 == 0) {
 			write(logfd, "ksys_write\r", 11);
 		} else {
 			ksys_write(logfd, "ksys_write\r", 11);
-		}
+		}*/
+		getppid_elevated();
 #else
-		write(logfd, "ksys_write\r", 11);
+		//write(logfd, "ksys_write\r", 11);
+		getppid();
 #endif
 	}
 	STOP_CLOCK();
@@ -34,7 +38,7 @@ void start_independent_client_loop(int iterations) {
 	sym_lower();
 #endif
 
-	close(logfd);
+	//close(logfd);
 }
 #else
 void start_shared_memory_client_loop(int iterations) {
