@@ -1,5 +1,7 @@
 # Multithread Syscall Server Implementation
 
+<img src="mt_server_diagram.png">
+
 ### Executables
 - `client`: perform client behavior based on command line arguments. 
      - Usage: `./client <num_iteration> <if_independent> <cmd>`
