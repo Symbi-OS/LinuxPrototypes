@@ -21,21 +21,19 @@ int main(int argc, char** argv) {
         printf("Fail to intialize server...\n");
     }
 
-    if (num_threads == 1){
-		//if it is a single thread, then just start the process
-        job_buffer_thread(&workspace->job_buffers[0]);
-    }else{
-		//use pthread to organize all threads
-		pthread_t tid[num_threads];
-		for (int j = 0; j < num_threads; j++){
-			int err = pthread_create(&(tid[j]), NULL, &job_buffer_thread, &workspace->job_buffers[j]);
-			if (err != 0) printf("can't create thread :[%s]", strerror(err));
-		}
 
-		for (int j = 0; j < num_threads; j++){
-			pthread_join(tid[j], NULL);
-		}
+
+	//use pthread to organize all threads
+	pthread_t tid[num_threads];
+	for (int j = 0; j < num_threads; j++){
+		int err = pthread_create(&(tid[j]), NULL, &job_buffer_thread, &workspace->job_buffers[j]);
+		if (err != 0) printf("can't create thread :[%s]", strerror(err));
 	}
+
+	for (int j = 0; j < num_threads; j++){
+		pthread_join(tid[j], NULL);
+	}
+	
 
     //close up the server
     munmap(workspace, BACKING_FILE_SIZE);

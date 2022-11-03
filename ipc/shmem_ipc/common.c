@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include "LINF/sym_all.h"
+#include <time.h>
 
 /*
 Function that initalize the server and workspace
@@ -47,7 +48,9 @@ void* server_init(){
 /*
 Function that for client to get empty job_buffer to communicate
 */
-job_buffer_t * get_job_buffer(workspace_t * workspace){
+job_buffer_t * get_job_buffer(){
+
+	workspace_t * workspace = connect_server();
 
 	for (int i = 0; i < MAX_JOB_BUFFERS; i++){
 		job_buffer_t * current = &(workspace->job_buffers[i]);
@@ -88,6 +91,13 @@ void* job_buffer_thread(void *job_buffer){
 	
 	job_buffer_t *request_job_buffer = job_buffer;
 
+	//stub hardcoded variables
+	FILE * fp = NULL;
+	int fd = -1;
+	char * last_filename = "";
+
+	clock_t end = clock() + 1*CLOCKS_PER_SEC;
+
 	#ifdef ELEVATED
 	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
 	getppid_t getppid_elevated = (getppid_t)sym_get_fn_address((char*)"__x64_sys_getppid");
@@ -95,22 +105,36 @@ void* job_buffer_thread(void *job_buffer){
 	#endif
 
 	printf("thread started at %p\n", job_buffer);
-	while (1){ // ever running thread
-		//wait for request
+		// ever running thread
+		//wait{ for request
+	LOOP:	
 		while (request_job_buffer->status != JOB_REQUESTED) {
-			if (request_job_buffer->status == SERVER_KILL_SIGNAL){
+			if ((request_job_buffer->status == SERVER_KILL_SIGNAL) || (clock() > end)){
 				#ifdef ELEVATED
 				sym_lower();
 				#endif
 				pthread_exit (NULL);
 			}
-			continue;
 		}
 
 		switch(request_job_buffer->cmd){
 
 			case CMD_WRITE: {
+				if ((fd == -1) | strcmp(request_job_buffer->filename, last_filename)){
+					if (fd != -1){
+						close(fd);
+					}
+					fp = fopen(request_job_buffer->filename, "a");
+					fd = fileno(fp);
+					last_filename = request_job_buffer->filename;
+				}
 				
+				#ifdef ELEVATED
+				ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				#else
+				write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				#endif
+				request_job_buffer->response = 1;
 				break;
 			}
 
@@ -130,20 +154,19 @@ void* job_buffer_thread(void *job_buffer){
 		}
 		
 		request_job_buffer->status = JOB_COMPLETED;
-	}
+
+		goto LOOP;
 }
 
 int server_write(job_buffer_t * job_buffer, char * floc, char * buf, size_t len){
+	//very stub write just doing the memory transfer
 
 	job_buffer->cmd = CMD_WRITE;
+	job_buffer->buf_len = len;
+	strcpy(job_buffer->buf, buf);
+	strcpy(job_buffer->filename, floc);
+	//send request
 	job_buffer->status = JOB_REQUESTED;
-	strcpy(job_buffer->buf, floc);
-	strcat(job_buffer->buf, "|");
-	strcat(job_buffer->buf, buf);
-	char * len_str = "0000";
-	strcat(job_buffer->buf, "|");
-	sprintf(len_str, "%lu", len);
-	strcat(job_buffer->buf, len_str);
 
 	while (job_buffer->status != JOB_COMPLETED);
 	return job_buffer->response;

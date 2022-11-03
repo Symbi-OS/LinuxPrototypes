@@ -24,7 +24,7 @@ server_elevated: server.c common.c
 	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED
 
 clean:
-	rm -rf client_elevated client server server_elevated serverkill
+	rm -rf client_elevated client server server_elevated serverkill tmp.txt
 
 
 

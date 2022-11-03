@@ -23,12 +23,19 @@
 #define BACKING_FILE_SIZE 512
 #define MAX_JOB_BUFFERS 2
 #define MAX_BUF_SIZE 100
+#define FILENAME_SIZE 10
 
 typedef struct __attribute__((__packed__)) job_buffer {
     int cmd;           // Job command requested by the client
     int response;      // Response from the server
     char buf[MAX_BUF_SIZE]; // hold arguments
     volatile int status;    // Flag indicating which stage the job is at
+
+    /*
+    * stub attribute to do write
+    */
+    char filename[FILENAME_SIZE];; // stub approach to do write
+    size_t buf_len; // stub approach to do write
 } job_buffer_t;
 
 typedef struct workspace {
@@ -44,7 +51,7 @@ typedef int (*getppid_t)(void);
 
 void* server_init();
 void* connect_server();
-job_buffer_t *get_job_buffer(workspace_t *workspace);
+job_buffer_t *get_job_buffer();
 void* job_buffer_thread(void *request_job_buffer);
 int server_write(job_buffer_t * job_buffer, char * floc, char * buf, size_t len);
 int server_getppid(job_buffer_t * job_buffer);
