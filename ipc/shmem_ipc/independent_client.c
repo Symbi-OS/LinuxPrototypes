@@ -8,7 +8,7 @@
 #include <time.h>
 #include "LINF/sym_all.h"
 
-#define STRESS_TEST_ITERATIONS 2000000
+#define STRESS_TEST_ITERATIONS 200000
 
 typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 
