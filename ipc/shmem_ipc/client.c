@@ -86,7 +86,7 @@ void write_loop(int iterations, job_buffer_t *work_job_buffer){
 
 	STOP_CLOCK();
 	double time_used = GET_DURATION();
-	printf("Time used: %f\n", time_used);
+	printf("%f", time_used);
     return;
 }
 

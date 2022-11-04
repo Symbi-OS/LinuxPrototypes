@@ -116,7 +116,7 @@ void* job_buffer_thread(void *job_buffer){
 				pthread_exit (NULL);
 			}
 		}
-
+		int i = 0;
 		switch(request_job_buffer->cmd){
 
 			case CMD_WRITE: {
@@ -130,7 +130,12 @@ void* job_buffer_thread(void *job_buffer){
 				}
 				
 				#ifdef ELEVATED
-				ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				i++;
+				if (i % 2000 == 0){
+					write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				}else{
+					ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				}
 				#else
 				write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
 				#endif

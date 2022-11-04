@@ -114,10 +114,7 @@ void* job_buffer_thread(void *job_buffer){
 			continue;
 		}
 
-		request_job_buffer->status = REQUEST_RECEIVED;
-
-		request_job_buffer->status = REQUEST_PROCESSING;
-
+		int i = 0;
 		switch(request_job_buffer->cmd){
 			case 1: {
 				
@@ -130,8 +127,14 @@ void* job_buffer_thread(void *job_buffer){
 					last_filename = request_job_buffer->filename;
 				}
 				
+				i++;	
 				#ifdef ELEVATED
-				ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+			
+				if (i % 2000 == 0){
+					write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				}else{
+					ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				}
 				#else
 				write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
 				#endif
