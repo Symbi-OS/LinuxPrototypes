@@ -77,8 +77,8 @@ void write_loop(int iterations, job_buffer_t *work_job_buffer){
 	}else{
 
 		for (int i = 0; i < iterations; i++){
-			
-			server_write(work_job_buffer, WRITE_LOC, WRITE_BUF, strlen(WRITE_BUF));
+
+			server_write(work_job_buffer, WRITE_BUF, strlen(WRITE_BUF));
 		}
 
 		work_job_buffer->status = JOB_NO_REQUEST;

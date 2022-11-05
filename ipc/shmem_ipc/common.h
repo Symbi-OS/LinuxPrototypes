@@ -24,6 +24,7 @@
 #define MAX_JOB_BUFFERS 2
 #define MAX_BUF_SIZE 100
 #define FILENAME_SIZE 10
+#define SERVER_TIMEOUT 4
 
 typedef struct __attribute__((__packed__)) job_buffer {
     int cmd;           // Job command requested by the client
@@ -52,7 +53,5 @@ typedef int (*getppid_t)(void);
 void* server_init();
 void* connect_server();
 job_buffer_t *get_job_buffer();
-void* job_buffer_thread(void *request_job_buffer);
-int server_write(job_buffer_t * job_buffer, char * floc, char * buf, size_t len);
+int server_write(job_buffer_t * job_buffer, char * buf, size_t len);
 int server_getppid(job_buffer_t * job_buffer);
-

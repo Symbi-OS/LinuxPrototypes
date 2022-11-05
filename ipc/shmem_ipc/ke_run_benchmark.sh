@@ -21,13 +21,26 @@ while [ $i -lt $LOOP_COUNT ]
       IC=$(taskset -c 0 ./client $ITERATIONS $INDEPENDENT write)
       sleep 0.02
 
+      echo -n -e '  [===>......] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+      ICE=$(taskset -c 0 ./client_elevated $ITERATIONS $INDEPENDENT write)
+      sleep 0.02
+
       ./server_elevated 1 > /dev/null &
       sleep 0.02
       SCE=$(taskset -c 1 ./client $ITERATIONS $SERVER write)
-      echo -n -e '  [====>.....] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+      echo -n -e '  [======>...] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
       sleep $SLEEP_TIME
 
+      ./server 1 > /dev/null &
+      sleep 0.02
+      SC=$(taskset -c 1 ./client $ITERATIONS $SERVER write)
+      echo -n -e '  [=======>..] Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+      sleep $SLEEP_TIME
+
+
       echo $i, $IC, independent, unelevated>> results.csv
+      echo $i, $ICE, independent, elevated>> results.csv
+      echo $i, $SC, server, unelevated>> results.csv
       echo $i, $SCE, server, elevated >> results.csv
       sleep 0.02
 	    i=$(( $i + 1 ))
