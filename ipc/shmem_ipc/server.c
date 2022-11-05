@@ -7,8 +7,6 @@
 #include <unistd.h>
 #include "LINF/sym_all.h"
 
-#define STRESS_TEST_ITERATIONS 200000
-
 static const char* BackingFileName = "sym_server_shm";
 static const int BackingFileSize = 512;
 
@@ -29,7 +27,10 @@ typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 static ksys_write_t my_ksys_write = NULL;
 #endif
 
-int main() {
+int main(int argc, char** argv) {
+	(void)argc;
+	int iterations = atoi(argv[1]);
+
 #ifdef ELEVATED_MODE
 	// Init symbiote library and kallsymlib
 	sym_lib_init();
@@ -83,7 +84,7 @@ int main() {
 #endif
 
 	// Begin stress testing
-	for (int i = 0; i < STRESS_TEST_ITERATIONS; ++i) {
+	for (int i = 0; i < iterations; ++i) {
 		// Wait until we get the job
         while (job_buffer->status != JOB_REQUESTED) {
         	continue;

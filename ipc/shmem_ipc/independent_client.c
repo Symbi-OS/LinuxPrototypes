@@ -8,11 +8,12 @@
 #include <time.h>
 #include "LINF/sym_all.h"
 
-#define STRESS_TEST_ITERATIONS 200000
-
 typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 
-int main() {
+int main(int argc, char** argv) {
+	(void)argc;
+	int iterations = atoi(argv[1]);
+
 	clock_t start, end;
 	double cpu_time_used = 0;
 
@@ -34,7 +35,7 @@ int main() {
 	start = clock();
 
 	// Begin stress testing
-	for (int i = 0; i < STRESS_TEST_ITERATIONS; ++i) {
+	for (int i = 0; i < iterations; ++i) {
 #ifdef ELEVATED_MODE
 		if (i % 20 == 0) {
             write(logfd, "ksys_write\r", 11);
