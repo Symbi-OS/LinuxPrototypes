@@ -7,6 +7,13 @@
 #include <unistd.h>
 #include <time.h>
 
+#ifdef ELEVATED_MODE
+	#include "LINF/sym_all.h"
+
+	typedef int(*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
+#endif
+
+#ifndef INDEPENDENT_CLIENT
 static const char* BackingFileName = "sym_server_shm";
 static const int BackingFileSize = 512;
 
@@ -52,11 +59,61 @@ void stress_test(int iterations, void* shared_memory) {
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   	printf("Time used: %f\n", cpu_time_used);
 }
+#else
+void stress_test(int iterations) {
+	clock_t start, end;
+    double cpu_time_used = 0;
+
+    FILE* log = fopen("stress_test_log", "w");
+    int logfd = fileno(log);
+
+#ifdef ELEVATED_MODE
+    // Init symbiote library and kallsymlib
+    sym_lib_init();
+
+    // Get the address of ksys_write
+    ksys_write_t my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
+
+    // Elevate
+    sym_elevate();
+#endif
+
+    // Start performance timer
+    start = clock();
+
+    // Begin stress testing
+    for (int i = 0; i < iterations; ++i) {
+#ifdef ELEVATED_MODE
+        if (i % 20 == 0) {
+            write(logfd, "ksys_write\r", 11);
+        } else {
+            my_ksys_write(logfd, "ksys_write\r", 11);
+        }
+#else
+        write(logfd, "ksys_write\r", 11);
+#endif
+    }
+
+    // Stop performance timer
+    end = clock();
+
+#ifdef ELEVATED_MODE
+    sym_lower();
+#endif
+
+    // Print the results
+    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("Time used: %f\n", cpu_time_used);
+
+	close(logfd);
+}
+#endif
 
 int main(int argc, char** argv) {
 	(void)argc;
 	int iterations = atoi(argv[1]);
 
+#ifndef INDEPENDENT_CLIENT
 	// Open the backing file
 	int fd = shm_open(BackingFileName, O_RDWR, S_IRUSR | S_IWUSR);
 	if (fd < 0) {
@@ -81,6 +138,9 @@ int main(int argc, char** argv) {
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);
 	close(fd);
+#else
+	stress_test(iterations);
+#endif
 
 	return 0;
 }

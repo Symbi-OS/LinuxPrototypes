@@ -28,11 +28,11 @@ server_elevated: server.c
 client: client.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
 
-independent_client: independent_client.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
+independent_client: client.c
+	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D INDEPENDENT_CLIENT
 
-independent_client_elevated: independent_client.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D ELEVATED_MODE
+independent_client_elevated: client.c
+	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D INDEPENDENT_CLIENT -D ELEVATED_MODE
 
 independent_client_shortcut: independent_client.c
 	LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):/home/sym/Symbi-OS/Tools/bin/shortcut/ LD_PRELOAD="sc_lib.so" $(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
