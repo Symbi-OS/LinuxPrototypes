@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -O0 -ggdb -Wall -Wextra -mno-red-zone -lrt -lpthread
+CFLAGS= -O3 -ggdb -Wall -Wextra -mno-red-zone -lrt -lpthread
 export CC CFLAGS
 
 SYMLIB_DIR=../../../Symlib
