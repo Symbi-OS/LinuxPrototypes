@@ -15,10 +15,10 @@ static const int BackingFileSize = 512;
 #define JOB_COMPLETED  2
 
 typedef struct JobRequestBuffer {
-	int fd;            // File descriptor
-	int cmd;           // Job command requested by the client
-	int response;      // Response from the server
-	int status;        // Flag indicating which stage the job is at
+	int fd;               // File descriptor
+	int cmd;              // Job command requested by the client
+	int response;         // Response from the server
+	volatile int status;  // Flag indicating which stage the job is at
 } JobRequestBuffer_t;
 
 #ifdef ELEVATED_MODE
