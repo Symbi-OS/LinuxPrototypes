@@ -93,7 +93,11 @@ int main() {
 		switch (job_buffer->cmd) {
 		case 1: {
 #ifdef ELEVATED_MODE
-			my_ksys_write(logfd, "ksys_write\r", 11);
+			if (i % 20 == 0) {
+				write(logfd, "ksys_write\r", 11);
+			} else {
+				my_ksys_write(logfd, "ksys_write\r", 11);
+			}
 #else
 			write(logfd, "ksys_write\r", 11);
 #endif

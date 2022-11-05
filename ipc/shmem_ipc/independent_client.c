@@ -36,7 +36,11 @@ int main() {
 	// Begin stress testing
 	for (int i = 0; i < STRESS_TEST_ITERATIONS; ++i) {
 #ifdef ELEVATED_MODE
-        my_ksys_write(logfd, "ksys_write\r", 11);
+		if (i % 20 == 0) {
+            write(logfd, "ksys_write\r", 11);
+        } else {
+    		my_ksys_write(logfd, "ksys_write\r", 11);
+		}
 #else
 		write(logfd, "ksys_write\r", 11);
 #endif
