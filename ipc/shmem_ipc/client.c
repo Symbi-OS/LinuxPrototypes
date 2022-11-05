@@ -7,8 +7,6 @@
 #include <unistd.h>
 #include <time.h>
 
-#define STRESS_TEST_ITERATIONS 200000
-
 static const char* BackingFileName = "sym_server_shm";
 static const int BackingFileSize = 512;
 
@@ -55,7 +53,10 @@ void stress_test(int iterations, void* shared_memory) {
   	printf("Time used: %f\n", cpu_time_used);
 }
 
-int main() {
+int main(int argc, char** argv) {
+	(void)argc;
+	int iterations = atoi(argv[1]);
+
 	// Open the backing file
 	int fd = shm_open(BackingFileName, O_RDWR, S_IRUSR | S_IWUSR);
 	if (fd < 0) {
@@ -75,7 +76,7 @@ int main() {
 	}
 
 	// Run the stress test
-	stress_test(STRESS_TEST_ITERATIONS, shared_memory);
+	stress_test(iterations, shared_memory);
 
 	// Cleanup
 	munmap(shared_memory, BackingFileSize);
