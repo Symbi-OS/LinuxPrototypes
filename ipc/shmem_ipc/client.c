@@ -1,107 +1,87 @@
 #include "common.h"
 #include <LINF/sym_all.h>
+#include "time.h"
 
 #define WRITE_BUF "BlackMagic\n"
 #define WRITE_LOC "tmp.txt"
 
-void getppid_loop(int iterations, job_buffer_t *work_job_buffer) {
+void write_loop_independent(int iterations){
 
-	START_CLOCK();
+	clock_t start, end;
+
 	#ifdef ELEVATED
-	getppid_t getppid_elevated = (getppid_t)sym_get_fn_address((char*)"__x64_sys_getppid");
+	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
 	sym_elevate();
 	#endif
-	
-	if (iterations == 0){
-		sleep(5);
-		return;
+	FILE * fp;
+	int fd;
+
+	fp = fopen(WRITE_LOC, "w");
+	fd = fileno(fp);
+
+	start = clock();
+	for (int i = 0; i < iterations; i++){
+		#ifdef ELEVATED
+		ksys_write(fd, WRITE_BUF, strlen(WRITE_BUF));
+		#else
+		write(fd, "ksys_write\r", 11);
+		#endif
 	}
+	end = clock();
 
 
-	for (int i = 0; i < iterations; ++i) {
-		if (work_job_buffer==NULL){
-			//perform independent write
-			#ifdef ELEVATED
-			getppid_elevated();
-			#else
-			getppid();
-			#endif
-		}else{
-			server_getppid(work_job_buffer);
-		}
-
-	}
-	
-
+	close(fd);
 	#ifdef ELEVATED
 	sym_lower();
 	#endif
 
-	if (work_job_buffer != NULL){
-		// free the job buffer
-        work_job_buffer->status = JOB_NO_REQUEST;
-    }
+	double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("%f\n", cpu_time_used);
 
-	STOP_CLOCK();
-	double time_used = GET_DURATION();
-	printf("Time used: %f\n", time_used);
+	return;
 }
+	
+	
+	
+void write_loop_server(int iterations, job_buffer_t * work_job_buffer){
+	clock_t start, end;
 
-void write_loop(int iterations, job_buffer_t *work_job_buffer){
+	work_job_buffer->cmd = CMD_WRITE;
+	work_job_buffer->buf_len = strlen(WRITE_BUF);
+	strcpy(work_job_buffer->buf, WRITE_BUF);
 
-	START_CLOCK();
-	if (work_job_buffer==NULL){
-		#ifdef ELEVATED
-		ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
-		sym_elevate();
-		#endif
-		FILE * fp;
-    	int fd;
+	start=clock();
+	for (int i = 0; i < iterations; i++){
+		work_job_buffer->status = JOB_REQUESTED;
 
-		fp = fopen(WRITE_LOC, "a");
-		fd = fileno(fp);
-
-
-		for (int i = 0; i < iterations; i++){
-			#ifdef ELEVATED
-			ksys_write(fd, WRITE_BUF, strlen(WRITE_BUF));
-			#else
-			write(fd, WRITE_BUF, strlen(WRITE_BUF));
-			#endif
+		// Wait for the job to be completed
+		while (work_job_buffer->status != JOB_COMPLETED) {
+			continue;
 		}
-
-		close(fd);
-		#ifdef ELEVATED
-		sym_lower();
-		#endif
-	}else{
-
-		for (int i = 0; i < iterations; i++){
-
-			server_write(work_job_buffer, WRITE_BUF, strlen(WRITE_BUF));
-		}
-
-		work_job_buffer->status = JOB_NO_REQUEST;
+		//server_write(work_job_buffer, WRITE_BUF, strlen(WRITE_BUF));
 	}
+	end=clock();
+	work_job_buffer->status = JOB_NO_REQUEST;
 
-	STOP_CLOCK();
-	double time_used = GET_DURATION();
-	printf("%f", time_used);
+	double cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+    printf("%f\n", cpu_time_used);
     return;
 }
 
 
 int main(int argc, char** argv) {
 	UNUSED(argc);
-	job_buffer_t *job_buffer = NULL;
+	
 
-	if (argc < 4){
-		printf("Usage: ./<client binary> <num iterations> <if_independent> < write | pid >\n");
+	if (argc < 3){
+		printf("Usage: ./<client binary> <num iterations> <if_independent>\n");
 		return 1;
 	}
 
 	int iterations = atoi(argv[1]);
 	int independent = atoi(argv[2]);
+
+	job_buffer_t *job_buffer = NULL;
 
 	if (!independent){ // need to connect to the server
 		job_buffer = get_job_buffer();
@@ -110,14 +90,11 @@ int main(int argc, char** argv) {
 			return 1;
 		}
 
+		write_loop_server(iterations, job_buffer);
+	}else{
+		write_loop_independent(iterations);
 	}
 
-	//start the test
-	if (!strcmp(argv[3], "write")){
-		write_loop(iterations, job_buffer);
-	}else if (!strcmp(argv[3], "pid")){
-		getppid_loop(iterations, job_buffer);
-	}
 	
 
 	//disconnect

@@ -6,7 +6,7 @@ SYMLIB_LINK=-lSym
 SYMLIB_INCLUDE=$(SYMLIB_DIR)/include
 SYMLIB_LIB_DIR=$(SYMLIB_DIR)/dynam_build
 
-all: client_elevated client server server_elevated serverkill
+all: old_client old_client_elevated client_elevated client server server_elevated serverkill old_server old_server_elevated
 
 client_elevated: client.c common.c
 	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED
@@ -23,8 +23,20 @@ serverkill: serverkill.c common.c
 server_elevated: server.c common.c
 	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED
 
+old_server: server.c common.c
+	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK)
+
+old_server_elevated: server.c common.c
+	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED
+
+old_client: old_client.c common.c
+	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D INDEPENDENT_CLIENT
+
+old_client_elevated: old_client.c common.c
+	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED -D INDEPENDENT_CLIENT
+
 clean:
-	rm -rf client_elevated client server server_elevated serverkill tmp.txt
+	rm -rf client_elevated client server server_elevated serverkill old_server old_server_elevated old_client *.txt old_client_elevated
 
 
 

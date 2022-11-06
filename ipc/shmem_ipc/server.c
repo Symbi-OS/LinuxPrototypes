@@ -3,8 +3,6 @@
 #include <pthread.h>
 #include "LINF/sym_all.h"
 
-#define DEBUG 0
-
 //hardcode locations
 #define WRITE_BUF "BlackMagic\n"
 #define WRITE_LOC "tmp.txt"
@@ -47,28 +45,17 @@ void* job_buffer_thread(void *job_buffer){
 				
 				#ifdef ELEVATED
 				i++;
-				if (i % 2000 == 0){
-					write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				if (i % 20 == 0){
+					write(fd, "ksys_write\r", 11);
 				}else{
-					ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+					ksys_write(fd, "ksys_write\r", 11);
 				}
 				#else
-				write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
+				write(fd, "ksys_write\r", 11);
 				#endif
-				request_job_buffer->response = 1;
 				break;
 			}
-
-			case CMD_GETPPID: {
-				#ifdef ELEVATED
-				getppid_elevated();
-				#else
-				getppid();
-				#endif
-				request_job_buffer->response = 1;
-				break;
-			}
-			default: {
+			default:{
 				break;
 			}
 
@@ -85,34 +72,26 @@ void single_job_buffer(job_buffer_t * job_buffer){
 	//clock_t end = clock() + SERVER_TIMEOUT*CLOCKS_PER_SEC;
 
 	//stub hardcoded variables
-	FILE * fp = fopen(WRITE_LOC, "w");
-	int fd = fileno(fp);
-	clock_t end = clock() + SERVER_TIMEOUT * CLOCKS_PER_SEC;
+	//clock_t end = clock() + SERVER_TIMEOUT * CLOCKS_PER_SEC;
 
 	#ifdef ELEVATED
 	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
-	getppid_t getppid_elevated = (getppid_t)sym_get_fn_address((char*)"__x64_sys_getppid");
-	printf("ksys_write: %p\n", ksys_write);
 	sym_elevate();
 	#endif
 
 	printf("thread started at %p\n", job_buffer);
+	// Create a file to write t
+	FILE * fp = fopen("tmp.txt", "w");
+    int fd = fileno(fp);
 	
 		// ever running thread
 		//wait{ for request
 	for (int j = 0; j < 200000; j++){	
 		while (request_job_buffer->status != JOB_REQUESTED) {
-			
-			if ((request_job_buffer->status == SERVER_KILL_SIGNAL)||(clock() > end)){
-				#ifdef ELEVATED
-				sym_lower();
-				#endif
-				fclose(fp);
-				return;
-			}
-			
+		
 			continue;
 		}
+        // Process the requested command
 		int i = 0;
 		switch(request_job_buffer->cmd){
 
@@ -132,15 +111,6 @@ void single_job_buffer(job_buffer_t * job_buffer){
 				break;
 			}
 
-			case CMD_GETPPID: {
-				#ifdef ELEVATED
-				getppid_elevated();
-				#else
-				getppid();
-				#endif
-				request_job_buffer->response = 1;
-				break;
-			}
 			default: {
 				break;
 			}
@@ -150,6 +120,12 @@ void single_job_buffer(job_buffer_t * job_buffer){
 		request_job_buffer->status = JOB_COMPLETED;
 
 	}
+
+	#ifdef ELEVATED
+	sym_lower();
+	#endif
+	fclose(fp);
+	return;
 }
 
 
@@ -171,6 +147,7 @@ int main(int argc, char** argv) {
         printf("Fail to intialize server...\n");
     }
 
+	int DEBUG = 1;
 
 	if (DEBUG){
 		single_job_buffer(&workspace->job_buffers[0]);
@@ -188,7 +165,6 @@ int main(int argc, char** argv) {
 	}
 
 	
-
     //close up the server
     munmap(workspace, BACKING_FILE_SIZE);
     shm_unlink(BACKING_FILE);
