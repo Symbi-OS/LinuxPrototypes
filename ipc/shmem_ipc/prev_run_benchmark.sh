@@ -85,8 +85,8 @@ function RunApproach4 {
 
     	wait
     	i=$(( $i + 1 ))
-		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-		sleep 0.08
+	echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+	sleep 0.08
 	done
 	printf "\n"
 }

@@ -24,7 +24,7 @@ void* job_buffer_thread(void *job_buffer){
 	sym_elevate();
 	#endif
 	int i=0;
-	printf("thread started at %p\n", job_buffer);
+	printf("pthread started at %p\n", job_buffer);
 		// ever running thread
 		//wait{ for request
 	LOOP:	
@@ -33,6 +33,7 @@ void* job_buffer_thread(void *job_buffer){
 				#ifdef ELEVATED
 				sym_lower();
 				#endif
+				printf("finished %d writes, exiting\n", i);
 				fclose(fp);
 				pthread_exit (NULL);
 			}
@@ -40,16 +41,14 @@ void* job_buffer_thread(void *job_buffer){
 		switch(request_job_buffer->cmd){
 
 			case CMD_WRITE: {
-				
 				#ifdef ELEVATED
-				i++;
 				if (i % 2000 == 0){
-					write(fd, "ksys_write\r", 11);
+					write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
 				}else{
-					ksys_write(fd, "ksys_write\r", 11);
+					ksys_write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
 				}
 				#else
-				write(fd, "ksys_write\r", 11);
+				write(fd, request_job_buffer->buf, request_job_buffer->buf_len);
 				#endif
 				break;
 			}
@@ -60,6 +59,7 @@ void* job_buffer_thread(void *job_buffer){
 		}
 		
 		request_job_buffer->status = JOB_COMPLETED;
+		i++;
 
 		goto LOOP;
 }

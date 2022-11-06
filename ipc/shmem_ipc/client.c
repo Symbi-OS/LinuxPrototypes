@@ -23,12 +23,12 @@ void write_loop_independent(int iterations){
 		#ifdef ELEVATED
 		printf("heree\n");
 		if (i % 20 == 0) {
-           		write(fd, "ksys_write\r", 11);
+           		write(fd, WRITE_BUF, 11);
         	} else {
-			ksys_write(fd, "ksys_write\r", 11);
+			ksys_write(fd, WRITE_BUF, 11);
         	}	
 		#else
-		write(fd, "ksys_write\r", 11);
+		write(fd, WRITE_BUF, 11);
 		#endif
 	}
 	end = clock();
@@ -56,13 +56,18 @@ void write_loop_server(int iterations, job_buffer_t * work_job_buffer){
 
 	start=clock();
 	for (int i = 0; i < iterations; i++){
+		// Wait for the job to be completed
+		work_job_buffer->cmd = CMD_WRITE;
+        	work_job_buffer->buf_len = 11;
+        	memcpy(work_job_buffer->buf, WRITE_BUF, 11);
+
 		work_job_buffer->status = JOB_REQUESTED;
 
-		// Wait for the job to be completed
 		while (work_job_buffer->status != JOB_COMPLETED) {
 			continue;
 		}
-		//server_write(work_job_buffer, WRITE_BUF, strlen(WRITE_BUF));
+		
+		//server_write(work_job_buffer, WRITE_BUF, 11);
 	}
 	end=clock();
 	work_job_buffer->status = JOB_NO_REQUEST;
@@ -107,4 +112,3 @@ int main(int argc, char** argv) {
 	}
 	return 0;
 }
-
