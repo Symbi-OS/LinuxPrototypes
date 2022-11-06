@@ -10,7 +10,7 @@ void write_loop_independent(int iterations){
 	clock_t start, end;
 
 	#ifdef ELEVATED
-	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address((char*)"ksys_write");
+	ksys_write_t ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
 	sym_elevate();
 	#endif
 	FILE * fp;
@@ -18,11 +18,15 @@ void write_loop_independent(int iterations){
 
 	fp = fopen(WRITE_LOC, "w");
 	fd = fileno(fp);
-
 	start = clock();
 	for (int i = 0; i < iterations; i++){
 		#ifdef ELEVATED
-		ksys_write(fd, WRITE_BUF, strlen(WRITE_BUF));
+		printf("heree\n");
+		if (i % 20 == 0) {
+           		write(fd, "ksys_write\r", 11);
+        	} else {
+			ksys_write(fd, "ksys_write\r", 11);
+        	}	
 		#else
 		write(fd, "ksys_write\r", 11);
 		#endif

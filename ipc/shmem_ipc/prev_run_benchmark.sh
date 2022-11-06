@@ -77,16 +77,16 @@ function RunApproach4 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./old_server_elevated 200000 &> /dev/null &
+    	taskset -c 0 ./server_elevated 1 &> /dev/null &
     	server_pid=$!
 
-    	sleep 0.2
+    	sleep 0.08
     	taskset -c 1 ./client 200000 0 >> $log_file
 
     	wait
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-		sleep 0.2
+		sleep 0.06
 	done
 	printf "\n"
 }

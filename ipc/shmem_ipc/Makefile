@@ -30,7 +30,7 @@ old_server_elevated: server.c common.c
 	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED_MODE
 
 old_client: old_client.c common.c
-	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D INDEPENDENT_CLIENT
+	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK)
 
 old_client_elevated: old_client.c common.c
 	$(CC) $(CFLAGS) -I $(SYMLIB_INCLUDE) -L $(SYMLIB_LIB_DIR) $^ -o $@ $(SYMLIB_LINK) -D ELEVATED -D INDEPENDENT_CLIENT
