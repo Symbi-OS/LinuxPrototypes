@@ -12,8 +12,8 @@ function RunApproach1 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./independent_client 200000 >> approach1_log.txt
-		sleep 0.2
+    	taskset -c 0 ./client 200000 1 >> approach1_log.txt
+	sleep 0.2
 
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
@@ -32,7 +32,7 @@ function RunApproach2 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./independent_client_elevated 200000 >> $log_file
+    	taskset -c 0 ./client_elevated 200000 1 >> $log_file
 		sleep 0.02
 
     	i=$(( $i + 1 ))
@@ -55,7 +55,7 @@ function RunApproach3 {
 		taskset -c 0 ./server 1 &> /dev/null &
 		server_pid=$!
 
-		sleep 0.5
+		sleep 0.2
 		taskset -c 1 ./client 200000 0 >> $log_file
 
 		wait
@@ -80,13 +80,13 @@ function RunApproach4 {
     	taskset -c 0 ./old_server_elevated 200000 &> /dev/null &
     	server_pid=$!
 
-    	sleep 0.08
-    	taskset -c 1 ./client 200000 >> $log_file
+    	sleep 0.2
+    	taskset -c 1 ./client 200000 0 >> $log_file
 
     	wait
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-		sleep 0.06
+		sleep 0.2
 	done
 	printf "\n"
 }
