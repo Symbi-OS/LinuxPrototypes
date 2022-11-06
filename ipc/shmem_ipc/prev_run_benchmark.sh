@@ -1,7 +1,6 @@
 #!/bin/bash
 
 LOOP_COUNT=20
-ITERATIONS=0
 
 function RunApproach1 {
 	log_file=approach1_log.txt
@@ -13,13 +12,13 @@ function RunApproach1 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    		taskset -c 0 ./client $ITERATIONS 1 >> approach1_log.txt
+    	taskset -c 0 ./independent_client 200000 >> approach1_log.txt
 		sleep 0.2
 
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
 	done
-	printf "\n"
+	printf "\n\n"
 }
 
 
@@ -33,8 +32,8 @@ function RunApproach2 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 6 ./client_elevated $ITERATIONS 1 >> $log_file
-	sleep 0.2
+    	taskset -c 0 ./independent_client_elevated 200000 >> $log_file
+		sleep 0.02
 
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
@@ -46,18 +45,18 @@ function RunApproach2 {
 function RunApproach3 {
 	log_file=approach3_log.txt
 
-    	rm -rf $log_file
+    rm -rf $log_file
 
 	printf "Approach 3: Client + Un-elevated Server\n"
 
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-		taskset -c 4 ./old_server $ITERATIONS &> /dev/null &
+		taskset -c 0 ./server 1 &> /dev/null &
 		server_pid=$!
 
-		sleep 0.001
-		taskset -c 7 ./client $ITERATIONS 0 >> $log_file
+		sleep 0.5
+		taskset -c 1 ./client 200000 0 >> $log_file
 
 		wait
 		i=$(( $i + 1 ))
@@ -78,16 +77,16 @@ function RunApproach4 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 4 ./server_elevated 1 &> /dev/null &
+    	taskset -c 0 ./old_server_elevated 200000 &> /dev/null &
     	server_pid=$!
 
-    	sleep 0.001
-    	taskset -c 7 ./client $ITERATIONS 0 >> $log_file
+    	sleep 0.08
+    	taskset -c 1 ./client 200000 >> $log_file
 
     	wait
     	i=$(( $i + 1 ))
-	echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
-	sleep 0.2
+		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+		sleep 0.06
 	done
 	printf "\n"
 }
@@ -96,11 +95,9 @@ printf "Choose one of the four approaches to IPC to test\n"
 printf "\t[1] Independent client (un-elevated)\n"
 printf "\t[2] Independent client (elevated + shortcutted)\n"
 printf "\t[3] Client + un-elevated Server\n"
-printf "\t[4] Client + elevated and shortcutted Server\n"
-printf "\t[5] All of the above (sequentially)\n\n"
+printf "\t[4] Client + elevated and shortcutted Server\n\n"
 
 read -p "Select your choice: " test_choice
-read -p "Enter each run's iteration count: " ITERATIONS
 
 if [ $test_choice == "1" ]; then
 	RunApproach1
@@ -110,12 +107,4 @@ elif [ $test_choice == "3" ]; then
     RunApproach3
 elif [ $test_choice == "4" ]; then
     RunApproach4
-elif [ $test_choice == "5" ]; then
-	RunApproach1
-	printf "\n"
-	RunApproach2
-	printf "\n"
-	RunApproach3
-	printf "\n"
-	RunApproach4
 fi
