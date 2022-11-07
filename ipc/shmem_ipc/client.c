@@ -43,9 +43,6 @@ void stress_test(int iterations) {
     int logfd = fileno(log);
 
 #ifdef ELEVATED_MODE
-    // Init symbiote library and kallsymlib
-    sym_lib_init();
-
     // Get the address of ksys_write
     ksys_write_t my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
 
