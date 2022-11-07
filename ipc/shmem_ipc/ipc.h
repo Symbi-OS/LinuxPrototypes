@@ -14,3 +14,8 @@ typedef struct JobRequestBuffer {
 	int buffer_len;		  // Commabd buffer length
     volatile int status;  // Flag indicating which stage the job is at
 } JobRequestBuffer_t;
+
+#define SHMEM_REGION_SIZE 512
+
+void* ipc_connect_client();
+void  ipc_close_client();

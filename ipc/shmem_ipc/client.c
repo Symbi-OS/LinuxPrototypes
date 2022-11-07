@@ -3,9 +3,6 @@
 #ifndef INDEPENDENT_CLIENT
 #include "ipc.h"
 
-static const char* BackingFileName = "sym_server_shm";
-static const int BackingFileSize = 512;
-
 void stress_test(int iterations, void* shared_memory) {
 	clock_t start, end;
 	double cpu_time_used = 0;
@@ -92,21 +89,10 @@ int main(int argc, char** argv) {
 	int iterations = atoi(argv[1]);
 
 #ifndef INDEPENDENT_CLIENT
-	// Open the backing file
-	int fd = shm_open(BackingFileName, O_RDWR, S_IRUSR | S_IWUSR);
-	if (fd < 0) {
-		printf("Failed to open the backing file\n");
-		return -1;
-	}
-
 	// Access the shared memory
-	void* shared_memory =
-		mmap(NULL, BackingFileSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+	void* shared_memory = ipc_connect_client();
 
-
-	if (shared_memory == (void*)-1) {
-		printf("Failed to mmap shared memory\n");
-		shm_unlink(BackingFileName);
+	if (shared_memory == NULL) {
 		return -1;
 	}
 
@@ -114,8 +100,7 @@ int main(int argc, char** argv) {
 	stress_test(iterations, shared_memory);
 
 	// Cleanup
-	munmap(shared_memory, BackingFileSize);
-	close(fd);
+	ipc_close_client();
 #else
 	stress_test(iterations);
 #endif

@@ -25,7 +25,7 @@ server: server.c
 server_elevated: server.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D ELEVATED_MODE
 
-client: client.c
+client: client.c ipc.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
 
 independent_client: client.c
