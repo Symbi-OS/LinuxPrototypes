@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
 	stress_test(iterations, shared_memory);
 
 	// Cleanup
-	ipc_close_client();
+	ipc_close();
 #else
 	stress_test(iterations);
 #endif

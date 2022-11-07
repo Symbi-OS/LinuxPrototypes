@@ -18,4 +18,6 @@ typedef struct JobRequestBuffer {
 #define SHMEM_REGION_SIZE 512
 
 void* ipc_connect_client();
-void  ipc_close_client();
+void  ipc_close();
+
+void* ipc_connect_server();

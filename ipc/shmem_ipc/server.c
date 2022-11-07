@@ -1,9 +1,6 @@
 #include "common.h"
 #include "ipc.h"
 
-static const char* BackingFileName = "sym_server_shm";
-static const int BackingFileSize = 512;
-
 #ifdef ELEVATED_MODE
 static ksys_write_t my_ksys_write = NULL;
 #endif
@@ -17,34 +14,7 @@ int main(int argc, char** argv) {
 	sym_lib_init();
 #endif
 
-	// Create the backing file
-	int fd = shm_open(
-		BackingFileName,
-		O_RDWR | O_CREAT,
-		S_IRUSR | S_IWUSR
-	);
-
-	if (fd < 0) {
-		printf("Can't open shared memory segment\n");
-		shm_unlink(BackingFileName);
-		return -1;
-	}
-
-	// Resize the backing file
-	ftruncate(fd, BackingFileSize);
-
-	// Get access to the shared memory
-	void* shared_memory =
-		mmap(NULL, BackingFileSize, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-
-	if (shared_memory == (void*)-1) {
-		printf("Can't mmap the shared memory\n");
-		shm_unlink(BackingFileName);
-		return -1;
-	}
-
-	// Zero out the backing file
-	memset(shared_memory, 0, BackingFileSize);
+	void* shared_memory = ipc_connect_server();
 
 #ifdef ELEVATED_MODE
 	// Get the adress of ksys_write
@@ -104,9 +74,7 @@ int main(int argc, char** argv) {
 	fclose(log);
 
 	// Cleanup
-	munmap(shared_memory, BackingFileSize);
-	close(fd);
-	shm_unlink(BackingFileName);
+	ipc_close();
 
 	return 0;
 }
