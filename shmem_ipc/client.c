@@ -3,14 +3,11 @@
 #ifndef INDEPENDENT_CLIENT
 #include "ipc.h"
 
-void stress_test(int iterations, void* shared_memory) {
+void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 	clock_t start, end;
 	double cpu_time_used = 0;
 
-	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
-
-	int command = 1; // ksys_write
-	job_buffer->cmd = command; // set the request command
+	job_buffer->cmd = CMD_WRITE; // set the request command
 
 	// Start the performance timer
 	start = clock();
@@ -34,7 +31,10 @@ void stress_test(int iterations, void* shared_memory) {
 	cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
   	printf("Time used: %f\n", cpu_time_used);
 }
+
 #else
+
+
 void stress_test(int iterations) {
 	clock_t start, end;
     double cpu_time_used = 0;
@@ -87,15 +87,14 @@ int main(int argc, char** argv) {
 
 #ifndef INDEPENDENT_CLIENT
 	// Access the shared memory
-	void* shared_memory = ipc_connect_client();
-
-	if (shared_memory == NULL) {
-		return -1;
+	JobRequestBuffer_t* job_buffer = ipc_get_job_buffer();
+	if (job_buffer == (void *)-1) {
+			printf("Fail to request working job_buffer...\n");
+			return 1;
 	}
 
 	// Run the stress test
-	stress_test(iterations, shared_memory);
-
+	stress_test(iterations, job_buffer);
 	// Cleanup
 	ipc_close();
 #else
