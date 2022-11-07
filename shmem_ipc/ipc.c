@@ -36,7 +36,7 @@ void ipc_close() {
 	}
 }
 
-void* ipc_connect_server() {
+workspace_t* ipc_connect_server() {
 	// Create the backing file
     s_BackingFileDescriptor = shm_open(
         s_BackingFileName,
@@ -66,6 +66,27 @@ void* ipc_connect_server() {
     // Zero out the backing file
     memset(s_SharedMemoryRegion, 0, SHMEM_REGION_SIZE);
 
-	return s_SharedMemoryRegion;
+    workspace_t * workspace = (workspace_t *)s_SharedMemoryRegion;
+
+	return workspace;
+}
+
+/*
+Function that for client to get empty job_buffer to communicate
+*/
+JobRequestBuffer_t * ipc_get_job_buffer(){
+
+	workspace_t * workspace = (workspace_t *)ipc_connect_client();
+
+	for (int i = 0; i < MAX_JOB_BUFFERS; i++){
+		JobRequestBuffer_t * current = &(workspace->job_buffers[i]);
+		if (current->status == JOB_NO_REQUEST){
+			//find a free spot!
+			current->status = JOB_BUFFER_IN_USE;
+			return &workspace->job_buffers[i];
+		}
+	}
+
+	return (void *)-1;
 }
 
