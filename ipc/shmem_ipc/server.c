@@ -9,11 +9,6 @@ int main(int argc, char** argv) {
 	(void)argc;
 	int iterations = atoi(argv[1]);
 
-#ifdef ELEVATED_MODE
-	// Init symbiote library and kallsymlib
-	sym_lib_init();
-#endif
-
 	void* shared_memory = ipc_connect_server();
 
 #ifdef ELEVATED_MODE
