@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
 	// Run the stress test
 	stress_test(iterations, job_buffer);
 	// Cleanup
-	ipc_close();
+	//ipc_close();
 #else
 	stress_test(iterations);
 #endif
