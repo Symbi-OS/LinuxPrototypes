@@ -23,54 +23,53 @@ int main(int argc, char** argv) {
 
 	// Prepare the job buffer
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
-	int resp = 1;
 
 #ifdef ELEVATED_MODE
 	sym_elevate();
 #endif
 
+	int i = 0; 
+	int current_idx = 0;
 	// Begin stress testing
-	for (int i = 0; i < iterations; ++i) {
+	while (1) {
 		// Wait until we get the job
-        while (job_buffer->status != JOB_REQUESTED) {
-        	continue;
-        }
-
-        // Process the requested command
-		switch (job_buffer->cmd) {
-		case 1: {
-#ifdef ELEVATED_MODE
-			if (i % 20 == 0) {
-				write(logfd, "ksys_write\r", 11);
-			} else {
-				my_ksys_write(logfd, "ksys_write\r", 11);
+		if (job_buffer->status[current_idx] != JOB_REQUESTED){
+			current_idx++;
+			if (current_idx == MAX_CLIENT_PER_BUF){
+				current_idx = 0;
 			}
-#else
-			write(logfd, "ksys_write\r", 11);
-#endif
-			break;
+			if (i== (iterations*MAX_CLIENT_PER_BUF)){
+				#ifdef ELEVATED_MODE
+				sym_lower();
+				#endif
+				fclose(log);
+				// Cleanup
+				ipc_close();
+				return 0;
+			}
+		}else{
+			// Process the requested command
+			switch (job_buffer->cmd) {
+			case 1: {
+				#ifdef ELEVATED_MODE
+				if (i % 20 == 0) {
+					write(logfd, "ksys_write\r", 11);
+				} else {
+					my_ksys_write(logfd, "ksys_write\r", 11);
+				}
+				#else
+				write(logfd, "ksys_write\r", 11);
+				#endif
+				break;
+			}
+			default: break;
+			}
+			
+			i++;
+			// Updating the job status flag
+			job_buffer->status[current_idx] = JOB_COMPLETED;
 		}
-		default: break;
-		}
-
-		// Writing in a response
-		job_buffer->response = resp;
-		++resp;
-
-        // Updating the job status flag
-		job_buffer->status = JOB_COMPLETED;
 	}
-
-#ifdef ELEVATED_MODE
-	sym_lower();
-#endif
-
-	// Close the log file
-	fclose(log);
-
-	// Cleanup
-	ipc_close();
-
-	return 0;
 }
+
 

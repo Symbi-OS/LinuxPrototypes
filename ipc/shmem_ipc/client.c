@@ -9,6 +9,18 @@ void stress_test(int iterations, void* shared_memory) {
 
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
 
+	int status_idx = 0;
+	while (job_buffer->status[status_idx] != JOB_NO_REQUEST){
+		status_idx++;
+		if (status_idx == MAX_CLIENT_PER_BUF){
+			fprintf(stderr, "Fail to request a buffer\n");
+			exit(1);
+		}
+	}
+
+	job_buffer->status[status_idx] = BUF_IN_USE;
+	fprintf(stderr, "buffer status idx is %d\n", status_idx);
+
 	int command = 1; // ksys_write
 	job_buffer->cmd = command; // set the request command
 
@@ -17,10 +29,10 @@ void stress_test(int iterations, void* shared_memory) {
 
 	for (int i = 0; i < iterations; ++i) {
 		// Indicate that the job was requested
-		job_buffer->status = JOB_REQUESTED;
+		job_buffer->status[status_idx] = JOB_REQUESTED;
 
 		// Wait for the job to be completed
-		while (job_buffer->status != JOB_COMPLETED) {
+		while (job_buffer->status[status_idx] != JOB_COMPLETED) {
 			continue;
 		}
 
@@ -97,7 +109,7 @@ int main(int argc, char** argv) {
 	stress_test(iterations, shared_memory);
 
 	// Cleanup
-	ipc_close();
+
 #else
 	stress_test(iterations);
 #endif
