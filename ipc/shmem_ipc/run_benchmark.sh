@@ -1,8 +1,7 @@
 #!/bin/bash
 
-LOOP_COUNT=500
-#ITERATIONS=200000
-ITERATIONS=1
+LOOP_COUNT=50
+ITERATIONS=200000
 
 function LaunchApproach1 {
     taskset -c 1 ./independent_client $ITERATIONS >> approach1_log.txt
@@ -36,6 +35,16 @@ function LaunchApproach4 {
     wait
 }
 
+function LaunchApproach5 {
+    taskset -c 0 ./server_no_work $ITERATIONS &> /dev/null &
+
+    sleep 0.05
+    taskset -c 1 ./client_no_work $ITERATIONS >> $log_file
+
+    wait
+}
+
+
 function RunApproach {
 	log_file=approach$1_log.txt
 
@@ -54,9 +63,9 @@ function RunApproach {
             LaunchApproach3
         elif [ $1 == "4" ]; then
             LaunchApproach4
-        fi
-
-        ITERATIONS=$(( $ITERATIONS + 500 ))
+        elif [ $1 == "5" ]; then
+            LaunchApproach5
+		fi
 
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
@@ -69,6 +78,7 @@ printf "\t[1] Independent Client (work)\n"
 printf "\t[2] Client (work) + Server (no work)\n"
 printf "\t[3] Client (no work) + Server (work)\n"
 printf "\t[4] Client (no work) + Elevated Server (work)\n"
+printf "\t[5] Client (no work) + Server (no work)\n"
 printf "\t[0] All approaches sequentially\n"
 printf "\n"
 
@@ -79,6 +89,7 @@ if [ $test_choice == "0" ]; then
     RunApproach 2
     RunApproach 3
     RunApproach 4
+	RunApproach 5
 else
     RunApproach $test_choice
 fi

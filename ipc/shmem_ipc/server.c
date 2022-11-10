@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
 
 #ifdef DO_WORK
-    FILE* log = fopen("log", "w");
+    FILE* log = fopen("/dev/null", "w");
     int logfd = fileno(log);
 #endif
 
@@ -21,6 +21,8 @@ int main(int argc, char** argv) {
 
     sym_elevate();
 #endif
+
+	job_buffer->status = JOB_COMPLETED;
 
 	// Begin stress testing
 	for (int i = 0; i < iterations; ++i) {
@@ -40,7 +42,8 @@ int main(int argc, char** argv) {
 #endif
 
         // Updating the job status flag
-		mark_job_completed(job_buffer);
+		//mark_job_completed(job_buffer);
+		__sync_bool_compare_and_swap(&job_buffer->status, JOB_REQUESTED, JOB_COMPLETED);
 	}
 
 #ifdef ELEVATED

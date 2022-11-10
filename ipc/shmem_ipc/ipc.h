@@ -6,13 +6,16 @@
 #define JOB_REQUESTED  1
 #define JOB_COMPLETED  2
 
+#define CACHE_LINE_SIZE 64
+
 typedef struct JobRequestBuffer {
-    int fd;               // File descriptor
-    int cmd;              // Job command requested by the client
-    int response;         // Response from the server
-	char buffer[128];	  // Command buffer
-	int buffer_len;		  // Commabd buffer length
-    volatile int status;  // Flag indicating which stage the job is at
+    //int fd;               // File descriptor
+    //int cmd;              // Job command requested by the client
+    //int response;         // Response from the server
+	//char buffer[128];	  // Command buffer
+	//int buffer_len;		  // Commabd buffer length
+    char padding[CACHE_LINE_SIZE];
+	volatile int status;  // Flag indicating which stage the job is at
 } JobRequestBuffer_t;
 
 #define SHMEM_REGION_SIZE 512
