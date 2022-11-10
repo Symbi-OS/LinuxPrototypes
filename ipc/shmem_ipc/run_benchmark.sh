@@ -1,7 +1,8 @@
 #!/bin/bash
 
-LOOP_COUNT=50
-ITERATIONS=200000
+LOOP_COUNT=500
+#ITERATIONS=200000
+ITERATIONS=1
 
 function LaunchApproach1 {
     taskset -c 1 ./independent_client $ITERATIONS >> approach1_log.txt
@@ -54,6 +55,8 @@ function RunApproach {
         elif [ $1 == "4" ]; then
             LaunchApproach4
         fi
+
+        ITERATIONS=$(( $ITERATIONS + 500 ))
 
     	i=$(( $i + 1 ))
 		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'

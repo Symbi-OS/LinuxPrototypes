@@ -32,4 +32,4 @@ independent_client: client.c ipc.c
 	$(CC) $(CFLAGS) $^ -o $@ -D INDEPENDENT_CLIENT
 
 clean:
-	rm -rf client_* server_* independent_client log
+	rm -rf client_* server_* independent_client log results.csv
