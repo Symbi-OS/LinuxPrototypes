@@ -21,3 +21,9 @@ void* ipc_connect_client();
 void  ipc_close();
 
 void* ipc_connect_server();
+
+void submit_job_request(JobRequestBuffer_t* jrb);
+void wait_for_job_completion(JobRequestBuffer_t* jrb);
+
+void mark_job_completed(JobRequestBuffer_t* jrb);
+void wait_for_job_request(JobRequestBuffer_t* jrb);

@@ -51,7 +51,7 @@ void* ipc_connect_server() {
     }
 
     // Resize the backing file
-    ftruncate(s_BackingFileDescriptor, SHMEM_REGION_SIZE);
+    (void) !ftruncate(s_BackingFileDescriptor, SHMEM_REGION_SIZE);
 
     // Get access to the shared memory
     s_SharedMemoryRegion =
@@ -69,3 +69,22 @@ void* ipc_connect_server() {
 	return s_SharedMemoryRegion;
 }
 
+void submit_job_request(JobRequestBuffer_t* jrb) {
+    jrb->status = JOB_REQUESTED;
+}
+
+void mark_job_completed(JobRequestBuffer_t* jrb) {
+    jrb->status = JOB_COMPLETED;
+}
+
+void wait_for_job_completion(JobRequestBuffer_t* jrb) {
+    while (jrb->status != JOB_COMPLETED) {
+        continue;
+    }
+}
+
+void wait_for_job_request(JobRequestBuffer_t* jrb) {
+    while (jrb->status != JOB_REQUESTED) {
+        continue;
+    }
+}
