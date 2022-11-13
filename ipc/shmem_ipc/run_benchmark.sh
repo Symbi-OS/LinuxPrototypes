@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOOP_COUNT=10
-CLIENTS=1
+CLIENTS=2
 
 function RunApproach1 {
 	log_file=approach1_log.txt
@@ -102,7 +102,7 @@ function RunApproach5 {
 	i=0
 	while [ $i -lt $LOOP_COUNT ]
 	do
-    	taskset -c 0 ./server_elevated 200000 &> /dev/null &
+    	taskset -c 0 ./server 200000 ${CLIENTS} &> /dev/null &
     	server_pid=$!
 
 		sleep 0.08
@@ -119,13 +119,36 @@ function RunApproach5 {
 	printf "\n"
 }
 
+function RunApproach6 {
+	log_file=approach6_log.txt
+
+    rm -rf $log_file
+
+	printf "Approach 6: ${CLIENTS} Independent Clients\n"
+
+	i=0
+	while [ $i -lt $LOOP_COUNT ]
+	do
+		for (( c=1; c<=${CLIENTS}; c++ ))
+		do 
+			sleep 0.01; taskset -c $c ./independent_client 200000 &> /dev/null >> $log_file &
+		done
+    
+    	wait
+    	i=$(( $i + 1 ))
+		echo -n -e '  Completed Iterations: '"$i/$LOOP_COUNT"'\r'
+		sleep 0.06
+	done
+	printf "\n"
+}
 
 printf "Choose one of the four approaches to IPC to test\n"
 printf "\t[1] Independent client (un-elevated)\n"
 printf "\t[2] Independent client (elevated + shortcutted)\n"
 printf "\t[3] Client + un-elevated Server\n"
 printf "\t[4] Client + elevated and shortcutted Server\n"
-printf "\t[5] ${CLIENTS} Client + elevated Server\n\n"
+printf "\t[5] ${CLIENTS} Client + elevated Server\n"
+printf "\t[6] ${CLIENTS} Independent Clients\n\n"
 
 
 read -p "Select your choice: " test_choice
@@ -140,5 +163,7 @@ elif [ $test_choice == "4" ]; then
     RunApproach4
 elif [ $test_choice == "5" ]; then
     RunApproach5
+elif [ $test_choice == "6" ]; then
+    RunApproach6
 fi
 

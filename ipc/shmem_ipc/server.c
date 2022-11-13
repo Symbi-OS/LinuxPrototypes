@@ -5,6 +5,8 @@
 static ksys_write_t my_ksys_write = NULL;
 #endif
 
+int NUM_CLIENTS=1;
+
 int main(int argc, char** argv) {
 	(void)argc;
 	int iterations = atoi(argv[1]);
@@ -20,6 +22,8 @@ int main(int argc, char** argv) {
 	// Create a file to write to
 	FILE* log = fopen("stress_test_log", "w");
 	int logfd = fileno(log);
+
+	NUM_CLIENTS = atoi(argv[2]);
 
 	// Prepare the job buffer
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)shared_memory;
@@ -38,7 +42,7 @@ int main(int argc, char** argv) {
 			if (current_idx == MAX_CLIENT_PER_BUF){
 				current_idx = 0;
 			}
-			if (i== (iterations*MAX_CLIENT_PER_BUF)){
+			if (i== (iterations*NUM_CLIENTS)){
 				#ifdef ELEVATED_MODE
 				sym_lower();
 				#endif

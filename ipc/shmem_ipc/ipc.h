@@ -6,7 +6,7 @@
 #define JOB_REQUESTED  1
 #define JOB_COMPLETED  2
 #define BUF_IN_USE  3
-#define MAX_CLIENT_PER_BUF 1
+#define MAX_CLIENT_PER_BUF 2
 
 typedef struct JobRequestBuffer {
     int fd;               // File descriptor
