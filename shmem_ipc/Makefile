@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS= -O3 -ggdb -Wall -Wextra -mno-red-zone -lrt -lpthread
 export CC CFLAGS
 
-SYMLIB_DIR=../../../Symlib
+SYMLIB_DIR=../../Symlib
 SYMLIB_DYNAM_BUILD_DIR=$(SYMLIB_DIR)/dynam_build
 SYMLIB_STATIC=$(SYMLIB_DIR)/build/libsym.a
 SYMLIB_INCLUDE_DIR=$(SYMLIB_DIR)/include
