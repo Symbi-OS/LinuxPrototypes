@@ -1,12 +1,6 @@
 CC=gcc
-CFLAGS= -O3 -ggdb -Wall -Wextra -mno-red-zone -lrt -lpthread
+CFLAGS= -O3 -ggdb -Wall -Wextra -mno-red-zone -lpthread -lrt
 export CC CFLAGS
-
-SYMLIB_DIR=../../Symlib
-SYMLIB_DYNAM_BUILD_DIR=$(SYMLIB_DIR)/dynam_build
-SYMLIB_STATIC=$(SYMLIB_DIR)/build/libsym.a
-SYMLIB_INCLUDE_DIR=$(SYMLIB_DIR)/include
-SYMLIB_LINK=-lSym
 
 #Check for kernel version
 UNAME=$(shell uname -r)
@@ -16,11 +10,6 @@ ifeq ($(TYPE), static)
 endif
 
 all: server client independent_client expe_info
-
-export SYMLIB_DIR SYMLIB_STATIC SYMLIB_INCLUDE_DIR SYMLIB_DYNAM_BUILD_DIR SYMLIB_LINK
-
-LIBRARY_PATH=$(SYMLIB_DYNAM_BUILD_DIR)
-export LIBRARY_PATH
 
 # GET TARGET INFO
 
