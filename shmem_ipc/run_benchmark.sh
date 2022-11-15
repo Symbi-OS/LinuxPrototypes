@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOOP_COUNT=50
+LOOP_COUNT=15
 
 function RunApproach1 {
 	log_file=approach1_log.txt

@@ -66,27 +66,45 @@ workspace_t* ipc_connect_server() {
     // Zero out the backing file
     memset(s_SharedMemoryRegion, 0, SHMEM_REGION_SIZE);
 
-    workspace_t * workspace = (workspace_t *)s_SharedMemoryRegion;
-
+    workspace_t* workspace = (workspace_t*)s_SharedMemoryRegion;
 	return workspace;
 }
 
 /*
 Function that for client to get empty job_buffer to communicate
 */
-JobRequestBuffer_t * ipc_get_job_buffer(){
+JobRequestBuffer_t* ipc_get_job_buffer(){
 
-	workspace_t * workspace = (workspace_t *)ipc_connect_client();
+	workspace_t* workspace = (workspace_t*)ipc_connect_client();
 
 	for (int i = 0; i < MAX_JOB_BUFFERS; i++){
-		JobRequestBuffer_t * current = &(workspace->job_buffers[i]);
+		JobRequestBuffer_t* current = &(workspace->job_buffers[i]);
 		if (current->status == JOB_NO_REQUEST){
-			//find a free spot!
+			// find a free spot!
 			current->status = JOB_BUFFER_IN_USE;
 			return &workspace->job_buffers[i];
 		}
 	}
 
-	return (void *)-1;
+	return NULL;
 }
 
+void submit_job_request(JobRequestBuffer_t* jrb) {
+    jrb->status = JOB_REQUESTED;
+}
+
+void mark_job_completed(JobRequestBuffer_t* jrb) {
+    jrb->status = JOB_COMPLETED;
+}
+
+void wait_for_job_completion(JobRequestBuffer_t* jrb) {
+    while (jrb->status != JOB_COMPLETED) {
+        continue;
+    }
+}
+
+void wait_for_job_request(JobRequestBuffer_t* jrb) {
+    while (jrb->status != JOB_REQUESTED) {
+        continue;
+    }
+}

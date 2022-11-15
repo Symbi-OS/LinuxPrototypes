@@ -8,70 +8,61 @@ static ksys_write_t my_ksys_write = NULL;
 
 int ITERATIONS;
 
-void* job_buffer_thread(void *current_job_buffer){
-
+void* job_buffer_thread(void* current_job_buffer){
 	// Prepare the job buffer
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)current_job_buffer;
-	int resp = 1;
 
-	#ifdef ELEVATED_MODE
+#ifdef ELEVATED_MODE
 	// Get the adress of ksys_write
 	my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
 	fprintf(stderr, "ksys_write: %p\n", my_ksys_write);
 	sym_elevate();
-	#endif
+#endif
 
 	// Create a file to write to
-	FILE* log = fopen("stress_test_log", "w");
+	FILE* log = fopen("/dev/null", "w");
 	int logfd = fileno(log);
 
 	// Begin stress testing
 	for (int i = 0; i < ITERATIONS; ++i) {
 		// Wait until we get the job
-        while (job_buffer->status != JOB_REQUESTED) {
-        	continue;
-        }
+        wait_for_job_request(job_buffer);
 
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case CMD_WRITE: {
 #ifdef ELEVATED_MODE
-			if (i % 200 == 0) {
-				write(logfd, "ksys_write\r", 11);
+			if (i % 20 == 0) {
+				(void) !write(logfd, "ksys_write\r", 11);
 			} else {
-				my_ksys_write(logfd, "ksys_write\r", 11);
+				(void) !my_ksys_write(logfd, "ksys_write\r", 11);
 			}
 #else
-			write(logfd, "ksys_write\r", 11);
+			(void) !write(logfd, "ksys_write\r", 11);
 #endif
 			break;
 		}
 		default: break;
 		}
 
-		// Writing in a response
-		job_buffer->response = resp;
-		++resp;
-
         // Updating the job status flag
-		job_buffer->status = JOB_COMPLETED;
+		mark_job_completed(job_buffer);
 	}
 
-	#ifdef ELEVATED_MODE
+#ifdef ELEVATED_MODE
 	sym_lower();
-	#endif
+#endif
 
 	// Close the log file
 	fclose(log);
-	pthread_exit (NULL);
+	pthread_exit(NULL);
 }
 
 int main(int argc, char** argv) {
-	
 	int num_threads = 1;
 
 	if (argc < 1){
-		printf("Usage: ./<server binary> <iterations>\n");
+		printf("Usage: ./<server binary> <iterations> [optional]<nthreads>\n");
 	}else if(argc == 2){
 		ITERATIONS = atoi(argv[1]);
 	}else if(argc == 3){

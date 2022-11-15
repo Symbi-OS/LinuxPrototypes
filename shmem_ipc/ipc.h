@@ -2,16 +2,16 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-//Request Definitions
+// Job Status Definitions
 #define JOB_NO_REQUEST 0
 #define JOB_REQUESTED  1
 #define JOB_COMPLETED  2
 #define JOB_BUFFER_IN_USE 3
 
-//Server Config
-#define MAX_JOB_BUFFERS 2
+// Server Config
+#define MAX_JOB_BUFFERS 25
 
-//commands
+// Commands
 #define CMD_WRITE 1
 
 typedef struct JobRequestBuffer {
@@ -27,9 +27,15 @@ typedef struct workspace {
     JobRequestBuffer_t job_buffers[MAX_JOB_BUFFERS];
 } workspace_t;
 
-#define SHMEM_REGION_SIZE 512
+#define SHMEM_REGION_SIZE 0x1000
 
 void* ipc_connect_client();
 void  ipc_close();
 workspace_t*  ipc_connect_server();
 JobRequestBuffer_t* ipc_get_job_buffer();
+
+void submit_job_request(JobRequestBuffer_t* jrb);
+void wait_for_job_completion(JobRequestBuffer_t* jrb);
+
+void mark_job_completed(JobRequestBuffer_t* jrb);
+void wait_for_job_request(JobRequestBuffer_t* jrb);
