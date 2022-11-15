@@ -9,7 +9,8 @@ void workspace_thread(workspace_t* workspace){
 	int idx = 0;
 
 	// Begin stress testing (+2 is necessary for open and close calls)
-	for (int i = 0; i < ITERATIONS + 2; ++i) {
+	register int idx = 0;
+	for (int i = 0; i < (ITERATIONS + 2)*NUM_CLIENTS; ++i) {
 		// Wait until we get the job
         while (workspace->job_buffers[idx].status != JOB_REQUESTED) {
 			idx++;
@@ -39,7 +40,7 @@ void workspace_thread(workspace_t* workspace){
 		}
 
         // Updating the job status flag
-		mark_job_completed(job_buffer);
+		mark_job_completed(workspace->job_buffers[idx]);
 	}
 
 	pthread_exit(NULL);
