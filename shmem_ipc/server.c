@@ -40,13 +40,9 @@ void workspace_thread(workspace_t* workspace){
 		}
 
         // Updating the job status flag
-		mark_job_completed(workspace->job_buffers[idx]);
+		mark_job_completed(job_buffer);
 	}
-
-	pthread_exit(NULL);
 }
-
-
 
 int main(int argc, char** argv) {
 	if (argc < 1){
