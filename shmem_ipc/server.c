@@ -26,7 +26,7 @@ void workspace_thread(workspace_t* workspace){
 	register int idx = 0;
 
 	// Begin stress testing
-	for (int i = 0; i < ITERATIONS; ++i) {
+	for (int i = 0; i < ITERATIONS*NUM_CLIENTS; ++i) {
 		// Wait until we get the job
         while (workspace->job_buffers[idx].status != JOB_REQUESTED) {
 			idx++;
