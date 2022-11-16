@@ -13,10 +13,13 @@
 
 // Commands
 #define CMD_WRITE 1
+#define CMD_OPEN  2
+#define CMD_CLOSE 3
 
 typedef struct JobRequestBuffer {
-    int fd;               // File descriptor
     int cmd;              // Job command requested by the client
+    int arg1;             // First integer argument
+    int arg2;             // Second integer argument
     int response;         // Response from the server
 	char buffer[128];	  // Command buffer
 	int buffer_len;		  // Commabd buffer length
