@@ -92,7 +92,6 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 	close(logfd);
 #else
 	close_log_file(job_buffer, logfd);
-	printf("file closed\n");
 #endif
 
 	// Print the results
