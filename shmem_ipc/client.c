@@ -9,14 +9,47 @@ int64_t calc_average(int64_t* buffer, uint64_t count) {
 	return sum / count;
 }
 
+#ifndef INDEPENDENT_CLIENT
+int open_log_file(JobRequestBuffer_t* job_buffer) {
+	job_buffer->cmd = CMD_OPEN;
+	job_buffer->buffer_len = strlen("/dev/null");
+	memcpy(job_buffer->buffer, "/dev/null", job_buffer->buffer_len);
+	job_buffer->arg1 = O_WRONLY | O_APPEND | O_CREAT;
+	job_buffer->arg2 = 0644;
+
+	// Indicate that the job was requested
+	submit_job_request(job_buffer);
+
+	// Wait for the job to be completed
+	wait_for_job_completion(job_buffer);
+
+	return job_buffer->response;
+}
+
+void close_log_file(JobRequestBuffer_t* job_buffer, int logfd) {
+	job_buffer->cmd = CMD_CLOSE;
+	job_buffer->arg1 = logfd;
+
+	// Indicate that the job was requested
+	submit_job_request(job_buffer);
+
+	// Wait for the job to be completed
+	wait_for_job_completion(job_buffer);
+}
+#endif
+
 void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 	(void)job_buffer;
 
 #ifndef INDEPENDENT_CLIENT
+	// Tell the server to open a file
+	int logfd = open_log_file(job_buffer);
+
+	// Prepare the buffer for 'write' operation
 	job_buffer->cmd = CMD_WRITE; // set the request command
+	job_buffer->arg1 = logfd;
 #else
-	FILE* log = fopen("/dev/null", "w");
-    int logfd = fileno(log);
+	int logfd = open("/dev/null", O_WRONLY | O_APPEND | O_CREAT, 0644);
 #endif
 	// Create performance timers
 	struct timespec outerTimeStart={0,0}, outerTimeEnd={0,0},
@@ -46,6 +79,9 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
     	clock_gettime(CLOCK_MONOTONIC, &innerTimeEnd);
 
 		innerTimesInNs[i] = innerTimeEnd.tv_nsec - innerTimeStart.tv_nsec;
+		if (innerTimesInNs[i] < 0 && i > 0) {
+			innerTimesInNs[i] = innerTimesInNs[i - 1];
+		}
 	}
 
 	// Stop the outer performance timer
@@ -54,6 +90,8 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 #ifdef INDEPENDENT_CLIENT
 	// Close the log file handle
 	close(logfd);
+#else
+	close_log_file(job_buffer, logfd);
 #endif
 
 	// Print the results

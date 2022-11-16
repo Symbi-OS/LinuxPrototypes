@@ -1,12 +1,16 @@
 #include "common.h"
 #include "ipc.h"
 #include <pthread.h>
+#include <sys/syscall.h>
+#include <sys/ptrace.h>
+#include <errno.h>
 
 #ifdef ELEVATED_MODE
 static ksys_write_t my_ksys_write = NULL;
 #endif
 
 int ITERATIONS;
+int target_logfd = -1;
 
 void* job_buffer_thread(void* current_job_buffer){
 	// Prepare the job buffer
@@ -19,26 +23,30 @@ void* job_buffer_thread(void* current_job_buffer){
 	sym_elevate();
 #endif
 
-	// Create a file to write to
-	FILE* log = fopen("/dev/null", "w");
-	int logfd = fileno(log);
-
-	// Begin stress testing
-	for (int i = 0; i < ITERATIONS; ++i) {
+	// Begin stress testing (+2 is necessary for open and close calls)
+	for (int i = 0; i < ITERATIONS + 2; ++i) {
 		// Wait until we get the job
         wait_for_job_request(job_buffer);
 
         // Process the requested command
 		switch (job_buffer->cmd) {
+		case CMD_OPEN: {
+			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1, job_buffer->arg2);
+			break;
+		}
+		case CMD_CLOSE: {
+			job_buffer->response = close(job_buffer->arg1);
+			break;
+		}
 		case CMD_WRITE: {
 #ifdef ELEVATED_MODE
 			if (i % 20 == 0) {
-				(void) !write(logfd, "ksys_write\r", 11);
+				(void) !write(job_buffer->arg1, "ksys_write\r", 11);
 			} else {
-				(void) !my_ksys_write(logfd, "ksys_write\r", 11);
+				(void) !my_ksys_write(job_buffer->arg1, "ksys_write\r", 11);
 			}
 #else
-			(void) !write(logfd, "ksys_write\r", 11);
+			(void) !write(job_buffer->arg1, "ksys_write\r", 11);
 #endif
 			break;
 		}
@@ -53,8 +61,6 @@ void* job_buffer_thread(void* current_job_buffer){
 	sym_lower();
 #endif
 
-	// Close the log file
-	fclose(log);
 	pthread_exit(NULL);
 }
 
