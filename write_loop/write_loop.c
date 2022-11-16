@@ -46,10 +46,28 @@ int main(int argc, char *argv[]) {
     // Write bytes to /dev/null times times
     int rc;
     // Start timer
-    time_t start,end;
+    time_t start,end, prior, current;
     start=clock();//predefined  function in c
 
-    for (int i = 0; i < times; i++) {
+    int print_interval = 1<<23;
+
+    // get prior time
+    prior = clock();
+
+    int verbose = 1;
+
+    // Start at 1 to make timer check easier, since we don't want to count the first iteration 
+    for (int i = 1; i < times; i++) {
+
+        // This does not seem to pertubate the timing
+        if( verbose && ( i % print_interval == 0 ) ){
+            // get current time
+            current = clock();
+            // print time since last print
+            printf("Time: %f seconds\n", (double)(current-prior)/CLOCKS_PER_SEC);
+            prior = current;
+        }
+
         rc = write(fd, buffer, bytes);
         // check write worked
         if (rc == -1) {
@@ -67,6 +85,7 @@ int main(int argc, char *argv[]) {
     printf("Throughput: %f Mb/s\n", (bytes*times)/(elapsed*1024*1024));
     printf("K Writes/sec: %f \n", (times)/(elapsed*1024));
 
+    free(buffer);
 
     close(fd);
 }
