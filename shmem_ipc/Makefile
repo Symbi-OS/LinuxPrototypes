@@ -8,16 +8,23 @@ SYMLIB_STATIC=$(SYMLIB_DIR)/build/libsym.a
 SYMLIB_INCLUDE_DIR=$(SYMLIB_DIR)/include
 SYMLIB_LINK=-lSym
 
+#Check for kernel version
+UNAME=$(shell uname -r)
+
 ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
+endif
+
+ifeq ($(UNAME), 5.14.0-symbiote+)
+all: server client independent_client server_elevated independent_client_elevated
+else
+all: server client independent_client
 endif
 
 export SYMLIB_DIR SYMLIB_STATIC SYMLIB_INCLUDE_DIR SYMLIB_DYNAM_BUILD_DIR SYMLIB_LINK
 
 LIBRARY_PATH=$(SYMLIB_DYNAM_BUILD_DIR)
 export LIBRARY_PATH
-
-all: server server_elevated client independent_client independent_client_elevated
 
 server: server.c ipc.c
 	$(CC) $(CFLAGS) $^ -o $@
