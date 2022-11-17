@@ -35,8 +35,10 @@ void workspace_thread(workspace_t* workspace){
         	continue;
         }
 
+		JobRequestBuffer_t * job_buffer = &workspace->job_buffers[idx];
+
         // Process the requested command
-		switch (workspace->job_buffers[idx].cmd) {
+		switch (job_buffer->cmd) {
 		case CMD_OPEN: {
 			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1, job_buffer->arg2);
 			break;
@@ -61,7 +63,7 @@ void workspace_thread(workspace_t* workspace){
 		}
 
         // Updating the job status flag
-		mark_job_completed(workspace->job_buffers[idx]);
+		mark_job_completed(job_buffer);
 	}
 
 #ifdef ELEVATED_MODE

@@ -89,6 +89,11 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 	#endif
 #endif
 
+		register int count = 20000;
+		while (count) {
+			asm volatile ("nop");
+			count --;
+		}
 		// Stop the inner performance timer
     	clock_gettime(CLOCK_MONOTONIC, &innerTimeEnd);
 
@@ -147,7 +152,7 @@ int main(int argc, char** argv) {
 
 #ifndef INDEPENDENT_CLIENT
     // Cleanup
-	ipc_close();
+	//ipc_close();
 
 	#ifdef ELEVATED_MODE
 		sym_lower();
