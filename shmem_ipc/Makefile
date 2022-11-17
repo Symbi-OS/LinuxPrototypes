@@ -20,16 +20,16 @@ export LIBRARY_PATH
 all: server server_elevated client independent_client independent_client_elevated
 
 server: server.c ipc.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
 server_elevated: server.c ipc.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D ELEVATED_MODE
 
 client: client.c ipc.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR)
+	$(CC) $(CFLAGS) $^ -o $@
 
 independent_client: client.c
-	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D INDEPENDENT_CLIENT
+	$(CC) $(CFLAGS) $^ -o $@ -D INDEPENDENT_CLIENT
 
 independent_client_elevated: client.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D INDEPENDENT_CLIENT -D ELEVATED_MODE
