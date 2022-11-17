@@ -23,7 +23,7 @@ void workspace_thread(workspace_t* workspace){
 		JobRequestBuffer_t* job_buffer = &workspace->job_buffers[idx];
 
         // Process the requested command
-		switch (workspace->job_buffers[idx].cmd) {
+		switch (job_buffer->cmd) {
 		case CMD_OPEN: {
 			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1, job_buffer->arg2);
 			break;

@@ -77,6 +77,11 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 		(void) !write(logfd, "ksys_write\r", 11);
 #endif
 
+		register int count = 20000;
+		while (count) {
+			asm volatile ("nop");
+			count --;
+		}
 		// Stop the inner performance timer
     	clock_gettime(CLOCK_MONOTONIC, &innerTimeEnd);
 
