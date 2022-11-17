@@ -67,8 +67,6 @@ void workspace_thread(workspace_t* workspace){
 #ifdef ELEVATED_MODE
 	sym_lower();
 #endif
-
-	pthread_exit(NULL);
 }
 
 
