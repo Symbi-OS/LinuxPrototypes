@@ -1,9 +1,9 @@
 #!/bin/bash
 
-LOOP_COUNT=10	
+LOOP_COUNT=10
 ITERATIONS=100000          # 100k
-ITERATION_LIMIT=10000000   # 10mil
-ITERATION_INCREMENT=100000 # 100k
+ITERATION_LIMIT=2000000    # 2m
+ITERATION_INCREMENT=200000 # 200k
 
 # Clean up and init 
 echo "run,iterations,type,latency" >  results.csv

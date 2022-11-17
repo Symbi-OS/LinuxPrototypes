@@ -1,797 +1,401 @@
 run,iterations,type,latency
-0,100000,Independent Client,0.019081
-0,100000,Independent Client (elevated),0.033634
-0,100000,Client + Server,0.035899
-0,100000,Client + Server (elevated),0.027709
-1,100000,Independent Client,0.040209
-1,100000,Independent Client (elevated),0.032486
-1,100000,Client + Server,0.033727
-1,100000,Client + Server (elevated),0.028155
-2,100000,Independent Client,0.040082
-2,100000,Independent Client (elevated),0.033169
-2,100000,Client + Server,0.035558
-2,100000,Client + Server (elevated),0.028191
-3,100000,Independent Client,0.039696
-3,100000,Independent Client (elevated),0.032869
-3,100000,Client + Server,0.035012
-3,100000,Client + Server (elevated),0.028105
-4,100000,Independent Client,0.040489
-4,100000,Independent Client (elevated),0.031731
-4,100000,Client + Server,0.036243
-4,100000,Client + Server (elevated),0.027448
-5,100000,Independent Client,0.044264
-5,100000,Independent Client (elevated),0.031811
-5,100000,Client + Server,0.034637
-5,100000,Client + Server (elevated),0.025430
-6,100000,Independent Client,0.040662
-6,100000,Independent Client (elevated),0.033388
-6,100000,Client + Server,0.035773
-6,100000,Client + Server (elevated),0.027514
-7,100000,Independent Client,0.041659
-7,100000,Independent Client (elevated),0.029878
-7,100000,Client + Server,0.035878
-7,100000,Client + Server (elevated),0.027378
-8,100000,Independent Client,0.041282
-8,100000,Independent Client (elevated),0.032812
-8,100000,Client + Server,0.035944
-8,100000,Client + Server (elevated),0.028212
-9,100000,Independent Client,0.038302
-9,100000,Independent Client (elevated),0.024377
-9,100000,Client + Server,0.035449
-9,100000,Client + Server (elevated),0.027546
-0,200000,Independent Client,0.060478
-0,200000,Independent Client (elevated),0.044214
-0,200000,Client + Server,0.071927
-0,200000,Client + Server (elevated),0.055279
-1,200000,Independent Client,0.061002
-1,200000,Independent Client (elevated),0.037346
-1,200000,Client + Server,0.069598
-1,200000,Client + Server (elevated),0.052642
-2,200000,Independent Client,0.060244
-2,200000,Independent Client (elevated),0.045952
-2,200000,Client + Server,0.070029
-2,200000,Client + Server (elevated),0.054727
-3,200000,Independent Client,0.060031
-3,200000,Independent Client (elevated),0.044745
-3,200000,Client + Server,0.073262
-3,200000,Client + Server (elevated),0.053596
-4,200000,Independent Client,0.060391
-4,200000,Independent Client (elevated),0.045319
-4,200000,Client + Server,0.072136
-4,200000,Client + Server (elevated),0.054596
-5,200000,Independent Client,0.061088
-5,200000,Independent Client (elevated),0.045917
-5,200000,Client + Server,0.072388
-5,200000,Client + Server (elevated),0.055897
-6,200000,Independent Client,0.058970
-6,200000,Independent Client (elevated),0.047022
-6,200000,Client + Server,0.073127
-6,200000,Client + Server (elevated),0.054931
-7,200000,Independent Client,0.074123
-7,200000,Independent Client (elevated),0.047818
-7,200000,Client + Server,0.072325
-7,200000,Client + Server (elevated),0.051084
-8,200000,Independent Client,0.059520
-8,200000,Independent Client (elevated),0.047659
-8,200000,Client + Server,0.072168
-8,200000,Client + Server (elevated),0.051317
-9,200000,Independent Client,0.060649
-9,200000,Independent Client (elevated),0.045172
-9,200000,Client + Server,0.072285
-9,200000,Client + Server (elevated),0.051234
-0,300000,Independent Client,0.078670
-0,300000,Independent Client (elevated),0.056031
-0,300000,Client + Server,0.107197
-0,300000,Client + Server (elevated),0.084552
-1,300000,Independent Client,0.078337
-1,300000,Independent Client (elevated),0.045082
-1,300000,Client + Server,0.110406
-1,300000,Client + Server (elevated),0.081610
-2,300000,Independent Client,0.079094
-2,300000,Independent Client (elevated),0.059362
-2,300000,Client + Server,0.108212
-2,300000,Client + Server (elevated),0.076807
-3,300000,Independent Client,0.078379
-3,300000,Independent Client (elevated),0.055056
-3,300000,Client + Server,0.108790
-3,300000,Client + Server (elevated),0.085443
-4,300000,Independent Client,0.078424
-4,300000,Independent Client (elevated),0.053267
-4,300000,Client + Server,0.100893
-4,300000,Client + Server (elevated),0.083118
-5,300000,Independent Client,0.065874
-5,300000,Independent Client (elevated),0.055139
-5,300000,Client + Server,0.105665
-5,300000,Client + Server (elevated),0.081927
-6,300000,Independent Client,0.078784
-6,300000,Independent Client (elevated),0.058945
-6,300000,Client + Server,0.107721
-6,300000,Client + Server (elevated),0.077578
-7,300000,Independent Client,0.079068
-7,300000,Independent Client (elevated),0.052833
-7,300000,Client + Server,0.108006
-7,300000,Client + Server (elevated),0.081129
-8,300000,Independent Client,0.078476
-8,300000,Independent Client (elevated),0.054654
-8,300000,Client + Server,0.107744
-8,300000,Client + Server (elevated),0.084077
-9,300000,Independent Client,0.078495
-9,300000,Independent Client (elevated),0.058909
-9,300000,Client + Server,0.107533
-9,300000,Client + Server (elevated),0.083944
-0,400000,Independent Client,0.100095
-0,400000,Independent Client (elevated),0.065275
-0,400000,Client + Server,0.139387
-0,400000,Client + Server (elevated),0.110879
-1,400000,Independent Client,0.099259
-1,400000,Independent Client (elevated),0.066895
-1,400000,Client + Server,0.144444
-1,400000,Client + Server (elevated),0.111609
-2,400000,Independent Client,0.096577
-2,400000,Independent Client (elevated),0.066545
-2,400000,Client + Server,0.144614
-2,400000,Client + Server (elevated),0.112416
-3,400000,Independent Client,0.110899
-3,400000,Independent Client (elevated),0.059058
-3,400000,Client + Server,0.143584
-3,400000,Client + Server (elevated),0.109428
-4,400000,Independent Client,0.099935
-4,400000,Independent Client (elevated),0.070945
-4,400000,Client + Server,0.136096
-4,400000,Client + Server (elevated),0.111337
-5,400000,Independent Client,0.098640
-5,400000,Independent Client (elevated),0.065149
-5,400000,Client + Server,0.139827
-5,400000,Client + Server (elevated),0.109716
-6,400000,Independent Client,0.085662
-6,400000,Independent Client (elevated),0.069156
-6,400000,Client + Server,0.143320
-6,400000,Client + Server (elevated),0.110778
-7,400000,Independent Client,0.096935
-7,400000,Independent Client (elevated),0.069267
-7,400000,Client + Server,0.139864
-7,400000,Client + Server (elevated),0.110713
-8,400000,Independent Client,0.084360
-8,400000,Independent Client (elevated),0.064841
-8,400000,Client + Server,0.142694
-8,400000,Client + Server (elevated),0.109299
-9,400000,Independent Client,0.098957
-9,400000,Independent Client (elevated),0.063814
-9,400000,Client + Server,0.143937
-9,400000,Client + Server (elevated),0.113354
-0,500000,Independent Client,0.128126
-0,500000,Independent Client (elevated),0.076998
-0,500000,Client + Server,0.182041
-0,500000,Client + Server (elevated),0.137607
-1,500000,Independent Client,0.116528
-1,500000,Independent Client (elevated),0.076336
-1,500000,Client + Server,0.168801
-1,500000,Client + Server (elevated),0.129339
-2,500000,Independent Client,0.116800
-2,500000,Independent Client (elevated),0.076988
-2,500000,Client + Server,0.178249
-2,500000,Client + Server (elevated),0.131523
-3,500000,Independent Client,0.099228
-3,500000,Independent Client (elevated),0.077502
-3,500000,Client + Server,0.178399
-3,500000,Client + Server (elevated),0.126904
-4,500000,Independent Client,0.119852
-4,500000,Independent Client (elevated),0.078073
-4,500000,Client + Server,0.168899
-4,500000,Client + Server (elevated),0.135312
-5,500000,Independent Client,0.130571
-5,500000,Independent Client (elevated),0.069790
-5,500000,Client + Server,0.175745
-5,500000,Client + Server (elevated),0.137333
-6,500000,Independent Client,0.117947
-6,500000,Independent Client (elevated),0.072321
-6,500000,Client + Server,0.180724
-6,500000,Client + Server (elevated),0.138300
-7,500000,Independent Client,0.117452
-7,500000,Independent Client (elevated),0.080238
-7,500000,Client + Server,0.177126
-7,500000,Client + Server (elevated),0.136915
-8,500000,Independent Client,0.127428
-8,500000,Independent Client (elevated),0.077422
-8,500000,Client + Server,0.180789
-8,500000,Client + Server (elevated),0.134892
-9,500000,Independent Client,0.119035
-9,500000,Independent Client (elevated),0.077358
-9,500000,Client + Server,0.181307
-9,500000,Client + Server (elevated),0.135114
-0,600000,Independent Client,0.136714
-0,600000,Independent Client (elevated),0.088189
-0,600000,Client + Server,0.219273
-0,600000,Client + Server (elevated),0.151906
-1,600000,Independent Client,0.147078
-1,600000,Independent Client (elevated),0.087112
-1,600000,Client + Server,0.218645
-1,600000,Client + Server (elevated),0.166203
-2,600000,Independent Client,0.120791
-2,600000,Independent Client (elevated),0.086617
-2,600000,Client + Server,0.217939
-2,600000,Client + Server (elevated),0.154108
-3,600000,Independent Client,0.137334
-3,600000,Independent Client (elevated),0.086906
-3,600000,Client + Server,0.221033
-3,600000,Client + Server (elevated),0.164484
-4,600000,Independent Client,0.148539
-4,600000,Independent Client (elevated),0.083232
-4,600000,Client + Server,0.218703
-4,600000,Client + Server (elevated),0.161704
-5,600000,Independent Client,0.137683
-5,600000,Independent Client (elevated),0.088983
-5,600000,Client + Server,0.212167
-5,600000,Client + Server (elevated),0.161371
-6,600000,Independent Client,0.137362
-6,600000,Independent Client (elevated),0.086650
-6,600000,Client + Server,0.217351
-6,600000,Client + Server (elevated),0.164434
-7,600000,Independent Client,0.148318
-7,600000,Independent Client (elevated),0.082839
-7,600000,Client + Server,0.213871
-7,600000,Client + Server (elevated),0.163863
-8,600000,Independent Client,0.137134
-8,600000,Independent Client (elevated),0.089276
-8,600000,Client + Server,0.216105
-8,600000,Client + Server (elevated),0.158226
-9,600000,Independent Client,0.134039
-9,600000,Independent Client (elevated),0.088687
-9,600000,Client + Server,0.214819
-9,600000,Client + Server (elevated),0.165499
-0,700000,Independent Client,0.168550
-0,700000,Independent Client (elevated),0.094415
-0,700000,Client + Server,0.252775
-0,700000,Client + Server (elevated),0.192641
-1,700000,Independent Client,0.159501
-1,700000,Independent Client (elevated),0.100676
-1,700000,Client + Server,0.255145
-1,700000,Client + Server (elevated),0.185385
-2,700000,Independent Client,0.169576
-2,700000,Independent Client (elevated),0.100543
-2,700000,Client + Server,0.254548
-2,700000,Client + Server (elevated),0.192690
-3,700000,Independent Client,0.154092
-3,700000,Independent Client (elevated),0.102568
-3,700000,Client + Server,0.255468
-3,700000,Client + Server (elevated),0.194167
-4,700000,Independent Client,0.152618
-4,700000,Independent Client (elevated),0.097967
-4,700000,Client + Server,0.238953
-4,700000,Client + Server (elevated),0.194683
-5,700000,Independent Client,0.165327
-5,700000,Independent Client (elevated),0.097866
-5,700000,Client + Server,0.251440
-5,700000,Client + Server (elevated),0.197099
-6,700000,Independent Client,0.155603
-6,700000,Independent Client (elevated),0.100671
-6,700000,Client + Server,0.254355
-6,700000,Client + Server (elevated),0.195487
-7,700000,Independent Client,0.155716
-7,700000,Independent Client (elevated),0.103953
-7,700000,Client + Server,0.244346
-7,700000,Client + Server (elevated),0.200003
-8,700000,Independent Client,0.152530
-8,700000,Independent Client (elevated),0.097004
-8,700000,Client + Server,0.244945
-8,700000,Client + Server (elevated),0.187061
-9,700000,Independent Client,0.165534
-9,700000,Independent Client (elevated),0.099457
-9,700000,Client + Server,0.250874
-9,700000,Client + Server (elevated),0.194024
-0,800000,Independent Client,0.172961
-0,800000,Independent Client (elevated),0.101723
-0,800000,Client + Server,0.276973
-0,800000,Client + Server (elevated),0.229015
-1,800000,Independent Client,0.184520
-1,800000,Independent Client (elevated),0.105271
-1,800000,Client + Server,0.292941
-1,800000,Client + Server (elevated),0.227966
-2,800000,Independent Client,0.173079
-2,800000,Independent Client (elevated),0.110684
-2,800000,Client + Server,0.289204
-2,800000,Client + Server (elevated),0.218023
-3,800000,Independent Client,0.176721
-3,800000,Independent Client (elevated),0.112326
-3,800000,Client + Server,0.291380
-3,800000,Client + Server (elevated),0.227328
-4,800000,Independent Client,0.187613
-4,800000,Independent Client (elevated),0.105556
-4,800000,Client + Server,0.291469
-4,800000,Client + Server (elevated),0.222760
-5,800000,Independent Client,0.172538
-5,800000,Independent Client (elevated),0.110531
-5,800000,Client + Server,0.284912
-5,800000,Client + Server (elevated),0.223853
-6,800000,Independent Client,0.176380
-6,800000,Independent Client (elevated),0.109469
-6,800000,Client + Server,0.290273
-6,800000,Client + Server (elevated),0.207843
-7,800000,Independent Client,0.173609
-7,800000,Independent Client (elevated),0.109291
-7,800000,Client + Server,0.288530
-7,800000,Client + Server (elevated),0.225815
-8,800000,Independent Client,0.171255
-8,800000,Independent Client (elevated),0.110311
-8,800000,Client + Server,0.289580
-8,800000,Client + Server (elevated),0.229372
-9,800000,Independent Client,0.181929
-9,800000,Independent Client (elevated),0.105046
-9,800000,Client + Server,0.288111
-9,800000,Client + Server (elevated),0.221252
-0,900000,Independent Client,0.173462
-0,900000,Independent Client (elevated),0.120770
-0,900000,Client + Server,0.326830
-0,900000,Client + Server (elevated),0.246064
-1,900000,Independent Client,0.189843
-1,900000,Independent Client (elevated),0.119903
-1,900000,Client + Server,0.326724
-1,900000,Client + Server (elevated),0.250687
-2,900000,Independent Client,0.191720
-2,900000,Independent Client (elevated),0.121417
-2,900000,Client + Server,0.317954
-2,900000,Client + Server (elevated),0.248790
-3,900000,Independent Client,0.194870
-3,900000,Independent Client (elevated),0.122165
-3,900000,Client + Server,0.306459
-3,900000,Client + Server (elevated),0.254972
-4,900000,Independent Client,0.195266
-4,900000,Independent Client (elevated),0.122189
-4,900000,Client + Server,0.322831
-4,900000,Client + Server (elevated),0.232908
-5,900000,Independent Client,0.190586
-5,900000,Independent Client (elevated),0.124939
-5,900000,Client + Server,0.324471
-5,900000,Client + Server (elevated),0.249960
-6,900000,Independent Client,0.206336
-6,900000,Independent Client (elevated),0.118289
-6,900000,Client + Server,0.323283
-6,900000,Client + Server (elevated),0.241020
-7,900000,Independent Client,0.204478
-7,900000,Independent Client (elevated),0.120735
-7,900000,Client + Server,0.323435
-7,900000,Client + Server (elevated),0.253185
-8,900000,Independent Client,0.182972
-8,900000,Independent Client (elevated),0.120142
-8,900000,Client + Server,0.305415
-8,900000,Client + Server (elevated),0.247558
-9,900000,Independent Client,0.191264
-9,900000,Independent Client (elevated),0.108847
-9,900000,Client + Server,0.328029
-9,900000,Client + Server (elevated),0.251025
-0,1000000,Independent Client,0.207844
-0,1000000,Independent Client (elevated),0.133953
-0,1000000,Client + Server,0.359413
-0,1000000,Client + Server (elevated),0.279819
-1,1000000,Independent Client,0.211546
-1,1000000,Independent Client (elevated),0.134084
-1,1000000,Client + Server,0.361237
-1,1000000,Client + Server (elevated),0.274591
-2,1000000,Independent Client,0.215498
-2,1000000,Independent Client (elevated),0.136153
-2,1000000,Client + Server,0.340855
-2,1000000,Client + Server (elevated),0.270524
-3,1000000,Independent Client,0.209163
-3,1000000,Independent Client (elevated),0.140299
-3,1000000,Client + Server,0.355884
-3,1000000,Client + Server (elevated),0.260013
-4,1000000,Independent Client,0.208272
-4,1000000,Independent Client (elevated),0.134654
-4,1000000,Client + Server,0.339623
-4,1000000,Client + Server (elevated),0.282119
-5,1000000,Independent Client,0.207076
-5,1000000,Independent Client (elevated),0.132980
-5,1000000,Client + Server,0.366767
-5,1000000,Client + Server (elevated),0.276522
-6,1000000,Independent Client,0.213635
-6,1000000,Independent Client (elevated),0.134285
-6,1000000,Client + Server,0.367449
-6,1000000,Client + Server (elevated),0.279574
-7,1000000,Independent Client,0.211074
-7,1000000,Independent Client (elevated),0.135236
-7,1000000,Client + Server,0.362456
-7,1000000,Client + Server (elevated),0.281168
-8,1000000,Independent Client,0.220132
-8,1000000,Independent Client (elevated),0.128422
-8,1000000,Client + Server,0.344777
-8,1000000,Client + Server (elevated),0.258722
-9,1000000,Independent Client,0.219810
-9,1000000,Independent Client (elevated),0.127250
-9,1000000,Client + Server,0.364308
-9,1000000,Client + Server (elevated),0.279020
-0,1100000,Independent Client,0.238074
-0,1100000,Independent Client (elevated),0.144393
-0,1100000,Client + Server,0.391047
-0,1100000,Client + Server (elevated),0.298371
-1,1100000,Independent Client,0.240523
-1,1100000,Independent Client (elevated),0.137641
-1,1100000,Client + Server,0.384525
-1,1100000,Client + Server (elevated),0.308686
-2,1100000,Independent Client,0.236655
-2,1100000,Independent Client (elevated),0.143060
-2,1100000,Client + Server,0.396028
-2,1100000,Client + Server (elevated),0.304550
-3,1100000,Independent Client,0.241341
-3,1100000,Independent Client (elevated),0.137807
-3,1100000,Client + Server,0.382356
-3,1100000,Client + Server (elevated),0.305705
-4,1100000,Independent Client,0.237180
-4,1100000,Independent Client (elevated),0.149364
-4,1100000,Client + Server,0.400218
-4,1100000,Client + Server (elevated),0.284809
-5,1100000,Independent Client,0.244351
-5,1100000,Independent Client (elevated),0.145335
-5,1100000,Client + Server,0.402661
-5,1100000,Client + Server (elevated),0.294435
-6,1100000,Independent Client,0.239400
-6,1100000,Independent Client (elevated),0.141158
-6,1100000,Client + Server,0.398330
-6,1100000,Client + Server (elevated),0.293423
-7,1100000,Independent Client,0.238097
-7,1100000,Independent Client (elevated),0.144179
-7,1100000,Client + Server,0.406620
-7,1100000,Client + Server (elevated),0.296688
-8,1100000,Independent Client,0.237655
-8,1100000,Independent Client (elevated),0.137750
-8,1100000,Client + Server,0.403827
-8,1100000,Client + Server (elevated),0.306811
-9,1100000,Independent Client,0.244636
-9,1100000,Independent Client (elevated),0.139632
-9,1100000,Client + Server,0.402564
-9,1100000,Client + Server (elevated),0.308521
-0,1200000,Independent Client,0.256511
-0,1200000,Independent Client (elevated),0.150379
-0,1200000,Client + Server,0.409663
-0,1200000,Client + Server (elevated),0.310380
-1,1200000,Independent Client,0.259182
-1,1200000,Independent Client (elevated),0.150008
-1,1200000,Client + Server,0.408769
-1,1200000,Client + Server (elevated),0.320685
-2,1200000,Independent Client,0.258500
-2,1200000,Independent Client (elevated),0.149616
-2,1200000,Client + Server,0.438601
-2,1200000,Client + Server (elevated),0.311221
-3,1200000,Independent Client,0.258280
-3,1200000,Independent Client (elevated),0.149383
-3,1200000,Client + Server,0.430836
-3,1200000,Client + Server (elevated),0.340625
-4,1200000,Independent Client,0.248751
-4,1200000,Independent Client (elevated),0.159886
-4,1200000,Client + Server,0.438395
-4,1200000,Client + Server (elevated),0.328570
-5,1200000,Independent Client,0.253178
-5,1200000,Independent Client (elevated),0.169101
-5,1200000,Client + Server,0.434213
-5,1200000,Client + Server (elevated),0.335884
-6,1200000,Independent Client,0.249520
-6,1200000,Independent Client (elevated),0.150077
-6,1200000,Client + Server,0.429870
-6,1200000,Client + Server (elevated),0.335327
-7,1200000,Independent Client,0.246153
-7,1200000,Independent Client (elevated),0.158046
-7,1200000,Client + Server,0.437811
-7,1200000,Client + Server (elevated),0.322706
-8,1200000,Independent Client,0.246874
-8,1200000,Independent Client (elevated),0.157136
-8,1200000,Client + Server,0.409432
-8,1200000,Client + Server (elevated),0.331198
-9,1200000,Independent Client,0.245231
-9,1200000,Independent Client (elevated),0.157614
-9,1200000,Client + Server,0.426413
-9,1200000,Client + Server (elevated),0.333823
-0,1300000,Independent Client,0.271417
-0,1300000,Independent Client (elevated),0.171039
-0,1300000,Client + Server,0.474435
-0,1300000,Client + Server (elevated),0.363960
-1,1300000,Independent Client,0.264668
-1,1300000,Independent Client (elevated),0.166385
-1,1300000,Client + Server,0.453873
-1,1300000,Client + Server (elevated),0.363607
-2,1300000,Independent Client,0.271011
-2,1300000,Independent Client (elevated),0.166511
-2,1300000,Client + Server,0.474376
-2,1300000,Client + Server (elevated),0.366003
-3,1300000,Independent Client,0.282492
-3,1300000,Independent Client (elevated),0.161143
-3,1300000,Client + Server,0.456331
-3,1300000,Client + Server (elevated),0.360114
-4,1300000,Independent Client,0.278450
-4,1300000,Independent Client (elevated),0.160279
-4,1300000,Client + Server,0.463394
-4,1300000,Client + Server (elevated),0.361428
-5,1300000,Independent Client,0.266611
-5,1300000,Independent Client (elevated),0.169023
-5,1300000,Client + Server,0.444603
-5,1300000,Client + Server (elevated),0.362490
-6,1300000,Independent Client,0.266498
-6,1300000,Independent Client (elevated),0.166323
-6,1300000,Client + Server,0.454403
-6,1300000,Client + Server (elevated),0.365115
-7,1300000,Independent Client,0.264031
-7,1300000,Independent Client (elevated),0.167868
-7,1300000,Client + Server,0.473694
-7,1300000,Client + Server (elevated),0.362571
-8,1300000,Independent Client,0.264206
-8,1300000,Independent Client (elevated),0.166653
-8,1300000,Client + Server,0.458837
-8,1300000,Client + Server (elevated),0.355330
-9,1300000,Independent Client,0.264965
-9,1300000,Independent Client (elevated),0.150539
-9,1300000,Client + Server,0.468577
-9,1300000,Client + Server (elevated),0.359711
-0,1400000,Independent Client,0.289715
-0,1400000,Independent Client (elevated),0.177245
-0,1400000,Client + Server,0.493410
-0,1400000,Client + Server (elevated),0.396949
-1,1400000,Independent Client,0.295472
-1,1400000,Independent Client (elevated),0.171774
-1,1400000,Client + Server,0.500569
-1,1400000,Client + Server (elevated),0.395996
-2,1400000,Independent Client,0.282277
-2,1400000,Independent Client (elevated),0.177080
-2,1400000,Client + Server,0.472521
-2,1400000,Client + Server (elevated),0.363019
-3,1400000,Independent Client,0.282819
-3,1400000,Independent Client (elevated),0.177966
-3,1400000,Client + Server,0.500813
-3,1400000,Client + Server (elevated),0.385988
-4,1400000,Independent Client,0.283081
-4,1400000,Independent Client (elevated),0.181035
-4,1400000,Client + Server,0.503440
-4,1400000,Client + Server (elevated),0.390979
-5,1400000,Independent Client,0.280863
-5,1400000,Independent Client (elevated),0.164839
-5,1400000,Client + Server,0.496581
-5,1400000,Client + Server (elevated),0.389569
-6,1400000,Independent Client,0.284762
-6,1400000,Independent Client (elevated),0.179028
-6,1400000,Client + Server,0.508819
-6,1400000,Client + Server (elevated),0.393296
-7,1400000,Independent Client,0.290437
-7,1400000,Independent Client (elevated),0.169620
-7,1400000,Client + Server,0.492323
-7,1400000,Client + Server (elevated),0.390030
-8,1400000,Independent Client,0.281739
-8,1400000,Independent Client (elevated),0.176752
-8,1400000,Client + Server,0.504851
-8,1400000,Client + Server (elevated),0.396335
-9,1400000,Independent Client,0.286969
-9,1400000,Independent Client (elevated),0.175786
-9,1400000,Client + Server,0.501884
-9,1400000,Client + Server (elevated),0.395202
-0,1500000,Independent Client,0.303531
-0,1500000,Independent Client (elevated),0.197254
-0,1500000,Client + Server,0.543508
-0,1500000,Client + Server (elevated),0.403588
-1,1500000,Independent Client,0.303884
-1,1500000,Independent Client (elevated),0.188377
-1,1500000,Client + Server,0.541271
-1,1500000,Client + Server (elevated),0.419811
-2,1500000,Independent Client,0.316676
-2,1500000,Independent Client (elevated),0.183613
-2,1500000,Client + Server,0.544810
-2,1500000,Client + Server (elevated),0.397011
-3,1500000,Independent Client,0.306380
-3,1500000,Independent Client (elevated),0.190951
-3,1500000,Client + Server,0.541404
-3,1500000,Client + Server (elevated),0.485976
-4,1500000,Independent Client,0.301132
-4,1500000,Independent Client (elevated),0.188632
-4,1500000,Client + Server,0.539948
-4,1500000,Client + Server (elevated),0.420114
-5,1500000,Independent Client,0.301268
-5,1500000,Independent Client (elevated),0.187456
-5,1500000,Client + Server,0.550345
-5,1500000,Client + Server (elevated),0.417663
-6,1500000,Independent Client,0.320187
-6,1500000,Independent Client (elevated),0.186147
-6,1500000,Client + Server,0.544706
-6,1500000,Client + Server (elevated),0.387143
-7,1500000,Independent Client,0.301260
-7,1500000,Independent Client (elevated),0.189176
-7,1500000,Client + Server,0.547073
-7,1500000,Client + Server (elevated),0.400020
-8,1500000,Independent Client,0.300512
-8,1500000,Independent Client (elevated),0.187901
-8,1500000,Client + Server,0.523609
-8,1500000,Client + Server (elevated),0.404952
-9,1500000,Independent Client,0.302732
-9,1500000,Independent Client (elevated),0.187066
-9,1500000,Client + Server,0.544114
-9,1500000,Client + Server (elevated),0.480679
-0,1600000,Independent Client,0.329332
-0,1600000,Independent Client (elevated),0.195892
-0,1600000,Client + Server,0.586323
-0,1600000,Client + Server (elevated),0.450170
-1,1600000,Independent Client,0.321169
-1,1600000,Independent Client (elevated),0.194376
-1,1600000,Client + Server,0.582771
-1,1600000,Client + Server (elevated),0.441570
-2,1600000,Independent Client,0.330284
-2,1600000,Independent Client (elevated),0.199323
-2,1600000,Client + Server,0.550874
-2,1600000,Client + Server (elevated),0.422854
-3,1600000,Independent Client,0.337205
-3,1600000,Independent Client (elevated),0.198266
-3,1600000,Client + Server,0.578100
-3,1600000,Client + Server (elevated),0.443492
-4,1600000,Independent Client,0.321032
-4,1600000,Independent Client (elevated),0.200243
-4,1600000,Client + Server,0.572710
-4,1600000,Client + Server (elevated),0.450267
-5,1600000,Independent Client,0.327939
-5,1600000,Independent Client (elevated),0.201433
-5,1600000,Client + Server,0.579967
-5,1600000,Client + Server (elevated),0.449815
-6,1600000,Independent Client,0.330727
-6,1600000,Independent Client (elevated),0.192933
-6,1600000,Client + Server,0.580424
-6,1600000,Client + Server (elevated),0.447543
-7,1600000,Independent Client,0.326971
-7,1600000,Independent Client (elevated),0.194124
-7,1600000,Client + Server,0.574093
-7,1600000,Client + Server (elevated),0.412844
-8,1600000,Independent Client,0.311220
-8,1600000,Independent Client (elevated),0.198143
-8,1600000,Client + Server,0.582146
-8,1600000,Client + Server (elevated),0.433423
-9,1600000,Independent Client,0.308567
-9,1600000,Independent Client (elevated),0.200041
-9,1600000,Client + Server,0.571204
-9,1600000,Client + Server (elevated),0.455429
-0,1700000,Independent Client,0.341374
-0,1700000,Independent Client (elevated),0.206456
-0,1700000,Client + Server,0.623772
-0,1700000,Client + Server (elevated),0.473512
-1,1700000,Independent Client,0.338362
-1,1700000,Independent Client (elevated),0.213436
-1,1700000,Client + Server,0.615911
-1,1700000,Client + Server (elevated),0.468785
-2,1700000,Independent Client,0.349914
-2,1700000,Independent Client (elevated),0.206299
-2,1700000,Client + Server,0.624066
-2,1700000,Client + Server (elevated),0.466780
-3,1700000,Independent Client,0.341599
-3,1700000,Independent Client (elevated),0.206471
-3,1700000,Client + Server,0.609121
-3,1700000,Client + Server (elevated),0.473128
-4,1700000,Independent Client,0.337340
-4,1700000,Independent Client (elevated),0.209920
-4,1700000,Client + Server,0.606445
-4,1700000,Client + Server (elevated),0.474057
-5,1700000,Independent Client,0.332847
-5,1700000,Independent Client (elevated),0.208058
-5,1700000,Client + Server,0.610841
-5,1700000,Client + Server (elevated),0.458498
-6,1700000,Independent Client,0.338855
-6,1700000,Independent Client (elevated),0.207447
-6,1700000,Client + Server,0.592922
-6,1700000,Client + Server (elevated),0.472389
-7,1700000,Independent Client,0.338354
-7,1700000,Independent Client (elevated),0.202811
-7,1700000,Client + Server,0.620498
-7,1700000,Client + Server (elevated),0.434665
-8,1700000,Independent Client,0.359730
-8,1700000,Independent Client (elevated),0.205857
-8,1700000,Client + Server,0.615567
-8,1700000,Client + Server (elevated),0.470221
-9,1700000,Independent Client,0.348171
-9,1700000,Independent Client (elevated),0.205242
-9,1700000,Client + Server,0.603022
-9,1700000,Client + Server (elevated),0.470969
-0,1800000,Independent Client,0.359029
-0,1800000,Independent Client (elevated),0.214343
-0,1800000,Client + Server,0.658173
-0,1800000,Client + Server (elevated),0.491186
-1,1800000,Independent Client,0.357257
-1,1800000,Independent Client (elevated),0.214880
-1,1800000,Client + Server,0.628831
-1,1800000,Client + Server (elevated),0.496719
-2,1800000,Independent Client,0.365208
-2,1800000,Independent Client (elevated),0.217943
-2,1800000,Client + Server,0.651366
-2,1800000,Client + Server (elevated),0.495251
-3,1800000,Independent Client,0.365366
-3,1800000,Independent Client (elevated),0.214792
-3,1800000,Client + Server,0.645046
-3,1800000,Client + Server (elevated),0.459555
-4,1800000,Independent Client,0.355808
-4,1800000,Independent Client (elevated),0.217767
-4,1800000,Client + Server,0.636491
-4,1800000,Client + Server (elevated),0.493474
-5,1800000,Independent Client,0.366981
-5,1800000,Independent Client (elevated),0.217110
-5,1800000,Client + Server,0.649644
-5,1800000,Client + Server (elevated),0.491289
-6,1800000,Independent Client,0.355671
-6,1800000,Independent Client (elevated),0.216246
-6,1800000,Client + Server,0.649357
-6,1800000,Client + Server (elevated),0.494603
-7,1800000,Independent Client,0.357970
-7,1800000,Independent Client (elevated),0.216338
-7,1800000,Client + Server,0.654918
-7,1800000,Client + Server (elevated),0.471629
-8,1800000,Independent Client,0.354980
-8,1800000,Independent Client (elevated),0.216475
-8,1800000,Client + Server,0.655891
-8,1800000,Client + Server (elevated),0.456636
-9,1800000,Independent Client,0.362709
-9,1800000,Independent Client (elevated),0.202869
-9,1800000,Client + Server,0.655715
-9,1800000,Client + Server (elevated),0.497316
-0,1900000,Independent Client,0.389300
-0,1900000,Independent Client (elevated),0.227760
-0,1900000,Client + Server,0.648266
-0,1900000,Client + Server (elevated),0.525518
-1,1900000,Independent Client,0.373374
-1,1900000,Independent Client (elevated),0.228545
-1,1900000,Client + Server,0.685594
-1,1900000,Client + Server (elevated),0.531102
-2,1900000,Independent Client,0.377570
-2,1900000,Independent Client (elevated),0.226832
-2,1900000,Client + Server,0.646344
-2,1900000,Client + Server (elevated),0.522767
-3,1900000,Independent Client,0.382657
-3,1900000,Independent Client (elevated),0.227581
-3,1900000,Client + Server,0.692089
-3,1900000,Client + Server (elevated),0.527832
-4,1900000,Independent Client,0.385120
-4,1900000,Independent Client (elevated),0.231390
-4,1900000,Client + Server,0.682149
-4,1900000,Client + Server (elevated),0.515556
-5,1900000,Independent Client,0.373660
-5,1900000,Independent Client (elevated),0.231360
-5,1900000,Client + Server,0.682261
-5,1900000,Client + Server (elevated),0.482701
-6,1900000,Independent Client,0.370513
-6,1900000,Independent Client (elevated),0.226768
-6,1900000,Client + Server,0.685172
-6,1900000,Client + Server (elevated),0.521614
-7,1900000,Independent Client,0.375137
-7,1900000,Independent Client (elevated),0.228434
-7,1900000,Client + Server,0.682558
-7,1900000,Client + Server (elevated),0.487011
-8,1900000,Independent Client,0.376409
-8,1900000,Independent Client (elevated),0.228352
-8,1900000,Client + Server,0.678367
-8,1900000,Client + Server (elevated),0.523145
-9,1900000,Independent Client,0.373615
-9,1900000,Independent Client (elevated),0.226701
-9,1900000,Client + Server,0.682984
-9,1900000,Client + Server (elevated),0.486388
-0,2000000,Independent Client,0.400336
-0,2000000,Independent Client (elevated),0.237207
-0,2000000,Client + Server,0.683915
-0,2000000,Client + Server (elevated),0.556635
-1,2000000,Independent Client,0.393286
-1,2000000,Independent Client (elevated),0.253869
-1,2000000,Client + Server,0.731027
-1,2000000,Client + Server (elevated),0.560736
-2,2000000,Independent Client,0.389531
-2,2000000,Independent Client (elevated),0.244963
-2,2000000,Client + Server,0.680653
-2,2000000,Client + Server (elevated),0.552152
-3,2000000,Independent Client,0.392921
-3,2000000,Independent Client (elevated),0.238733
-3,2000000,Client + Server,0.720619
-3,2000000,Client + Server (elevated),0.545736
-4,2000000,Independent Client,0.402125
-4,2000000,Independent Client (elevated),0.243186
-4,2000000,Client + Server,0.713749
-4,2000000,Client + Server (elevated),0.526720
-5,2000000,Independent Client,0.401849
-5,2000000,Independent Client (elevated),0.237490
-5,2000000,Client + Server,0.728794
-5,2000000,Client + Server (elevated),0.510283
-6,2000000,Independent Client,0.402565
-6,2000000,Independent Client (elevated),0.240623
-6,2000000,Client + Server,0.726626
-6,2000000,Client + Server (elevated),0.510475
-7,2000000,Independent Client,0.417432
-7,2000000,Independent Client (elevated),0.236830
-7,2000000,Client + Server,0.730287
-7,2000000,Client + Server (elevated),0.550212
-8,2000000,Independent Client,0.404137
-8,2000000,Independent Client (elevated),0.239597
-8,2000000,Client + Server,0.711854
-8,2000000,Client + Server (elevated),0.529186
+0,100000,Independent Client,0.019475
+0,100000,Independent Client (elevated),0.025851
+0,100000,Client + Server,0.036432
+0,100000,Client + Server (elevated),0.024726
+1,100000,Independent Client,0.051701
+1,100000,Independent Client (elevated),0.028405
+1,100000,Client + Server,0.036308
+1,100000,Client + Server (elevated),0.024719
+2,100000,Independent Client,0.052986
+2,100000,Independent Client (elevated),0.028880
+2,100000,Client + Server,0.036714
+2,100000,Client + Server (elevated),0.024110
+3,100000,Independent Client,0.053368
+3,100000,Independent Client (elevated),0.028966
+3,100000,Client + Server,0.036119
+3,100000,Client + Server (elevated),0.024568
+4,100000,Independent Client,0.050234
+4,100000,Independent Client (elevated),0.026291
+4,100000,Client + Server,0.036774
+4,100000,Client + Server (elevated),0.024699
+5,100000,Independent Client,0.051623
+5,100000,Independent Client (elevated),0.024967
+5,100000,Client + Server,0.036800
+5,100000,Client + Server (elevated),0.024286
+6,100000,Independent Client,0.050420
+6,100000,Independent Client (elevated),0.025101
+6,100000,Client + Server,0.035499
+6,100000,Client + Server (elevated),0.024799
+7,100000,Independent Client,0.050561
+7,100000,Independent Client (elevated),0.024870
+7,100000,Client + Server,0.035968
+7,100000,Client + Server (elevated),0.024723
+8,100000,Independent Client,0.050346
+8,100000,Independent Client (elevated),0.024848
+8,100000,Client + Server,0.036099
+8,100000,Client + Server (elevated),0.025657
+9,100000,Independent Client,0.053179
+9,100000,Independent Client (elevated),0.028920
+9,100000,Client + Server,0.036784
+9,100000,Client + Server (elevated),0.023597
+0,300000,Independent Client,0.090096
+0,300000,Independent Client (elevated),0.045986
+0,300000,Client + Server,0.103593
+0,300000,Client + Server (elevated),0.073498
+1,300000,Independent Client,0.090985
+1,300000,Independent Client (elevated),0.049240
+1,300000,Client + Server,0.109931
+1,300000,Client + Server (elevated),0.070713
+2,300000,Independent Client,0.092490
+2,300000,Independent Client (elevated),0.046311
+2,300000,Client + Server,0.105607
+2,300000,Client + Server (elevated),0.067433
+3,300000,Independent Client,0.090023
+3,300000,Independent Client (elevated),0.045534
+3,300000,Client + Server,0.107668
+3,300000,Client + Server (elevated),0.074291
+4,300000,Independent Client,0.090759
+4,300000,Independent Client (elevated),0.046335
+4,300000,Client + Server,0.108783
+4,300000,Client + Server (elevated),0.073398
+5,300000,Independent Client,0.091119
+5,300000,Independent Client (elevated),0.049385
+5,300000,Client + Server,0.109073
+5,300000,Client + Server (elevated),0.075170
+6,300000,Independent Client,0.089713
+6,300000,Independent Client (elevated),0.046001
+6,300000,Client + Server,0.104289
+6,300000,Client + Server (elevated),0.068036
+7,300000,Independent Client,0.091244
+7,300000,Independent Client (elevated),0.046117
+7,300000,Client + Server,0.108361
+7,300000,Client + Server (elevated),0.073952
+8,300000,Independent Client,0.090975
+8,300000,Independent Client (elevated),0.046328
+8,300000,Client + Server,0.107879
+8,300000,Client + Server (elevated),0.074811
+9,300000,Independent Client,0.090736
+9,300000,Independent Client (elevated),0.049166
+9,300000,Client + Server,0.109011
+9,300000,Client + Server (elevated),0.070455
+0,500000,Independent Client,0.128906
+0,500000,Independent Client (elevated),0.056984
+0,500000,Client + Server,0.183804
+0,500000,Client + Server (elevated),0.122174
+1,500000,Independent Client,0.131204
+1,500000,Independent Client (elevated),0.057387
+1,500000,Client + Server,0.183032
+1,500000,Client + Server (elevated),0.122718
+2,500000,Independent Client,0.130845
+2,500000,Independent Client (elevated),0.061352
+2,500000,Client + Server,0.181895
+2,500000,Client + Server (elevated),0.122428
+3,500000,Independent Client,0.129320
+3,500000,Independent Client (elevated),0.057047
+3,500000,Client + Server,0.172096
+3,500000,Client + Server (elevated),0.122475
+4,500000,Independent Client,0.127861
+4,500000,Independent Client (elevated),0.057611
+4,500000,Client + Server,0.179475
+4,500000,Client + Server (elevated),0.113663
+5,500000,Independent Client,0.128992
+5,500000,Independent Client (elevated),0.060464
+5,500000,Client + Server,0.172487
+5,500000,Client + Server (elevated),0.124588
+6,500000,Independent Client,0.130260
+6,500000,Independent Client (elevated),0.060453
+6,500000,Client + Server,0.170800
+6,500000,Client + Server (elevated),0.123555
+7,500000,Independent Client,0.129015
+7,500000,Independent Client (elevated),0.060423
+7,500000,Client + Server,0.182658
+7,500000,Client + Server (elevated),0.117764
+8,500000,Independent Client,0.128107
+8,500000,Independent Client (elevated),0.057440
+8,500000,Client + Server,0.182436
+8,500000,Client + Server (elevated),0.123137
+9,500000,Independent Client,0.130985
+9,500000,Independent Client (elevated),0.061262
+9,500000,Client + Server,0.178622
+9,500000,Client + Server (elevated),0.120979
+0,700000,Independent Client,0.168010
+0,700000,Independent Client (elevated),0.077649
+0,700000,Client + Server,0.255414
+0,700000,Client + Server (elevated),0.174233
+1,700000,Independent Client,0.169884
+1,700000,Independent Client (elevated),0.078920
+1,700000,Client + Server,0.246988
+1,700000,Client + Server (elevated),0.171148
+2,700000,Independent Client,0.168715
+2,700000,Independent Client (elevated),0.074842
+2,700000,Client + Server,0.238891
+2,700000,Client + Server (elevated),0.171164
+3,700000,Independent Client,0.174379
+3,700000,Independent Client (elevated),0.078109
+3,700000,Client + Server,0.253405
+3,700000,Client + Server (elevated),0.173944
+4,700000,Independent Client,0.169485
+4,700000,Independent Client (elevated),0.074399
+4,700000,Client + Server,0.252419
+4,700000,Client + Server (elevated),0.174934
+5,700000,Independent Client,0.166317
+5,700000,Independent Client (elevated),0.078350
+5,700000,Client + Server,0.253504
+5,700000,Client + Server (elevated),0.158400
+6,700000,Independent Client,0.167836
+6,700000,Independent Client (elevated),0.078462
+6,700000,Client + Server,0.258421
+6,700000,Client + Server (elevated),0.164545
+7,700000,Independent Client,0.167265
+7,700000,Independent Client (elevated),0.078342
+7,700000,Client + Server,0.248250
+7,700000,Client + Server (elevated),0.165051
+8,700000,Independent Client,0.168340
+8,700000,Independent Client (elevated),0.074656
+8,700000,Client + Server,0.254409
+8,700000,Client + Server (elevated),0.164369
+9,700000,Independent Client,0.169189
+9,700000,Independent Client (elevated),0.079069
+9,700000,Client + Server,0.253178
+9,700000,Client + Server (elevated),0.164022
+0,900000,Independent Client,0.208169
+0,900000,Independent Client (elevated),0.095274
+0,900000,Client + Server,0.327406
+0,900000,Client + Server (elevated),0.215180
+1,900000,Independent Client,0.207769
+1,900000,Independent Client (elevated),0.096556
+1,900000,Client + Server,0.330174
+1,900000,Client + Server (elevated),0.221217
+2,900000,Independent Client,0.206733
+2,900000,Independent Client (elevated),0.095855
+2,900000,Client + Server,0.324651
+2,900000,Client + Server (elevated),0.203648
+3,900000,Independent Client,0.205717
+3,900000,Independent Client (elevated),0.095123
+3,900000,Client + Server,0.331062
+3,900000,Client + Server (elevated),0.224021
+4,900000,Independent Client,0.207393
+4,900000,Independent Client (elevated),0.095933
+4,900000,Client + Server,0.326059
+4,900000,Client + Server (elevated),0.222704
+5,900000,Independent Client,0.210010
+5,900000,Independent Client (elevated),0.095297
+5,900000,Client + Server,0.327402
+5,900000,Client + Server (elevated),0.222430
+6,900000,Independent Client,0.207515
+6,900000,Independent Client (elevated),0.096071
+6,900000,Client + Server,0.323572
+6,900000,Client + Server (elevated),0.221502
+7,900000,Independent Client,0.207764
+7,900000,Independent Client (elevated),0.096149
+7,900000,Client + Server,0.327321
+7,900000,Client + Server (elevated),0.222337
+8,900000,Independent Client,0.207661
+8,900000,Independent Client (elevated),0.096457
+8,900000,Client + Server,0.327152
+8,900000,Client + Server (elevated),0.221421
+9,900000,Independent Client,0.211553
+9,900000,Independent Client (elevated),0.091840
+9,900000,Client + Server,0.327891
+9,900000,Client + Server (elevated),0.220378
+0,1100000,Independent Client,0.245446
+0,1100000,Independent Client (elevated),0.113736
+0,1100000,Client + Server,0.400069
+0,1100000,Client + Server (elevated),0.268054
+1,1100000,Independent Client,0.246358
+1,1100000,Independent Client (elevated),0.110186
+1,1100000,Client + Server,0.398780
+1,1100000,Client + Server (elevated),0.270544
+2,1100000,Independent Client,0.247417
+2,1100000,Independent Client (elevated),0.112850
+2,1100000,Client + Server,0.399778
+2,1100000,Client + Server (elevated),0.273860
+3,1100000,Independent Client,0.246107
+3,1100000,Independent Client (elevated),0.113784
+3,1100000,Client + Server,0.398107
+3,1100000,Client + Server (elevated),0.263871
+4,1100000,Independent Client,0.245930
+4,1100000,Independent Client (elevated),0.111766
+4,1100000,Client + Server,0.401102
+4,1100000,Client + Server (elevated),0.258686
+5,1100000,Independent Client,0.246941
+5,1100000,Independent Client (elevated),0.108478
+5,1100000,Client + Server,0.402065
+5,1100000,Client + Server (elevated),0.258735
+6,1100000,Independent Client,0.245629
+6,1100000,Independent Client (elevated),0.108653
+6,1100000,Client + Server,0.402233
+6,1100000,Client + Server (elevated),0.270698
+7,1100000,Independent Client,0.247484
+7,1100000,Independent Client (elevated),0.107787
+7,1100000,Client + Server,0.401893
+7,1100000,Client + Server (elevated),0.271654
+8,1100000,Independent Client,0.243965
+8,1100000,Independent Client (elevated),0.113786
+8,1100000,Client + Server,0.398667
+8,1100000,Client + Server (elevated),0.271747
+9,1100000,Independent Client,0.246869
+9,1100000,Independent Client (elevated),0.111585
+9,1100000,Client + Server,0.398553
+9,1100000,Client + Server (elevated),0.274032
+0,1300000,Independent Client,0.284880
+0,1300000,Independent Client (elevated),0.127578
+0,1300000,Client + Server,0.472217
+0,1300000,Client + Server (elevated),0.318979
+1,1300000,Independent Client,0.284097
+1,1300000,Independent Client (elevated),0.128975
+1,1300000,Client + Server,0.452388
+1,1300000,Client + Server (elevated),0.321521
+2,1300000,Independent Client,0.285633
+2,1300000,Independent Client (elevated),0.127572
+2,1300000,Client + Server,0.446934
+2,1300000,Client + Server (elevated),0.311724
+3,1300000,Independent Client,0.281899
+3,1300000,Independent Client (elevated),0.128290
+3,1300000,Client + Server,0.469066
+3,1300000,Client + Server (elevated),0.314347
+4,1300000,Independent Client,0.284653
+4,1300000,Independent Client (elevated),0.128606
+4,1300000,Client + Server,0.471556
+4,1300000,Client + Server (elevated),0.323145
+5,1300000,Independent Client,0.287502
+5,1300000,Independent Client (elevated),0.130441
+5,1300000,Client + Server,0.448086
+5,1300000,Client + Server (elevated),0.319920
+6,1300000,Independent Client,0.289535
+6,1300000,Independent Client (elevated),0.124423
+6,1300000,Client + Server,0.458079
+6,1300000,Client + Server (elevated),0.314134
+7,1300000,Independent Client,0.287667
+7,1300000,Independent Client (elevated),0.124447
+7,1300000,Client + Server,0.467455
+7,1300000,Client + Server (elevated),0.324456
+8,1300000,Independent Client,0.284413
+8,1300000,Independent Client (elevated),0.131277
+8,1300000,Client + Server,0.440236
+8,1300000,Client + Server (elevated),0.319812
+9,1300000,Independent Client,0.285499
+9,1300000,Independent Client (elevated),0.128549
+9,1300000,Client + Server,0.464370
+9,1300000,Client + Server (elevated),0.294538
+0,1500000,Independent Client,0.321273
+0,1500000,Independent Client (elevated),0.144474
+0,1500000,Client + Server,0.549321
+0,1500000,Client + Server (elevated),0.354835
+1,1500000,Independent Client,0.327362
+1,1500000,Independent Client (elevated),0.145453
+1,1500000,Client + Server,0.529044
+1,1500000,Client + Server (elevated),0.368709
+2,1500000,Independent Client,0.320127
+2,1500000,Independent Client (elevated),0.145263
+2,1500000,Client + Server,0.547488
+2,1500000,Client + Server (elevated),0.373484
+3,1500000,Independent Client,0.321905
+3,1500000,Independent Client (elevated),0.146082
+3,1500000,Client + Server,0.548108
+3,1500000,Client + Server (elevated),0.336421
+4,1500000,Independent Client,0.322521
+4,1500000,Independent Client (elevated),0.146492
+4,1500000,Client + Server,0.528598
+4,1500000,Client + Server (elevated),0.368917
+5,1500000,Independent Client,0.320491
+5,1500000,Independent Client (elevated),0.147455
+5,1500000,Client + Server,0.531130
+5,1500000,Client + Server (elevated),0.340289
+6,1500000,Independent Client,0.323268
+6,1500000,Independent Client (elevated),0.147255
+6,1500000,Client + Server,0.546300
+6,1500000,Client + Server (elevated),0.368884
+7,1500000,Independent Client,0.324629
+7,1500000,Independent Client (elevated),0.142268
+7,1500000,Client + Server,0.548166
+7,1500000,Client + Server (elevated),0.371488
+8,1500000,Independent Client,0.320805
+8,1500000,Independent Client (elevated),0.146434
+8,1500000,Client + Server,0.536588
+8,1500000,Client + Server (elevated),0.352628
+9,1500000,Independent Client,0.323727
+9,1500000,Independent Client (elevated),0.144346
+9,1500000,Client + Server,0.549308
+9,1500000,Client + Server (elevated),0.373740
+0,1700000,Independent Client,0.362250
+0,1700000,Independent Client (elevated),0.170920
+0,1700000,Client + Server,0.620747
+0,1700000,Client + Server (elevated),0.418642
+1,1700000,Independent Client,0.360492
+1,1700000,Independent Client (elevated),0.164791
+1,1700000,Client + Server,0.579753
+1,1700000,Client + Server (elevated),0.399079
+2,1700000,Independent Client,0.359604
+2,1700000,Independent Client (elevated),0.165412
+2,1700000,Client + Server,0.622475
+2,1700000,Client + Server (elevated),0.415255
+3,1700000,Independent Client,0.358727
+3,1700000,Independent Client (elevated),0.162596
+3,1700000,Client + Server,0.622754
+3,1700000,Client + Server (elevated),0.417995
+4,1700000,Independent Client,0.355691
+4,1700000,Independent Client (elevated),0.162997
+4,1700000,Client + Server,0.617434
+4,1700000,Client + Server (elevated),0.399565
+5,1700000,Independent Client,0.365636
+5,1700000,Independent Client (elevated),0.167861
+5,1700000,Client + Server,0.622342
+5,1700000,Client + Server (elevated),0.424482
+6,1700000,Independent Client,0.356297
+6,1700000,Independent Client (elevated),0.166378
+6,1700000,Client + Server,0.609330
+6,1700000,Client + Server (elevated),0.418068
+7,1700000,Independent Client,0.361437
+7,1700000,Independent Client (elevated),0.162145
+7,1700000,Client + Server,0.614927
+7,1700000,Client + Server (elevated),0.381035
+8,1700000,Independent Client,0.357927
+8,1700000,Independent Client (elevated),0.169570
+8,1700000,Client + Server,0.656597
+8,1700000,Client + Server (elevated),0.479462
+9,1700000,Independent Client,0.378405
+9,1700000,Independent Client (elevated),0.170542
+9,1700000,Client + Server,0.618211
+9,1700000,Client + Server (elevated),0.414680
+0,1900000,Independent Client,0.396560
+0,1900000,Independent Client (elevated),0.185502
+0,1900000,Client + Server,0.734062
+0,1900000,Client + Server (elevated),0.476120
+1,1900000,Independent Client,0.423294
+1,1900000,Independent Client (elevated),0.183645
+1,1900000,Client + Server,0.670261
+1,1900000,Client + Server (elevated),0.464930
+2,1900000,Independent Client,0.398075
+2,1900000,Independent Client (elevated),0.185830
+2,1900000,Client + Server,0.689740
+2,1900000,Client + Server (elevated),0.539569
+3,1900000,Independent Client,0.422553
+3,1900000,Independent Client (elevated),0.182900
+3,1900000,Client + Server,0.680268
+3,1900000,Client + Server (elevated),0.463483
+4,1900000,Independent Client,0.399826
+4,1900000,Independent Client (elevated),0.180005
+4,1900000,Client + Server,0.733477
+4,1900000,Client + Server (elevated),0.538366
+5,1900000,Independent Client,0.422103
+5,1900000,Independent Client (elevated),0.186738
+5,1900000,Client + Server,0.733898
+5,1900000,Client + Server (elevated),0.493329
+6,1900000,Independent Client,0.416161
+6,1900000,Independent Client (elevated),0.184769
+6,1900000,Client + Server,0.716789
+6,1900000,Client + Server (elevated),0.542130
+7,1900000,Independent Client,0.420712
+7,1900000,Independent Client (elevated),0.185932
+7,1900000,Client + Server,0.688935
+7,1900000,Client + Server (elevated),0.538847
+8,1900000,Independent Client,0.395316
+8,1900000,Independent Client (elevated),0.184322
+8,1900000,Client + Server,0.690760
+8,1900000,Client + Server (elevated),0.539725
+9,1900000,Independent Client,0.398650
+9,1900000,Independent Client (elevated),0.182424
+9,1900000,Client + Server,0.692765
+9,1900000,Client + Server (elevated),0.445386
