@@ -1,13 +1,6 @@
 #include "common.h"
 #include "ipc.h"
 #include <pthread.h>
-#include <sys/syscall.h>
-#include <sys/ptrace.h>
-#include <errno.h>
-
-#ifdef ELEVATED_MODE
-static ksys_write_t my_ksys_write = NULL;
-#endif
 
 int ITERATIONS;
 int target_logfd = -1;
@@ -15,13 +8,6 @@ int target_logfd = -1;
 void* job_buffer_thread(void* current_job_buffer){
 	// Prepare the job buffer
 	JobRequestBuffer_t* job_buffer = (JobRequestBuffer_t*)current_job_buffer;
-
-#ifdef ELEVATED_MODE
-	// Get the adress of ksys_write
-	my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
-	fprintf(stderr, "ksys_write: %p\n", my_ksys_write);
-	sym_elevate();
-#endif
 
 	// Begin stress testing (+2 is necessary for open and close calls)
 	for (int i = 0; i < ITERATIONS + 2; ++i) {
@@ -39,15 +25,7 @@ void* job_buffer_thread(void* current_job_buffer){
 			break;
 		}
 		case CMD_WRITE: {
-#ifdef ELEVATED_MODE
-			if (i % 20 == 0) {
-				(void) !write(job_buffer->arg1, "ksys_write\r", 11);
-			} else {
-				(void) !my_ksys_write(job_buffer->arg1, "ksys_write\r", 11);
-			}
-#else
 			(void) !write(job_buffer->arg1, "ksys_write\r", 11);
-#endif
 			break;
 		}
 		default: break;
@@ -56,10 +34,6 @@ void* job_buffer_thread(void* current_job_buffer){
         // Updating the job status flag
 		mark_job_completed(job_buffer);
 	}
-
-#ifdef ELEVATED_MODE
-	sym_lower();
-#endif
 
 	pthread_exit(NULL);
 }

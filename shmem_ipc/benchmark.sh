@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LOOP_COUNT=1
+LOOP_COUNT=6
 ITERATIONS=100000          # 100k
-ITERATION_LIMIT=100000   # 10mil
+ITERATION_LIMIT=1000000    # 1mil
 ITERATION_INCREMENT=100000 # 100k
 cur_time=$(date +%m-%d-%H-%M-%S)
 EXPE_DIR="benchmark-${cur_time}"
@@ -37,22 +37,35 @@ do
       echo -n -e "  [===>......] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
       sleep 0.06
 
-      #check kernel version
+      # Check kernel version
       if [[ $(uname -r) == "5.14.0-symbiote+" ]];
       then
         echo -n -e "  [======>...] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
-        ICE=$(taskset -c 1 ./independent_client_elevated $ITERATIONS 2>&1)
+        ICE=$(taskset -c 1 bash -c 'shortcut.sh -be -- ./independent_client '$ITERATIONS' 2>&1 >/dev/null')
         sleep 0.06
 
-        taskset -c 0 ./server_elevated  $ITERATIONS &> /dev/null &
+        echo -n -e "  [======>...] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
+        ICES=$(taskset -c 1 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./independent_client '$ITERATIONS' 2>&1 >/dev/null')
+        sleep 0.06
+
+        taskset -c 0 bash -c 'shortcut.sh -be -- ./server '$ITERATIONS' &> /dev/null' &
         sleep 0.08
         SCE=$(taskset -c 1 ./client $ITERATIONS 2>&1)
         wait
         echo -n -e "  [=======>..] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
         sleep 0.06
+
+        taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server '$ITERATIONS' &> /dev/null' &
+        sleep 0.08
+        SCES=$(taskset -c 1 ./client $ITERATIONS 2>&1)
+        wait
+        echo -n -e "  [=======>..] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
+        sleep 0.06
         
         echo $i,$ITERATIONS,Independent Client \(elevated\),$ICE>> results.csv
+        echo $i,$ITERATIONS,Independent Client \(elevated + shortcutted\),$ICES>> results.csv
         echo $i,$ITERATIONS,Client + Server \(elevated\),$SCE>> results.csv
+        echo $i,$ITERATIONS,Client + Server \(elevated + shortcutted\),$SCES>> results.csv
       fi 
 
       echo $i,$ITERATIONS,Independent Client,$IC>> results.csv
@@ -61,7 +74,8 @@ do
       sleep 0.02
       i=$(( $i + 1 ))
     done
-   ITERATIONS=$(( $ITERATIONS + $ITERATION_INCREMENT ))
+
+    ITERATIONS=$(( $ITERATIONS + $ITERATION_INCREMENT ))
 done
 
 make clean > /dev/null
@@ -72,3 +86,4 @@ mv $EXPE_INFO ./${EXPE_DIR}/
 
 mv ${EXPE_DIR} ./data
 
+printf "\r----------------- COMPLETED -----------------\n\n"
