@@ -1,12 +1,21 @@
 #!/bin/bash
 
-LOOP_COUNT=10
+LOOP_COUNT=1
 ITERATIONS=100000          # 100k
-ITERATION_LIMIT=2000000    # 2m
-ITERATION_INCREMENT=200000 # 200k
+ITERATION_LIMIT=100000   # 10mil
+ITERATION_INCREMENT=100000 # 100k
+cur_time=$(date +%m-%d-%H-%M-%S)
+EXPE_DIR="benchmark-${cur_time}"
+EXPE_INFO="expe.info"
 
 # Clean up and init 
-echo "run,iterations,type,latency" >  results.csv
+echo "run,iterations,type,latency" > results.csv
+
+mkdir $EXPE_DIR
+
+echo "number of repeat run per iteration: ${LOOP_COUNT}" > $EXPE_INFO
+echo "number of test iterations range: ${ITERATIONS} to ${ITERATION_LIMIT}" >> $EXPE_INFO
+echo "number of each iterations increment: ${ITERATION_INCREMENT}" >> $EXPE_INFO
 
 make clean > /dev/null
 make > /dev/null
@@ -21,31 +30,45 @@ do
       IC=$(taskset -c 1 ./independent_client $ITERATIONS 2>&1)
       sleep 0.06
 
-      echo -n -e "  [===>......] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
-      ICE=$(taskset -c 1 ./independent_client_elevated $ITERATIONS 2>&1)
-      sleep 0.06
-
-      taskset -c 0 ./server_elevated  $ITERATIONS &> /dev/null &
-      sleep 0.08
-      SCE=$(taskset -c 1 ./client $ITERATIONS 2>&1)
-      wait
-      echo -n -e "  [======>...] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
-      sleep 0.06
-
       taskset -c 0 ./server $ITERATIONS > /dev/null &
       sleep 0.08
       SC=$(taskset -c 1 ./client $ITERATIONS 2>&1)
       wait
-      echo -n -e "  [=======>..] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
+      echo -n -e "  [===>......] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
       sleep 0.06
 
+      #check kernel version
+      if [[ $(uname -r) == "5.14.0-symbiote+" ]];
+      then
+        echo -n -e "  [======>...] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
+        ICE=$(taskset -c 1 ./independent_client_elevated $ITERATIONS 2>&1)
+        sleep 0.06
+
+        taskset -c 0 ./server_elevated  $ITERATIONS &> /dev/null &
+        sleep 0.08
+        SCE=$(taskset -c 1 ./client $ITERATIONS 2>&1)
+        wait
+        echo -n -e "  [=======>..] Completed ${ITERATIONS} Iterations: $i/$LOOP_COUNT \r"
+        sleep 0.06
+        
+        echo $i,$ITERATIONS,Independent Client \(elevated\),$ICE>> results.csv
+        echo $i,$ITERATIONS,Client + Server \(elevated\),$SCE>> results.csv
+      fi 
 
       echo $i,$ITERATIONS,Independent Client,$IC>> results.csv
-      echo $i,$ITERATIONS,Independent Client \(elevated\),$ICE>> results.csv
       echo $i,$ITERATIONS,Client + Server,$SC>> results.csv
-      echo $i,$ITERATIONS,Client + Server \(elevated\),$SCE>> results.csv
+
       sleep 0.02
       i=$(( $i + 1 ))
     done
    ITERATIONS=$(( $ITERATIONS + $ITERATION_INCREMENT ))
 done
+
+make clean > /dev/null
+
+cp results.csv ./${EXPE_DIR}/
+mv sys_info ./${EXPE_DIR}/
+mv $EXPE_INFO ./${EXPE_DIR}/
+
+mv ${EXPE_DIR} ./data
+
