@@ -15,7 +15,7 @@ ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
 endif
 
-all: server client independent_client info
+all: server client independent_client expe_info
 
 export SYMLIB_DIR SYMLIB_STATIC SYMLIB_INCLUDE_DIR SYMLIB_DYNAM_BUILD_DIR SYMLIB_LINK
 
@@ -24,8 +24,7 @@ export LIBRARY_PATH
 
 # GET TARGET INFO
 
-SYS_INFO=sys_info
-
+SYS_INFO="sys_info/"
 
 info:
 	mkdir -p $(SYS_INFO)

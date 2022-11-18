@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LOOP_COUNT=6
+LOOP_COUNT=1
 ITERATIONS=100000          # 100k
-ITERATION_LIMIT=1000000    # 1mil
+ITERATION_LIMIT=100000    # 1mil
 ITERATION_INCREMENT=100000 # 100k
 cur_time=$(date +%m-%d-%H-%M-%S)
 EXPE_DIR="benchmark-${cur_time}"
