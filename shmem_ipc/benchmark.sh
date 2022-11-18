@@ -1,13 +1,21 @@
 #!/bin/bash
 
-LOOP_COUNT=10	
+LOOP_COUNT=1
 ITERATIONS=100000          # 100k
-ITERATION_LIMIT=10000000   # 10mil
+ITERATION_LIMIT=100000   # 10mil
 ITERATION_INCREMENT=100000 # 100k
+cur_time=$(date +%m-%d-%H-%M-%S)
+EXPE_DIR="benchmark-${cur_time}"
+EXPE_INFO="expe.info"
 
 # Clean up and init 
-echo "run,iterations,type,latency" >  results.csv
+echo "run,iterations,type,latency" > results.csv
 
+mkdir $EXPE_DIR
+
+echo "number of repeat run per iteration: ${LOOP_COUNT}" > $EXPE_INFO
+echo "number of test iterations range: ${ITERATIONS} to ${ITERATION_LIMIT}" >> $EXPE_INFO
+echo "number of each iterations increment: ${ITERATION_INCREMENT}" >> $EXPE_INFO
 
 make clean > /dev/null
 make > /dev/null
@@ -55,3 +63,12 @@ do
     done
    ITERATIONS=$(( $ITERATIONS + $ITERATION_INCREMENT ))
 done
+
+make clean > /dev/null
+
+cp results.csv ./${EXPE_DIR}/
+mv sys_info ./${EXPE_DIR}/
+mv $EXPE_INFO ./${EXPE_DIR}/
+
+mv ${EXPE_DIR} ./data
+
