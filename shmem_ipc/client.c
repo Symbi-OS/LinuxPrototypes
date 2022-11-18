@@ -3,10 +3,6 @@
 
 #define LOG_FILE "/dev/null"
 
-#ifdef ELEVATED_MODE
-static ksys_write_t my_ksys_write = NULL;
-#endif
-
 int64_t calc_average(int64_t* buffer, uint64_t count) {
 	int64_t sum = 0;
 	for (uint64_t i = 0; i < count; i++) {
@@ -78,15 +74,7 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
         // Wait for the job to be completed
 		wait_for_job_completion(job_buffer);
 #else
-	#ifdef ELEVATED_MODE
-		if (i % 20 == 0) {
-			(void) !write(logfd, "ksys_write\r", 11);
-		} else {
-			(void) !my_ksys_write(logfd, "ksys_write\r", 11);
-		}
-	#else
 		(void) !write(logfd, "ksys_write\r", 11);
-	#endif
 #endif
 
 		// Stop the inner performance timer
@@ -134,12 +122,6 @@ int main(int argc, char** argv) {
 	}
 #else
     JobRequestBuffer_t* job_buffer = 0;
-
-	#ifdef ELEVATED_MODE
-		// Get the adress of ksys_write
-		my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
-		sym_elevate();
-	#endif
 #endif
 
 	// Run the stress test
@@ -148,10 +130,6 @@ int main(int argc, char** argv) {
 #ifndef INDEPENDENT_CLIENT
     // Cleanup
 	ipc_close();
-
-	#ifdef ELEVATED_MODE
-		sym_lower();
-	#endif
 #endif
 
 	return 0;
