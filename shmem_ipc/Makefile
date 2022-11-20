@@ -52,4 +52,4 @@ independent_client: client.c
 	$(CC) $(CFLAGS) $^ -o $@ -D INDEPENDENT_CLIENT
 
 clean:
-	rm -rf server client independent_client run_log
+	rm -rf server client independent_client run_log scalability.log
