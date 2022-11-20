@@ -42,4 +42,4 @@ independent_client_elevated: client.c
 	$(CC) $(CFLAGS) $^ -o $@ $(SYMLIB_LINK) -I $(SYMLIB_INCLUDE_DIR) -D INDEPENDENT_CLIENT -D ELEVATED_MODE
 
 clean:
-	rm -rf server server_elevated client independent_client* run_log
+	rm -rf server server_elevated client independent_client* run_log scalability.log
