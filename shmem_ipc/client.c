@@ -47,13 +47,13 @@ void stress_test(int iterations) {
 	// Stop the outer performance timer
     clock_gettime(CLOCK_MONOTONIC, &outerTimeEnd);
 
+	char read_buffer[128] = { 0 };
+	read(logfd, read_buffer, 128);
+
 	// Close the log file handle
 	close(logfd);
 
-#ifndef INDEPENDENT_CLIENT
-	// Indicating that the client is done
-	disconnect_job_buffer(job_buffer);
-#endif
+	printf("Read buffer: %s\n", read_buffer);	
 
 	// Print the results
 	double cpu_time_used = ((double)outerTimeEnd.tv_sec + 1.0e-9*outerTimeEnd.tv_nsec) -
