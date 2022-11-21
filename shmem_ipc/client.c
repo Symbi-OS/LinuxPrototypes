@@ -30,7 +30,7 @@ void stress_test(int iterations) {
 
 		(void) !write(logfd, "ksys_write\r", 11);
 
-		register int count = 20000;
+		register int count = 10000;
 		while (count) {
 			asm volatile ("nop");
 			count --;

@@ -6,8 +6,7 @@
 
 int target_logfd = -1;
 int work_idx = 0;
-pthread_mutex_t lock;
-
+pthread_spinlock_t lock;
 static uint8_t bShouldExit = 0;
 
 static int registered_fds[10000] = { 0 };
@@ -21,6 +20,17 @@ void workspace_thread(workspace_t* workspace) {
 			idx++;
 			if (idx==NUM_CLIENTS){
 				idx = 0;
+	workspace_t *workspace = (workspace_t *) ws;
+	int idx;
+	JobRequestBuffer_t* job_buffer;
+
+	while (1) {
+		// obtain lock to update next buffer
+		pthread_spin_lock(&lock);
+        while ((workspace->job_buffers[work_idx].status != JOB_REQUESTED)){
+			work_idx++;
+			if (work_idx==MAX_JOB_BUFFERS){
+				work_idx = 0;
 			}
 			//printf("Status: %d at Spinning at %d\n", workspace->job_buffers[work_idx].status, work_idx);
         	continue;
@@ -28,7 +38,23 @@ void workspace_thread(workspace_t* workspace) {
 		
 		job_buffer = &workspace->job_buffers[idx];
 		job_buffer->status = JOB_PICKEDUP;
-		pthread_mutex_unlock(&lock);
+		pthread_spin_unlock(&lock);
+		
+
+		// Check if the server has been killed
+		if (job_buffer->cmd == CMD_KILL_SERVER) {
+			bShouldExit = 1;
+			mark_job_completed(job_buffer);
+			break;
+		}
+
+
+		// Check if the server has been killed
+		if (job_buffer->cmd == CMD_KILL_SERVER) {
+			bShouldExit = 1;
+			mark_job_completed(job_buffer);
+			break;
+		}
 
 		// Check if the server has been killed
 		if (job_buffer->cmd == CMD_KILL_SERVER) {
@@ -106,7 +132,7 @@ int main(int argc, char** argv) {
 	
 	pthread_t tid[num_threads];
 
-	if (pthread_mutex_init(&lock, NULL) != 0) {
+	if (pthread_spin_init(&lock, PTHREAD_PROCESS_PRIVATE) != 0) {
         printf("\n mutex init has failed\n");
         return 1;
     }
