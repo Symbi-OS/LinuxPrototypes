@@ -77,6 +77,11 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 		(void) !write(logfd, "ksys_write\r", 11);
 #endif
 
+		register int count = 20000;
+		while (count) {
+			asm volatile ("nop");
+			count --;
+		}
 		// Stop the inner performance timer
     	clock_gettime(CLOCK_MONOTONIC, &innerTimeEnd);
 
@@ -85,6 +90,11 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 			innerTimesInNs[i] = innerTimesInNs[i - 1];
 		}
 	}
+
+#ifndef INDEPENDENT_CLIENT
+	// Indicating that the client is done
+	job_buffer->status = JOB_NO_REQUEST;
+#endif
 
 	// Stop the outer performance timer
     clock_gettime(CLOCK_MONOTONIC, &outerTimeEnd);
@@ -100,7 +110,8 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 	double cpu_time_used = ((double)outerTimeEnd.tv_sec + 1.0e-9*outerTimeEnd.tv_nsec) -
 						   ((double)outerTimeStart.tv_sec + 1.0e-9*outerTimeStart.tv_nsec);
   	fprintf(stderr, "%f\n", cpu_time_used);
-
+	printf("Time used: %f seconds\n", cpu_time_used);
+	printf("Throughput: %d req per second\n", (int)(iterations/cpu_time_used));
 	// Calculate average latency for each iteration
 	//int64_t avgIterationLatency = calc_average(innerTimesInNs, iterations);
 	//fprintf(stderr, "%ld\n", avgIterationLatency);
@@ -126,11 +137,6 @@ int main(int argc, char** argv) {
 
 	// Run the stress test
 	stress_test(iterations, job_buffer);
-
-#ifndef INDEPENDENT_CLIENT
-    // Cleanup
-	ipc_close();
-#endif
 
 	return 0;
 }
