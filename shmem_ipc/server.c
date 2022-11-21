@@ -5,10 +5,12 @@ int ITERATIONS;
 int target_logfd = -1;
 int NUM_CLIENTS = 1;
 
+static uint8_t bShouldExit = 0;
+
 void workspace_thread(workspace_t* workspace) {
 	// Begin stress testing (+2 is necessary for open and close calls)
 	register int idx = 0;
-	for (int i = 0; i < (ITERATIONS + 3)*NUM_CLIENTS; ++i) {
+	while (!bShouldExit) {
 		// Wait until we get the job
         while (workspace->job_buffers[idx].status != JOB_REQUESTED) {
 			idx++;
@@ -19,6 +21,13 @@ void workspace_thread(workspace_t* workspace) {
         }
 
 		JobRequestBuffer_t* job_buffer = &workspace->job_buffers[idx];
+
+		// Check if the server has been killed
+		if (job_buffer->cmd == CMD_KILL_SERVER) {
+			bShouldExit = 1;
+			mark_job_completed(job_buffer);
+			break;
+		}
 
         // Process the requested command
 		switch (job_buffer->cmd) {
@@ -48,12 +57,9 @@ void workspace_thread(workspace_t* workspace) {
 
 int main(int argc, char** argv) {
 	if (argc < 1){
-		printf("Usage: ./<server binary> <iterations> [optional]<nthreads>\n");
-	}else if(argc == 2){
-		ITERATIONS = atoi(argv[1]);
-	}else if(argc == 3){
-		ITERATIONS = atoi(argv[1]);
-		NUM_CLIENTS = atoi(argv[2]);
+		printf("Usage: ./<server binary> [optional]<nthreads>\n");
+	} else if (argc == 2) {
+		NUM_CLIENTS = atoi(argv[1]);
 	}
 
 	workspace_t* workspace = ipc_connect_server();
