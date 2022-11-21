@@ -91,8 +91,10 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 		}
 	}
 
+#ifndef INDEPENDENT_CLIENT
 	// Indicating that the client is done
 	job_buffer->status = JOB_NO_REQUEST;
+#endif
 
 	// Stop the outer performance timer
     clock_gettime(CLOCK_MONOTONIC, &outerTimeEnd);

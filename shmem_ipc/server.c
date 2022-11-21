@@ -5,9 +5,7 @@ int ITERATIONS;
 int target_logfd = -1;
 int NUM_CLIENTS = 1;
 
-void workspace_thread(workspace_t* workspace){
-	int idx = 0;
-
+void workspace_thread(workspace_t* workspace) {
 	// Begin stress testing (+2 is necessary for open and close calls)
 	register int idx = 0;
 	for (int i = 0; i < (ITERATIONS + 2)*NUM_CLIENTS; ++i) {
