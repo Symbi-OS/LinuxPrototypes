@@ -4,6 +4,7 @@ export CC CFLAGS
 
 #Check for kernel version
 UNAME=$(shell uname -r)
+USER=$(shell whoami)
 
 ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
@@ -58,7 +59,7 @@ run_independent_client: independent_client
 	taskset -c 1 ./independent_client $(RUN_ITERATIONS)
 
 run_client: independent_client
-	taskset -c 1 bash -c 'LD_PRELOAD=/home/ar/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client $(RUN_ITERATIONS)'
+	taskset -c 1 bash -c 'LD_PRELOAD=/home/$(USER)/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client $(RUN_ITERATIONS)'
 
 run_server: server
 	taskset -c 0 ./server
