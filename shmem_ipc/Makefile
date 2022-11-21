@@ -71,5 +71,10 @@ kill_server: server_killer
 	./server_killer
 
 clean:
+<<<<<<< HEAD
 	rm -rf server server_killer independent_client run_log scalability.log
 	rm -f /dev/shm/sym_server_shm
+=======
+	rm -rf server server_killer independent_client run_log scalability.log sys_info/
+	rm /dev/shm/sym_server_shm
+>>>>>>> f9dd362 (changes mc mt server)
