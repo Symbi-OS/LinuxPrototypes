@@ -1,0 +1,7 @@
+run,iterations,type,latency
+0,100000,Independent Client (elevated),bash: line 1: shortcut.sh: command not found
+0,100000,Independent Client (elevated + shortcutted),bash: line 1: shortcut.sh: command not found
+0,100000,Client + Server (elevated),Failed to open the backing file
+0,100000,Client + Server (elevated + shortcutted),Failed to open the backing file
+0,100000,Independent Client,0.847920 Time used: 0.847920 seconds Throughput: 117935 req per second
+0,100000,Client + Server,0.870198 Time used: 0.870198 seconds Throughput: 114916 req per second

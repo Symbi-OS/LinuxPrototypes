@@ -10,10 +10,14 @@ ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
 endif
 
+<<<<<<< HEAD
 RUN_ITERATIONS := 2000000
 export RUN_ITERATIONS
 
 all: server server_killer independent_client expe_info
+=======
+all: server client independent_client
+>>>>>>> 6ae6be5 (changes mc mt server)
 
 # GET TARGET INFO
 
@@ -71,4 +75,9 @@ kill_server: server_killer
 	./server_killer
 
 clean:
+<<<<<<< HEAD
 	rm -rf server server_killer independent_client run_log scalability.log sys_info/
+=======
+	rm -rf server client independent_client run_log scalability.log
+	rm /dev/shm/sym_server_shm
+>>>>>>> 6ae6be5 (changes mc mt server)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOOP_COUNT=1
+LOOP_COUNT=10
 ITERATIONS=100000          # 100k
 ITERATION_LIMIT=100000    # 1mil
 ITERATION_INCREMENT=100000 # 100k
@@ -19,6 +19,7 @@ echo "number of each iterations increment: ${ITERATION_INCREMENT}" >> $EXPE_INFO
 
 make clean > /dev/null
 make > /dev/null
+make expe_info > /dev/null
 
 while [ $ITERATIONS -le $ITERATION_LIMIT ]
 do
