@@ -5,7 +5,7 @@
 #include <pthread.h>
 
 int target_logfd = -1;
-int work_idx = 0;
+static uint8_t bShouldExit = 0;
 pthread_spinlock_t locks[MAX_JOB_BUFFERS];
 static uint8_t bShouldExit = 0;
 
@@ -56,6 +56,13 @@ void workspace_thread(workspace_t* workspace) {
 			break;
 		}
 
+
+		// Check if the server has been killed
+		if (job_buffer->cmd == CMD_KILL_SERVER) {
+			bShouldExit = 1;
+			mark_job_completed(job_buffer);
+			break;
+		}
 
         // Process the requested command
 		switch (job_buffer->cmd) {
