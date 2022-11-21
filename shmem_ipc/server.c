@@ -8,7 +8,7 @@ int NUM_CLIENTS = 1;
 void workspace_thread(workspace_t* workspace) {
 	// Begin stress testing (+2 is necessary for open and close calls)
 	register int idx = 0;
-	for (int i = 0; i < (ITERATIONS + 2)*NUM_CLIENTS; ++i) {
+	for (int i = 0; i < (ITERATIONS + 3)*NUM_CLIENTS; ++i) {
 		// Wait until we get the job
         while (workspace->job_buffers[idx].status != JOB_REQUESTED) {
 			idx++;
@@ -32,6 +32,10 @@ void workspace_thread(workspace_t* workspace) {
 		}
 		case CMD_WRITE: {
 			job_buffer->response = write(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
+			break;
+		}
+		case CMD_READ: {
+			job_buffer->response = read(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
 			break;
 		}
 		default: break;

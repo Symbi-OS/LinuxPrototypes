@@ -67,4 +67,4 @@ run_server_elevated: server
 	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server $(RUN_ITERATIONS)'
 
 clean:
-	rm -rf server client independent_client run_log scalability.log
+	rm -rf server client independent_client run_log scalability.log sys_info/
