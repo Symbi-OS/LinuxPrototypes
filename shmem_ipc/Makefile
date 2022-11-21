@@ -10,10 +10,10 @@ ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
 endif
 
-RUN_ITERATIONS := 2000000
+RUN_ITERATIONS := 20000
 export RUN_ITERATIONS
 
-all: server server_killer independent_client expe_info
+all: server server_killer independent_client
 
 # GET TARGET INFO
 
@@ -65,10 +65,10 @@ run_server: server
 	taskset -c 0 ./server $(THREADS)
 
 run_server_elevated: server
-	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server'
+	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server $(THREADS)'
 
 kill_server: server_killer
-	./server_killer
+	./server_killer $(THREADS)
 
 clean:
 	rm -rf server server_killer independent_client run_log scalability.log sys_info/
