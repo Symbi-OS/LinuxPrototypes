@@ -11,7 +11,7 @@
 
 
 // Server Config
-#define MAX_JOB_BUFFERS 7
+#define MAX_JOB_BUFFERS 6
 
 // Commands
 #define CMD_KILL_SERVER  -1
