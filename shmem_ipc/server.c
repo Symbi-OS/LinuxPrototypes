@@ -6,7 +6,7 @@
 
 int target_logfd = -1;
 int work_idx = 0;
-pthread_spinlock_t lock;
+pthread_spinlock_t locks[MAX_JOB_BUFFERS];
 static uint8_t bShouldExit = 0;
 
 static int registered_fds[10000] = { 0 };
@@ -21,26 +21,34 @@ void workspace_thread(workspace_t* workspace) {
 			if (idx==NUM_CLIENTS){
 				idx = 0;
 	workspace_t *workspace = (workspace_t *) ws;
-	int idx;
+	register int idx = 0;
 	JobRequestBuffer_t* job_buffer;
 
-	while (1) {
+	while (!bShouldExit) {
 		// obtain lock to update next buffer
-		pthread_spin_lock(&lock);
-        while ((workspace->job_buffers[work_idx].status != JOB_REQUESTED)){
-			work_idx++;
-			if (work_idx==MAX_JOB_BUFFERS){
-				work_idx = 0;
+		
+        while (1) {
+			if (pthread_spin_trylock(&locks[idx]) == 0){
+				if (workspace->job_buffers[idx].status == JOB_REQUESTED){
+					goto JOB_FOUND;
+				}else{
+					pthread_spin_unlock(&locks[idx]);
+					idx++;
+					if (idx==MAX_JOB_BUFFERS){
+						idx = 0;
+					}
+				}
+			}else{
+				idx++;
+				if (idx==MAX_JOB_BUFFERS){
+					idx = 0;
+				}
 			}
-			//printf("Status: %d at Spinning at %d\n", workspace->job_buffers[work_idx].status, work_idx);
-        	continue;
         }
 		
+		JOB_FOUND:
 		job_buffer = &workspace->job_buffers[idx];
 		job_buffer->status = JOB_PICKEDUP;
-		pthread_spin_unlock(&lock);
-		
-
 		// Check if the server has been killed
 		if (job_buffer->cmd == CMD_KILL_SERVER) {
 			bShouldExit = 1;
@@ -48,28 +56,6 @@ void workspace_thread(workspace_t* workspace) {
 			break;
 		}
 
-
-		// Check if the server has been killed
-		if (job_buffer->cmd == CMD_KILL_SERVER) {
-			bShouldExit = 1;
-			mark_job_completed(job_buffer);
-			break;
-		}
-
-		// Check if the server has been killed
-		if (job_buffer->cmd == CMD_KILL_SERVER) {
-			bShouldExit = 1;
-			mark_job_completed(job_buffer);
-			break;
-		}
-
-
-		// Check if the server has been killed
-		if (job_buffer->cmd == CMD_KILL_SERVER) {
-			bShouldExit = 1;
-			mark_job_completed(job_buffer);
-			break;
-		}
 
         // Process the requested command
 		switch (job_buffer->cmd) {
@@ -105,6 +91,7 @@ void workspace_thread(workspace_t* workspace) {
 
         // Updating the job status flag
 		mark_job_completed(job_buffer);
+		pthread_spin_unlock(&locks[idx]);
 	}
 }
 
@@ -132,10 +119,12 @@ int main(int argc, char** argv) {
 	
 	pthread_t tid[num_threads];
 
-	if (pthread_spin_init(&lock, PTHREAD_PROCESS_PRIVATE) != 0) {
-        printf("\n mutex init has failed\n");
-        return 1;
-    }
+	for (int j = 0; j < MAX_JOB_BUFFERS; j++){
+		if (pthread_spin_init(&(locks[j]), PTHREAD_PROCESS_PRIVATE) != 0) {
+			printf("\n mutex init has failed\n");
+			return 1;
+		}
+	}
 
 	for (int j = 0; j < num_threads; j++){
 		int err = pthread_create(&(tid[j]), NULL, &workspace_thread, workspace);
