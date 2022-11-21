@@ -23,7 +23,7 @@ void workspace_thread(workspace_t* workspace) {
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case CMD_OPEN: {
-			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1, job_buffer->arg2);
+			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1);
 			break;
 		}
 		case CMD_CLOSE: {
@@ -31,7 +31,7 @@ void workspace_thread(workspace_t* workspace) {
 			break;
 		}
 		case CMD_WRITE: {
-			job_buffer->response = write(job_buffer->arg1, "ksys_write\r", 11);
+			job_buffer->response = write(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
 			break;
 		}
 		default: break;
