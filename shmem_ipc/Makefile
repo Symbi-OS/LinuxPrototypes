@@ -71,5 +71,5 @@ kill_server: server_killer
 	./server_killer
 
 clean:
-	rm -rf server client independent_client run_log scalability.log
+	rm -rf server server_killer independent_client run_log scalability.log
 	rm -f /dev/shm/sym_server_shm
