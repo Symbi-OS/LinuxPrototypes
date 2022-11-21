@@ -87,6 +87,8 @@ void workspace_thread(workspace_t* workspace){
 		mark_job_completed(job_buffer);
 		pthread_spin_unlock(&locks[idx]);
 	}
+
+	pthread_exit(NULL);
 }
 
 
