@@ -76,6 +76,9 @@ Function that for client to get empty job_buffer to communicate
 JobRequestBuffer_t* ipc_get_job_buffer(){
 
 	workspace_t* workspace = (workspace_t*)ipc_connect_client();
+    if (!workspace) {
+        return NULL;
+    }
 
 	for (int i = 0; i < MAX_JOB_BUFFERS; i++){
 		JobRequestBuffer_t* current = &(workspace->job_buffers[i]);

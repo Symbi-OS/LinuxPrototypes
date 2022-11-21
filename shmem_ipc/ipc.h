@@ -12,6 +12,8 @@
 #define MAX_JOB_BUFFERS 25
 
 // Commands
+#define CMD_KILL_SERVER  -1
+#define CMD_READ  0
 #define CMD_WRITE 1
 #define CMD_OPEN  2
 #define CMD_CLOSE 3

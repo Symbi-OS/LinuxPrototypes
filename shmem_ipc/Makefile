@@ -4,12 +4,16 @@ export CC CFLAGS
 
 #Check for kernel version
 UNAME=$(shell uname -r)
+USER=$(shell whoami)
 
 ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
 endif
 
-all: server client independent_client expe_info
+RUN_ITERATIONS := 2000000
+export RUN_ITERATIONS
+
+all: server server_killer independent_client expe_info
 
 # GET TARGET INFO
 
@@ -45,11 +49,26 @@ expe_info: info info_cmdline info_ifconfig info_nproc info__uptime info_cpu info
 server: server.c ipc.c
 	$(CC) $(CFLAGS) $^ -o $@
 
-client: client.c ipc.c
-	$(CC) $(CFLAGS) $^ -o $@
-
 independent_client: client.c
 	$(CC) $(CFLAGS) $^ -o $@ -D INDEPENDENT_CLIENT
 
+server_killer: server_killer.c ipc.c
+	$(CC) $(CFLAGS) $^ -o $@
+
+run_independent_client: independent_client
+	taskset -c 1 ./independent_client $(RUN_ITERATIONS)
+
+run_client: independent_client
+	taskset -c 1 bash -c 'LD_PRELOAD=/home/$(USER)/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client $(RUN_ITERATIONS)'
+
+run_server: server
+	taskset -c 0 ./server
+
+run_server_elevated: server
+	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server'
+
+kill_server: server_killer
+	./server_killer
+
 clean:
-	rm -rf server client independent_client run_log scalability.log
+	rm -rf server server_killer independent_client run_log scalability.log sys_info/
