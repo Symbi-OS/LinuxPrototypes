@@ -109,7 +109,6 @@ void stress_test(int iterations, JobRequestBuffer_t* job_buffer) {
 	// Print the results
 	double cpu_time_used = ((double)outerTimeEnd.tv_sec + 1.0e-9*outerTimeEnd.tv_nsec) -
 						   ((double)outerTimeStart.tv_sec + 1.0e-9*outerTimeStart.tv_nsec);
-
   	fprintf(stderr, "%f\n", cpu_time_used);
 	printf("Time used: %f seconds\n", cpu_time_used);
 	printf("Throughput: %d req per second\n", (int)(iterations/cpu_time_used));
