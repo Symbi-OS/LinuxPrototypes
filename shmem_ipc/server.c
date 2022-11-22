@@ -53,8 +53,6 @@ void workspace_thread(workspace_t* workspace){
 		}
 
 
-		pthread_spin_unlock(&lock);
-
 		// Check if the server has been killed
 		if (job_buffer->cmd == CMD_KILL_SERVER) {
 			bShouldExit = 1;

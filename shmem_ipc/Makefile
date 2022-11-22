@@ -10,7 +10,7 @@ ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
 endif
 
-RUN_ITERATIONS := 2000000
+RUN_ITERATIONS := 20000
 export RUN_ITERATIONS
 
 all: server server_killer independent_client expe_info
@@ -62,14 +62,14 @@ run_client: independent_client
 	taskset -c 1 bash -c 'LD_PRELOAD=/home/$(USER)/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client $(RUN_ITERATIONS)'
 
 run_server: server
-	taskset -c 0 ./server
+	taskset -c 0 ./server 1
 
 run_server_elevated: server
-	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server'
+	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server 1'
 
 kill_server: server_killer
-	./server_killer
+	./server_killer 1
 
 clean:
-	rm -rf server server_killer independent_client run_log scalability.log
+	rm -rf server server_killer independent_client run_log scalability.log sys_info
 	rm -f /dev/shm/sym_server_shm
