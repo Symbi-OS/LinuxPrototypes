@@ -5,17 +5,9 @@
 int target_logfd = -1;
 static uint8_t bShouldExit = 0;
 pthread_spinlock_t locks[MAX_JOB_BUFFERS];
-static uint8_t bShouldExit = 0;
 
-void workspace_thread(workspace_t* workspace){
-	// Begin stress testing (+2 is necessary for open and close calls)
-	register int idx = 0;
-	while (!bShouldExit) {
-		// Wait until we get the job
-        while (workspace->job_buffers[idx].status != JOB_REQUESTED) {
-			idx++;
-			if (idx==NUM_CLIENTS){
-				idx = 0;
+void workspace_thread(void* ws){
+	
 	workspace_t *workspace = (workspace_t *) ws;
 	register int idx = 0;
 	JobRequestBuffer_t* job_buffer;
@@ -44,21 +36,11 @@ void workspace_thread(workspace_t* workspace){
 		
 		JOB_FOUND:
 		job_buffer = &workspace->job_buffers[idx];
-		job_buffer->status = JOB_PICKEDUP;
-		// Check if the server has been killed
-		if (job_buffer->cmd == CMD_KILL_SERVER) {
-			bShouldExit = 1;
-			mark_job_completed(job_buffer);
-			break;
-		}
-
-
+		
 
 		// Check if the server has been killed
 		if (job_buffer->cmd == CMD_KILL_SERVER) {
-			bShouldExit = 1;
-			mark_job_completed(job_buffer);
-			break;
+			
 		}
 
         // Process the requested command
@@ -77,6 +59,10 @@ void workspace_thread(workspace_t* workspace){
 		}
 		case CMD_READ: {
 			job_buffer->response = read(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
+			break;
+		}
+		case CMD_KILL_SERVER: {
+			bShouldExit = 1;
 			break;
 		}
 		default: break;
@@ -99,7 +85,7 @@ int main(int argc, char** argv) {
 	if (argc < 1){
 		printf("Usage: ./<server binary> [optional]<nthreads>\n");
 	} else if (argc == 2) {
-		NUM_CLIENTS = atoi(argv[1]);
+		num_threads = atoi(argv[1]);
 	}
 
 
