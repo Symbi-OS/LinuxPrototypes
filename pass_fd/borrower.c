@@ -31,7 +31,11 @@ int main(int argc, char *argv[]) {
 
     // Borrow the file descriptor
     printf("about to try to borrow fd\n");
-    int borrowed_fd = syscall(SYS_pidfd_getfd, pid, fd, 0);
+    // This is different from a pid.
+    int pidfd = syscall(SYS_pidfd_open, pid, 0);
+
+
+    int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, fd, 0);
     printf("done trying to borrow fd\n");
 
     // check error case
