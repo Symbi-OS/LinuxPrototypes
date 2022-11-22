@@ -49,12 +49,7 @@ void stress_test(int iterations) {
 
 	// Close the log file handle
 	close(logfd);
-
-#ifndef INDEPENDENT_CLIENT
-	// Indicating that the client is done
-	disconnect_job_buffer(job_buffer);
-#endif
-
+	
 	// Print the results
 	double cpu_time_used = ((double)outerTimeEnd.tv_sec + 1.0e-9*outerTimeEnd.tv_nsec) -
 						   ((double)outerTimeStart.tv_sec + 1.0e-9*outerTimeStart.tv_nsec);
