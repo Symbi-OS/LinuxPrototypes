@@ -4,7 +4,7 @@ LOOP_COUNT=10
 NUM_SERVER_THREADS=1
 CLIENTS=$NUM_SERVER_THREADS   
 CLIENTS_LIMIT=$((8 - $CLIENTS ))
-ITERATIONS=10000
+ITERATIONS=300000
 
 
 
@@ -43,7 +43,7 @@ do
 		  for (( c=1; c<=${CLIENTS}; c++ ))
 		  do 
 			  #sleep 0.01
-        taskset -c $c taskset -c $c bash -c "LD_PRELOAD=/home/${USER}/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client ${ITERATIONS}" 2>> scalability.log & 2>> scalability.log  &
+        taskset -c $c bash -c "LD_PRELOAD=/home/${USER}/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client ${ITERATIONS}" 2>> scalability.log &
 		  done
       sleep 2
       ./server_killer $NUM_SERVER_THREADS

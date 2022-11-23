@@ -37,12 +37,6 @@ void workspace_thread(void* ws){
 		JOB_FOUND:
 		job_buffer = &workspace->job_buffers[idx];
 		
-
-		// Check if the server has been killed
-		if (job_buffer->cmd == CMD_KILL_SERVER) {
-			
-		}
-
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case CMD_OPEN: {
