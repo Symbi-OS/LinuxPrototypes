@@ -1,11 +1,15 @@
 #include "common.h"
 #include "ipc.h"
+#include <sys/syscall.h>
+#include <errno.h>
 
 int ITERATIONS;
 int target_logfd = -1;
 int NUM_CLIENTS = 1;
 
 static uint8_t bShouldExit = 0;
+
+static int registered_fds[10000] = { 0 };
 
 void workspace_thread(workspace_t* workspace) {
 	// Begin stress testing (+2 is necessary for open and close calls)
@@ -31,22 +35,45 @@ void workspace_thread(workspace_t* workspace) {
 
         // Process the requested command
 		switch (job_buffer->cmd) {
-		case CMD_OPEN: {
-			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1);
-			break;
-		}
-		case CMD_CLOSE: {
-			job_buffer->response = close(job_buffer->arg1);
-			break;
-		}
+		// case CMD_OPEN: {
+		// 	job_buffer->response = open(job_buffer->buffer, job_buffer->arg1);
+		// 	break;
+		// }
+		// case CMD_CLOSE: {
+		// 	job_buffer->response = close(job_buffer->arg1);
+		// 	break;
+		// }
 		case CMD_WRITE: {
-			job_buffer->response = write(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
+			int clientfd = job_buffer->arg1;
+			if (registered_fds[clientfd] == 0) {
+				int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
+				int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, job_buffer->arg1, 0);
+
+				// check error case
+				if (borrowed_fd == -1) {
+					perror("pidfd_getfd");
+					//  print errno
+					printf("errno: %d\n", errno);
+					//  print strerror
+					printf("strerror: %s\n", strerror(errno));
+					break;
+				}
+
+				registered_fds[clientfd] = borrowed_fd;
+			}
+
+			job_buffer->response = write(registered_fds[clientfd], job_buffer->buffer, job_buffer->buffer_len);
+
+			// Write to borrowed_fd
+			if (job_buffer->response == -1) {
+				perror("write failed");
+			}
 			break;
 		}
-		case CMD_READ: {
-			job_buffer->response = read(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
-			break;
-		}
+		// case CMD_READ: {
+		// 	job_buffer->response = read(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
+		// 	break;
+		// }
 		default: break;
 		}
 

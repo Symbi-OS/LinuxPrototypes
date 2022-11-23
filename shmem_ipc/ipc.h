@@ -19,6 +19,7 @@
 #define CMD_CLOSE 3
 
 typedef struct JobRequestBuffer {
+    int pid;              // Client's PID
     int cmd;              // Job command requested by the client
     int arg1;             // First integer argument
     int arg2;             // Second integer argument
