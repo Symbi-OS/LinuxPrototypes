@@ -62,7 +62,7 @@ run_client: independent_client
 	taskset -c 1 bash -c 'LD_PRELOAD=/home/$(USER)/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client $(RUN_ITERATIONS)'
 
 run_server: server
-	taskset -c 0 ./server
+	taskset -c 0 ./server $(THREADS)
 
 run_server_elevated: server
 	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server'
