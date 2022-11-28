@@ -13,7 +13,7 @@ endif
 RUN_ITERATIONS := 20000
 export RUN_ITERATIONS
 
-all: server server_killer independent_client expe_info
+all: server server_killer independent_client
 
 # GET TARGET INFO
 
@@ -62,14 +62,14 @@ run_client: independent_client
 	taskset -c 1 bash -c 'LD_PRELOAD=/home/$(USER)/Symbi-OS/Tools/bin/ipc_shortcut/ipc_shortcut.so ./independent_client $(RUN_ITERATIONS)'
 
 run_server: server
-	taskset -c 0 ./server 1
+	taskset -c 0 ./server $(THREADS)
 
 run_server_elevated: server
-	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server 1'
+	taskset -c 0 bash -c 'shortcut.sh -be -s "write->ksys_write" -- ./server $(THREADS)'
 
 kill_server: server_killer
-	./server_killer 1
+	./server_killer $(THREADS)
 
 clean:
-	rm -rf server server_killer independent_client run_log scalability.log sys_info
+	rm -rf server server_killer independent_client run_log scalability.log sys_info/
 	rm -f /dev/shm/sym_server_shm

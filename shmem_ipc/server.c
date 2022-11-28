@@ -1,20 +1,23 @@
 #include "common.h"
 #include "ipc.h"
+<<<<<<< HEAD
+=======
+#include <sys/syscall.h>
+#include <errno.h>
+>>>>>>> 773c9e97de872bc4669c1e8ef6fe1b427183670a
 #include <pthread.h>
 
 int target_logfd = -1;
 static uint8_t bShouldExit = 0;
 pthread_spinlock_t locks[MAX_JOB_BUFFERS];
 
-void workspace_thread(void* ws){
-	
+void* workspace_thread(void* ws){
 	workspace_t *workspace = (workspace_t *) ws;
 	register int idx = 0;
 	JobRequestBuffer_t* job_buffer;
 
 	while (!bShouldExit) {
 		// obtain lock to update next buffer
-		
         while (1) {
 			if (pthread_spin_trylock(&locks[idx]) == 0){
 				if (workspace->job_buffers[idx].status == JOB_REQUESTED){
@@ -36,23 +39,33 @@ void workspace_thread(void* ws){
 		
 		JOB_FOUND:
 		job_buffer = &workspace->job_buffers[idx];
-		
         // Process the requested command
 		switch (job_buffer->cmd) {
-		case CMD_OPEN: {
-			job_buffer->response = open(job_buffer->buffer, job_buffer->arg1);
-			break;
-		}
-		case CMD_CLOSE: {
-			job_buffer->response = close(job_buffer->arg1);
-			break;
-		}
 		case CMD_WRITE: {
-			job_buffer->response = write(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
-			break;
-		}
-		case CMD_READ: {
-			job_buffer->response = read(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
+			int clientfd = job_buffer->arg1;
+			if (registered_fds[clientfd] == 0) {
+				int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
+				int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, job_buffer->arg1, 0);
+
+				// check error case
+				if (borrowed_fd == -1) {
+					perror("pidfd_getfd");
+					//  print errno
+					printf("errno: %d\n", errno);
+					//  print strerror
+					printf("strerror: %s\n", strerror(errno));
+					break;
+				}
+
+				registered_fds[clientfd] = borrowed_fd;
+			}
+
+			job_buffer->response = write(registered_fds[clientfd], job_buffer->buffer, job_buffer->buffer_len);
+
+			// Write to borrowed_fd
+			if (job_buffer->response == -1) {
+				perror("write failed");
+			}
 			break;
 		}
 		case CMD_KILL_SERVER: {

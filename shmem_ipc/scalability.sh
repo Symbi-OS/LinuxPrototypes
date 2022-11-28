@@ -17,6 +17,7 @@ echo $CLIENTS_LIMIT >>  scalability.log
 echo $ITERATIONS >>  scalability.log
 
 make > /dev/null
+make expe_info > /dev/null
 
 while [ $CLIENTS -le $CLIENTS_LIMIT ]
 do
