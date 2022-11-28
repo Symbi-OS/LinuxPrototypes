@@ -82,9 +82,11 @@ JobRequestBuffer_t* ipc_get_job_buffer(){
 
 	for (int i = 0; i < MAX_JOB_BUFFERS; i++){
 		JobRequestBuffer_t* current = &(workspace->job_buffers[i]);
+        //printf("Checking job buffer [%d] with status of %d\n", i, current->status);
 		if (current->status == JOB_NO_REQUEST){
 			// find a free spot!
 			current->status = JOB_BUFFER_IN_USE;
+            printf("Connected to job buffer [%d]\n", i);
 			return &workspace->job_buffers[i];
 		}
 	}
@@ -110,4 +112,8 @@ void wait_for_job_request(JobRequestBuffer_t* jrb) {
     while (jrb->status != JOB_REQUESTED) {
         continue;
     }
+}
+
+void disconnect_job_buffer(JobRequestBuffer_t* jrb) {
+    jrb->status = JOB_NO_REQUEST;
 }
