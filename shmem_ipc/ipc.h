@@ -4,12 +4,14 @@
 
 // Job Status Definitions
 #define JOB_NO_REQUEST 0
-#define JOB_REQUESTED  1
-#define JOB_COMPLETED  2
-#define JOB_BUFFER_IN_USE 3
+#define JOB_BUFFER_IN_USE 1
+#define JOB_REQUESTED  2
+#define JOB_PICKEDUP 3
+#define JOB_COMPLETED  4
+
 
 // Server Config
-#define MAX_JOB_BUFFERS 25
+#define MAX_JOB_BUFFERS 7
 
 // Commands
 #define CMD_KILL_SERVER  -1
@@ -45,3 +47,4 @@ void wait_for_job_completion(JobRequestBuffer_t* jrb);
 
 void mark_job_completed(JobRequestBuffer_t* jrb);
 void wait_for_job_request(JobRequestBuffer_t* jrb);
+void disconnect_job_buffer(JobRequestBuffer_t* jrb);
