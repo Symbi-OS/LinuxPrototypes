@@ -35,14 +35,6 @@ void workspace_thread(workspace_t* workspace) {
 
         // Process the requested command
 		switch (job_buffer->cmd) {
-		// case CMD_OPEN: {
-		// 	job_buffer->response = open(job_buffer->buffer, job_buffer->arg1);
-		// 	break;
-		// }
-		// case CMD_CLOSE: {
-		// 	job_buffer->response = close(job_buffer->arg1);
-		// 	break;
-		// }
 		case CMD_WRITE: {
 			int clientfd = job_buffer->arg1;
 			if (registered_fds[clientfd] == 0) {
@@ -70,10 +62,6 @@ void workspace_thread(workspace_t* workspace) {
 			}
 			break;
 		}
-		// case CMD_READ: {
-		// 	job_buffer->response = read(job_buffer->arg1, job_buffer->buffer, job_buffer->buffer_len);
-		// 	break;
-		// }
 		default: break;
 		}
 
