@@ -4,11 +4,13 @@
 #include <errno.h>
 #include <pthread.h>
 
+#define FD_PER_CLIENT 10000
+
 int target_logfd = -1;
 static uint8_t bShouldExit = 0;
 pthread_spinlock_t locks[MAX_JOB_BUFFERS];
 
-static int registered_fds[10000] = { 0 };
+static int registered_fds[MAX_JOB_BUFFERS][FD_PER_CLIENT] = {};
 
 void* workspace_thread(void* ws){
 	workspace_t *workspace = (workspace_t *) ws;
@@ -42,7 +44,7 @@ void* workspace_thread(void* ws){
 		switch (job_buffer->cmd) {
 		case CMD_WRITE: {
 			int clientfd = job_buffer->arg1;
-			if (registered_fds[clientfd] == 0) {
+			if (registered_fds[idx][clientfd] == 0) {
 				int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
 				int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, job_buffer->arg1, 0);
 
@@ -56,10 +58,10 @@ void* workspace_thread(void* ws){
 					break;
 				}
 
-				registered_fds[clientfd] = borrowed_fd;
+				registered_fds[idx][clientfd] = borrowed_fd;
 			}
 
-			job_buffer->response = write(registered_fds[clientfd], job_buffer->buffer, job_buffer->buffer_len);
+			job_buffer->response = write(registered_fds[idx][clientfd], job_buffer->buffer, job_buffer->buffer_len);
 
 			// Write to borrowed_fd
 			if (job_buffer->response == -1) {
@@ -69,6 +71,10 @@ void* workspace_thread(void* ws){
 		}
 		case CMD_KILL_SERVER: {
 			bShouldExit = 1;
+			break;
+		}
+		case CMD_DISCONNECT:{
+			memset(&registered_fds[idx], 0, sizeof(registered_fds[0]));
 			break;
 		}
 		default: break;
@@ -115,7 +121,7 @@ int main(int argc, char** argv) {
 
 	for (int j = 0; j < num_threads; j++){
 		int err = pthread_create(&(tid[j]), NULL, &workspace_thread, workspace);
-		printf("Thread starting at: %p\n", &tid[j]);
+		printf("[IPC Server] Thread starting at: %p\n", &tid[j]);
 		if (err != 0) printf("can't create thread :[%s]", strerror(err));
 	}
 
