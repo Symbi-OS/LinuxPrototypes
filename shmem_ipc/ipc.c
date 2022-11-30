@@ -86,7 +86,7 @@ JobRequestBuffer_t* ipc_get_job_buffer(){
 		if (current->status == JOB_NO_REQUEST){
 			// find a free spot!
 			current->status = JOB_BUFFER_IN_USE;
-            printf("Connected to job buffer [%d]\n", i);
+            printf("[IPC Server] Connected to job buffer [%d]\n", i);
 			return &workspace->job_buffers[i];
 		}
 	}
@@ -115,5 +115,11 @@ void wait_for_job_request(JobRequestBuffer_t* jrb) {
 }
 
 void disconnect_job_buffer(JobRequestBuffer_t* jrb) {
-    jrb->status = JOB_NO_REQUEST;
+    jrb->cmd = CMD_DISCONNECT;
+}
+
+void print_job_buffer(JobRequestBuffer_t* jrb){
+
+    printf("JOB BUFFER:\n");
+    printf("status: %d | fd: %d | pid: %d | cmd: %d \n", jrb->status, jrb->arg1, jrb->pid, jrb->cmd);
 }

@@ -3,12 +3,19 @@
 #include <sys/syscall.h>
 #include <errno.h>
 #include <pthread.h>
+#define _POSIX_SOURCE
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+
 
 int target_logfd = -1;
 static uint8_t bShouldExit = 0;
 pthread_spinlock_t locks[MAX_JOB_BUFFERS];
 
-static int registered_fds[10000] = { 0 };
+
+static int client_fds[MAX_JOB_BUFFERS] = { 0 };
+static int server_fds[MAX_JOB_BUFFERS] = { 0 };
 
 void* workspace_thread(void* ws){
 	workspace_t *workspace = (workspace_t *) ws;
@@ -41,11 +48,10 @@ void* workspace_thread(void* ws){
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case CMD_WRITE: {
-			int clientfd = job_buffer->arg1;
-			if (registered_fds[clientfd] == 0) {
+			if (client_fds[idx] != job_buffer->arg1) {
+				printf("new fd: %d\n", job_buffer->arg1);
 				int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
 				int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, job_buffer->arg1, 0);
-
 				// check error case
 				if (borrowed_fd == -1) {
 					perror("pidfd_getfd");
@@ -53,29 +59,35 @@ void* workspace_thread(void* ws){
 					printf("errno: %d\n", errno);
 					//  print strerror
 					printf("strerror: %s\n", strerror(errno));
+					mark_job_completed(job_buffer);
 					break;
 				}
-
-				registered_fds[clientfd] = borrowed_fd;
+				server_fds[idx] = borrowed_fd;
 			}
 
-			job_buffer->response = write(registered_fds[clientfd], job_buffer->buffer, job_buffer->buffer_len);
+			job_buffer->response = write(server_fds[idx], job_buffer->buffer, job_buffer->buffer_len);
 
 			// Write to borrowed_fd
 			if (job_buffer->response == -1) {
 				perror("write failed");
 			}
+			// Updating the job status flag
+			mark_job_completed(job_buffer);
 			break;
 		}
 		case CMD_KILL_SERVER: {
 			bShouldExit = 1;
+			// Updating the job status flag
+			mark_job_completed(job_buffer);
+			break;
+		}
+		case CMD_DISCONNECT:{
+			memset(job_buffer, 0, sizeof(JobRequestBuffer_t));
 			break;
 		}
 		default: break;
 		}
 
-        // Updating the job status flag
-		mark_job_completed(job_buffer);
 		pthread_spin_unlock(&locks[idx]);
 	}
 
@@ -115,7 +127,7 @@ int main(int argc, char** argv) {
 
 	for (int j = 0; j < num_threads; j++){
 		int err = pthread_create(&(tid[j]), NULL, &workspace_thread, workspace);
-		printf("Thread starting at: %p\n", &tid[j]);
+		printf("[IPC server] Thread starting at: %p\n", &tid[j]);
 		if (err != 0) printf("can't create thread :[%s]", strerror(err));
 	}
 
