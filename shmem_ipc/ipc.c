@@ -116,6 +116,9 @@ void wait_for_job_request(JobRequestBuffer_t* jrb) {
 
 void disconnect_job_buffer(JobRequestBuffer_t* jrb) {
     jrb->cmd = CMD_DISCONNECT;
+    submit_job_request(jrb);
+    wait_for_job_completion(jrb);
+    memset(jrb, 0, sizeof(JobRequestBuffer_t));
 }
 
 void print_job_buffer(JobRequestBuffer_t* jrb){

@@ -15,7 +15,7 @@
 
 // Commands
 #define CMD_KILL_SERVER  -1
-#define CMD_DISCONNECT  0
+#define CMD_DISCONNECT  -2
 #define CMD_WRITE 1
 #define CMD_OPEN  2
 #define CMD_CLOSE 3
@@ -48,4 +48,4 @@ void wait_for_job_completion(JobRequestBuffer_t* jrb);
 void mark_job_completed(JobRequestBuffer_t* jrb);
 void wait_for_job_request(JobRequestBuffer_t* jrb);
 void disconnect_job_buffer(JobRequestBuffer_t* jrb);
-void print_job_buffer(JobRequestBuffer_t* jrb)
+void print_job_buffer(JobRequestBuffer_t* jrb);
