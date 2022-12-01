@@ -62,18 +62,24 @@ void* workspace_thread(void* ws){
 			}
 
 			job_buffer->response = write(registered_fds[idx][clientfd], job_buffer->buffer, job_buffer->buffer_len);
-
+			
 			// Write to borrowed_fd
 			if (job_buffer->response == -1) {
 				perror("write failed");
 			}
+
+			break;
+		}
+		case CMD_CLOSE: {
+			int clientfd = job_buffer->arg1;
+			registered_fds[idx][clientfd] = 0;
 			break;
 		}
 		case CMD_KILL_SERVER: {
 			bShouldExit = 1;
 			break;
 		}
-		case CMD_DISCONNECT:{
+		case CMD_DISCONNECT: {
 			memset(&registered_fds[idx], 0, sizeof(registered_fds[0]));
 			break;
 		}
@@ -100,15 +106,11 @@ int main(int argc, char** argv) {
 		num_threads = atoi(argv[1]);
 	}
 
-
 	workspace_t* workspace = ipc_connect_server();
-
 
 	if (workspace == NULL){
         printf("Fail to intialize server...\n");
     }
-
-
 	
 	pthread_t tid[num_threads];
 
