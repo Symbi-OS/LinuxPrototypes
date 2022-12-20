@@ -1,9 +1,55 @@
 #include "ipc.h"
 #include "common.h"
 
+#define handle_error(msg) \
+  do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
 static const char* s_BackingFileName = "sym_server_shm";
 static int s_BackingFileDescriptor = 0;
 static void* s_SharedMemoryRegion = 0;
+
+
+int futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3) {
+    return syscall(SYS_futex, uaddr, futex_op, val, timeout, uaddr2, val3);
+}
+
+/* Acquire the futex pointed to by 'futexp': wait for its value to
+    become 1, and then set the value to 0. */
+void futex_wait(int *futexp) {
+    int s;
+
+    while (1) {
+
+        /* Is the futex available? */
+
+        if (__sync_bool_compare_and_swap(futexp, 1, 0))
+            break;      /* Yes */
+
+        /* Futex is not available; wait */
+
+        s = futex(futexp, FUTEX_WAIT, 0, NULL, NULL, 0);
+        if (s == -1 && errno != EAGAIN)
+            handle_error("futex-FUTEX_WAIT");
+    }
+}
+
+/* Release the futex pointed to by 'futexp': if the futex currently
+    has the value 0, set its value to 1 and the wake any futex waiters,
+    so that if the peer is blocked in fpost(), it can proceed. */
+
+void futex_signal(int *futexp) {
+    int s;
+
+    /* __sync_bool_compare_and_swap() was described in comments above */
+
+    if (__sync_bool_compare_and_swap(futexp, 0, 1)) {
+
+        s = futex(futexp, FUTEX_WAKE, 1, NULL, NULL, 0);
+        if (s  == -1)
+            handle_error("futex-FUTEX_WAKE");
+    }
+}
+
 
 void* ipc_connect_client() {
 	// Open the backing file
@@ -100,17 +146,19 @@ void submit_job_request(JobRequestBuffer_t* jrb) {
 
 void mark_job_completed(JobRequestBuffer_t* jrb) {
     jrb->status = JOB_COMPLETED;
+    futex_signal(&(jrb->lock));
 }
 
 void wait_for_job_completion(JobRequestBuffer_t* jrb) {
-    while (jrb->status != JOB_COMPLETED) {
-        continue;
+    futex_wait(&(jrb->lock));
+    if (jrb->status != JOB_COMPLETED){
+        handle_error(" lock is released before a job completes");
     }
 }
 
 void wait_for_job_request(JobRequestBuffer_t* jrb) {
-    while (jrb->status != JOB_REQUESTED) {
-        continue;
+    if (jrb->status != JOB_REQUESTED) {
+        handle_error(" lock is released before a job completes");
     }
 }
 
@@ -122,7 +170,6 @@ void disconnect_job_buffer(JobRequestBuffer_t* jrb) {
 }
 
 void print_job_buffer(JobRequestBuffer_t* jrb){
-
     printf("JOB BUFFER:\n");
     printf("status: %d | fd: %d | pid: %d | cmd: %d \n", jrb->status, jrb->arg1, jrb->pid, jrb->cmd);
 }

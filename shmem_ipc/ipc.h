@@ -1,6 +1,13 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <linux/futex.h>
+#include <sys/time.h>
 
 // Job Status Definitions
 #define JOB_NO_REQUEST 0
@@ -29,6 +36,7 @@ typedef struct JobRequestBuffer {
 	char buffer[128];	  // Command buffer
 	int buffer_len;		  // Commabd buffer length
     volatile int status;  // Flag indicating which stage the job is at
+    int lock;
 } JobRequestBuffer_t;
 
 typedef struct workspace {
@@ -36,6 +44,11 @@ typedef struct workspace {
 } workspace_t;
 
 #define SHMEM_REGION_SIZE 0x1000
+
+
+int futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3);
+void futex_wait(int *futexp);
+void futex_signal(int *futexp);
 
 void* ipc_connect_client();
 void  ipc_close();
