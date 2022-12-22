@@ -12,33 +12,35 @@ pthread_spinlock_t locks[MAX_JOB_BUFFERS];
 
 static int registered_fds[MAX_JOB_BUFFERS][FD_PER_CLIENT] = {};
 
-void* workspace_thread(void* ws){
-	workspace_t *workspace = (workspace_t *) ws;
-	register int idx = 0;
+struct thread_arg {
+    int idx;
+	int thread_count;
+    workspace_t *ws;
+};
+
+void* workspace_thread(void* arg){
+	struct thread_arg *data = (struct thread_arg *)arg;
+	int start_idx = data->idx;
+	int thread_count = data->thread_count;
+	workspace_t *workspace = data->ws;
+	register int idx = start_idx;
 	JobRequestBuffer_t* job_buffer;
 
 	while (!bShouldExit) {
 		// obtain lock to update next buffer
         while (1) {
-			if (pthread_spin_trylock(&locks[idx]) == 0){
-				if (workspace->job_buffers[idx].status == JOB_REQUESTED){
-					goto JOB_FOUND;
-				}else{
-					pthread_spin_unlock(&locks[idx]);
-					idx++;
-					if (idx==MAX_JOB_BUFFERS){
-						idx = 0;
-					}
-				}
+			if (workspace->job_buffers[idx].status == JOB_REQUESTED){
+				goto JOB_FOUND;
 			}else{
-				idx++;
-				if (idx==MAX_JOB_BUFFERS){
-					idx = 0;
+				idx += thread_count;
+				if (idx >= MAX_JOB_BUFFERS){
+					idx = start_idx;
 				}
 			}
         }
 		
 		JOB_FOUND:
+		printf("Thread %d working on %d\n", start_idx, idx);
 		job_buffer = &workspace->job_buffers[idx];
         // Process the requested command
 		switch (job_buffer->cmd) {
@@ -121,8 +123,12 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	struct thread_arg args[num_threads];
 	for (int j = 0; j < num_threads; j++){
-		int err = pthread_create(&(tid[j]), NULL, &workspace_thread, workspace);
+		args[j].idx = j;
+		args[j].thread_count = num_threads;
+		args[j].ws = workspace;
+		int err = pthread_create(&(tid[j]), NULL, &workspace_thread, &args[j]);
 		printf("[IPC Server] Thread starting at: %p\n", &tid[j]);
 		if (err != 0) printf("can't create thread :[%s]", strerror(err));
 	}
