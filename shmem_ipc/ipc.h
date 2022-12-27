@@ -46,9 +46,10 @@ typedef struct workspace {
 #define SHMEM_REGION_SIZE 0x1000
 
 
-int futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3);
-void futex_wait(int *futexp);
-void futex_signal(int *futexp);
+int futex_wait(int *futex, int val);
+int futex_signal(int *futex);
+void wait(int *futex);
+void signal(int *futex);
 
 void* ipc_connect_client();
 void  ipc_close();

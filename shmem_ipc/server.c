@@ -43,6 +43,7 @@ void* workspace_thread(void* ws){
         // Process the requested command
 		switch (job_buffer->cmd) {
 		case CMD_WRITE: {
+			//printf("write request received\n");
 			int clientfd = job_buffer->arg1;
 			if (registered_fds[idx][clientfd] == 0) {
 				int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
@@ -71,6 +72,7 @@ void* workspace_thread(void* ws){
 			break;
 		}
 		case CMD_CLOSE: {
+			printf("close request received\n");
 			int clientfd = job_buffer->arg1;
 			registered_fds[idx][clientfd] = 0;
 			break;
@@ -81,12 +83,14 @@ void* workspace_thread(void* ws){
 		}
 		case CMD_DISCONNECT: {
 			memset(&registered_fds[idx], 0, sizeof(registered_fds[0]));
+			//printf("disconnecting from the server\n");
 			break;
 		}
 		default: break;
 		}
 
         // Updating the job status flag
+		//printf("Request completed\n");
 		mark_job_completed(job_buffer);
 		pthread_spin_unlock(&locks[idx]);
 	}

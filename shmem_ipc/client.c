@@ -1,7 +1,7 @@
 #include "common.h"
 #include "ipc.h"
 
-#define LOG_FILE "/dev/null"
+#define LOG_FILE "tmp.log"
 
 int64_t calc_average(int64_t* buffer, uint64_t count) {
 	int64_t sum = 0;
@@ -12,7 +12,7 @@ int64_t calc_average(int64_t* buffer, uint64_t count) {
 }
 
 void stress_test(int iterations) {
-	int logfd = open(LOG_FILE, O_WRONLY | O_APPEND | O_CREAT, 0644);
+	int logfd = open(LOG_FILE, O_WRONLY | O_CREAT, 0644);
 
 	// Create performance timers
 	struct timespec outerTimeStart={0,0}, outerTimeEnd={0,0},
