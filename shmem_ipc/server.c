@@ -41,10 +41,12 @@ void* workspace_thread(void* ws){
 		JOB_FOUND:
 		job_buffer = &workspace->job_buffers[idx];
         // Process the requested command
+		//printf("request %d received.\n", job_buffer->cmd);
 		switch (job_buffer->cmd) {
 		case CMD_WRITE: {
 			//printf("write request received\n");
 			int clientfd = job_buffer->arg1;
+			
 			if (registered_fds[idx][clientfd] == 0) {
 				int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
 				int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, job_buffer->arg1, 0);
@@ -61,8 +63,12 @@ void* workspace_thread(void* ws){
 
 				registered_fds[idx][clientfd] = borrowed_fd;
 			}
+			
+			int server_fd = registered_fds[idx][clientfd];
 
-			job_buffer->response = write(registered_fds[idx][clientfd], job_buffer->buffer, job_buffer->buffer_len);
+			//printf("Client fd: %d, Server fd: %d\n", clientfd, server_fd);
+
+			job_buffer->response = write(server_fd, job_buffer->buffer, job_buffer->buffer_len);
 			
 			// Write to borrowed_fd
 			if (job_buffer->response == -1) {
@@ -72,9 +78,10 @@ void* workspace_thread(void* ws){
 			break;
 		}
 		case CMD_CLOSE: {
-			printf("close request received\n");
+			//printf("close request received\n");
 			int clientfd = job_buffer->arg1;
 			registered_fds[idx][clientfd] = 0;
+			//print_job_buffer(job_buffer);
 			break;
 		}
 		case CMD_KILL_SERVER: {
@@ -91,6 +98,9 @@ void* workspace_thread(void* ws){
 
         // Updating the job status flag
 		//printf("Request completed\n");
+		//printf("sleeping...\n");
+		//sleep(2);
+		//printf("sleeping done\n");
 		mark_job_completed(job_buffer);
 		pthread_spin_unlock(&locks[idx]);
 	}

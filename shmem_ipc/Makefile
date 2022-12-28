@@ -10,7 +10,7 @@ ifeq ($(TYPE), static)
 	SYMLIB_LINK=$(SYMLIB_STATIC)
 endif
 
-RUN_ITERATIONS := 10000
+RUN_ITERATIONS := 5
 export RUN_ITERATIONS
 
 all: server server_killer independent_client 

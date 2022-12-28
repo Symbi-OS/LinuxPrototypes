@@ -13,8 +13,7 @@
 #define JOB_NO_REQUEST 0
 #define JOB_BUFFER_IN_USE 1
 #define JOB_REQUESTED  2
-#define JOB_PICKEDUP 3
-#define JOB_COMPLETED  4
+#define JOB_COMPLETED  3
 
 
 // Server Config
@@ -45,11 +44,9 @@ typedef struct workspace {
 
 #define SHMEM_REGION_SIZE 0x1000
 
-
-int futex_wait(int *futex, int val);
-int futex_signal(int *futex);
-void wait(int *futex);
-void signal(int *futex);
+int futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3);
+void futex_wait(int *futexp);
+void futex_signal(int *futexp);
 
 void* ipc_connect_client();
 void  ipc_close();
@@ -62,4 +59,4 @@ void wait_for_job_completion(JobRequestBuffer_t* jrb);
 void mark_job_completed(JobRequestBuffer_t* jrb);
 void wait_for_job_request(JobRequestBuffer_t* jrb);
 void disconnect_job_buffer(JobRequestBuffer_t* jrb);
-void print_job_buffer(JobRequestBuffer_t* jrb);
+void print_job_buffer(JobRequestBuffer_t* jrb, char * header);

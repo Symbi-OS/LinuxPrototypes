@@ -9,26 +9,38 @@ static int s_BackingFileDescriptor = 0;
 static void* s_SharedMemoryRegion = 0;
 
 
-int futex_wait(int *futex, int val)
-{
-    return syscall(SYS_futex, futex, FUTEX_WAIT, val, NULL, NULL, 0);
+int futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3) {
+    return syscall(SYS_futex, uaddr, futex_op, val, timeout, uaddr2, val3);
 }
 
-int futex_signal(int *futex)
-{
-    return syscall(SYS_futex, futex, FUTEX_WAKE, 1, NULL, NULL, 0);
+/* Acquire the futex pointed to by 'futexp': wait for its value to
+    become 1, and then set the value to 0. */
+void futex_wait(int *futexp) {
+
+    /* Is the futex available? */
+
+    /*
+    while (!(__sync_bool_compare_and_swap(futexp, 1, 0)));
+            return;     
+    */
+    
+    futex(futexp, FUTEX_WAIT, 0, NULL, NULL, 0);
 }
 
-void wait(int *futex)
-{
-    futex_wait(futex, *futex);
-}
+/* Release the futex pointed to by 'futexp': if the futex currently
+    has the value 0, set its value to 1 and the wake any futex waiters,
+    so that if the peer is blocked in fpost(), it can proceed. */
 
-void signal(int *futex)
-{
-    futex_signal(futex);
-}
+void futex_signal(int *futexp) {
+    int s;
 
+    /* __sync_bool_compare_and_swap() was described in comments above */
+    do {
+        s = futex(futexp, FUTEX_WAKE, 1, NULL, NULL, 0);
+    } while (s==0);
+    //printf("%d process is woken\n", s);
+    
+}
 
 
 void* ipc_connect_client() {
@@ -113,7 +125,7 @@ JobRequestBuffer_t* ipc_get_job_buffer(){
 			// find a free spot!
 			current->status = JOB_BUFFER_IN_USE;
             printf("[IPC Server] Connected to job buffer [%d]\n", i);
-            print_job_buffer(current);
+            //print_job_buffer(current);
 			return &workspace->job_buffers[i];
 		}
 	}
@@ -127,15 +139,15 @@ void submit_job_request(JobRequestBuffer_t* jrb) {
 
 void mark_job_completed(JobRequestBuffer_t* jrb) {
     jrb->status = JOB_COMPLETED;
-    signal(&(jrb->lock));
+    //printf("signal client!\n");
+    futex_signal(&(jrb->lock));
 }
 
 void wait_for_job_completion(JobRequestBuffer_t* jrb) {
-    wait(&(jrb->lock));
-    //printf("Request completed\n");
-    if (jrb->status != JOB_COMPLETED){
-        handle_error(" lock is released before a job completes");
-    }
+    //printf("Going to be blocked!\n");
+    futex_wait(&(jrb->lock));
+    //printf("Awake!\n");
+    //if (jrb->status != JOB_COMPLETED) handle_error(" lock is released before a job completes");
 }
 
 void wait_for_job_request(JobRequestBuffer_t* jrb) {
@@ -153,7 +165,7 @@ void disconnect_job_buffer(JobRequestBuffer_t* jrb) {
     memset(jrb, 0, sizeof(JobRequestBuffer_t));
 }
 
-void print_job_buffer(JobRequestBuffer_t* jrb){
-    printf("JOB BUFFER:\n");
+void print_job_buffer(JobRequestBuffer_t* jrb, char * header){
+    printf("JOB BUFFER at %s:\n", header);
     printf("status: %d | lock: %d | pid: %d | cmd: %d \n", jrb->status, jrb->lock, jrb->pid, jrb->cmd);
 }
