@@ -17,7 +17,7 @@
 
 
 // Server Config
-#define MAX_JOB_BUFFERS 41
+#define MAX_JOB_BUFFERS 80
 
 // Commands
 #define CMD_KILL_SERVER  -1
@@ -42,7 +42,7 @@ typedef struct workspace {
     JobRequestBuffer_t job_buffers[MAX_JOB_BUFFERS];
 } workspace_t;
 
-#define SHMEM_REGION_SIZE 0x2000
+#define SHMEM_REGION_SIZE 0x3000
 
 int futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3);
 void futex_wait(int *futexp);
