@@ -25,6 +25,7 @@
 #define CMD_WRITE 1
 #define CMD_OPEN  2
 #define CMD_CLOSE 3
+#define CMD_READ 4
 
 typedef struct JobRequestBuffer {
     int pid;              // Client's PID

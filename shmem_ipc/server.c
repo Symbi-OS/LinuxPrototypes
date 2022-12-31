@@ -77,6 +77,36 @@ void* workspace_thread(void* ws){
 
 			break;
 		}
+		case CMD_READ: {
+			int clientfd = job_buffer->arg1;
+
+            if (registered_fds[idx][clientfd] == 0) {
+                int pidfd = syscall(SYS_pidfd_open, job_buffer->pid, 0);
+                int borrowed_fd = syscall(SYS_pidfd_getfd, pidfd, job_buffer->arg1, 0);
+
+                // check error case
+                if (borrowed_fd == -1) {
+                    perror("pidfd_getfd");
+                    //  print errno
+                    printf("errno: %d\n", errno);
+                    //  print strerror
+                    printf("strerror: %s\n", strerror(errno));
+                    break;
+                }
+
+                registered_fds[idx][clientfd] = borrowed_fd;
+            }
+
+            int server_fd = registered_fds[idx][clientfd];
+
+			job_buffer->response = read(server_fd, job_buffer->buffer, job_buffer->buffer_len);
+
+            // Write to borrowed_fd
+            if (job_buffer->response == -1) {
+                perror("read failed");
+            }
+			break;
+		}
 		case CMD_CLOSE: {
 			//printf("close request received\n");
 			int clientfd = job_buffer->arg1;
