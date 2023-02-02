@@ -3,17 +3,19 @@ CFLAGS += -mno-red-zone -fno-omit-frame-pointer -O0 -g
 benchmark: benchmark.c
 	$(CC) $(CFLAGS) -o $@ $<
 
+ITERATIONS=100000
+USE_GLIBC_FN=0
 run_pt:
-	taskset -c 1 shortcut.sh -p --- ./benchmark 1 1
+	taskset -c 1 shortcut.sh -p --- ./benchmark $(ITERATIONS) $(USE_GLIBC_FN)
 
 run_interpose:
-	taskset -c 1 shortcut.sh --- ./benchmark 1 1 
+	taskset -c 1 shortcut.sh --- ./benchmark $(ITERATIONS) $(USE_GLIBC_FN)
 
 run_be:
-	taskset -c 1 shortcut.sh -be --- ./benchmark 1 1
+	taskset -c 1 shortcut.sh -be --- ./benchmark $(ITERATIONS) $(USE_GLIBC_FN)
 
 run_sc:
-	taskset -c 1 shortcut.sh -be \
+	taskset -c 1 shortcut.sh  \
 		-s 'getpid->__x64_sys_getpid' \
 		-s 'getppid->__x64_sys_getppid' \
 		-s 'write->__x64_sys_write' \
@@ -22,7 +24,9 @@ run_sc:
 		-s 'munmap->__x64_sys_munmap' \
 		-s 'poll->__x64_sys_poll' \
 		-s 'select->__x64_sys_select' \
-		--- ./benchmark 8 0
+		-l 'fork' \
+		-e 'getpid' \ 
+		--- ./benchmark $(ITERATIONS) $(USE_GLIBC_FN)
 
 # use bpf to profile the benchmark
 profile: benchmark profile.sh
