@@ -10,7 +10,7 @@ run:
 	./fork
 
 run_elev:
-	taskset -c 0 shortcut.sh -be --- ./fork  &
+	taskset -c 0 shortcut.sh -be --- ./fork
 
 
 # Works fine
