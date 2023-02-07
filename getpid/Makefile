@@ -1,36 +1,39 @@
 # all and clean are phony targets
-.PHONY: all run clean
+.PHONY: all run clean profile_pt profile_interpose profile_all
 
 all: getpid
 
 getpid: getpid.c
-	gcc getpid.c -o getpid
+	gcc -O3	getpid.c -o getpid
 
-run:
-	./getpid 10000000
+# Chosen to take 1 sec.
+ITERATIONS=160000000
+WORKLOAD=./getpid ${ITERATIONS}
+TASKSET_CMD=taskset -c 0 bash -c
 
-# Works fine
-run_share_core:
-	taskset -c 0 ./getpid 40000000 &
-	sleep 1
-	taskset -c 0 ./getpid 1
+run: getpid
+	./getpid ${ITERATIONS}
 
-run_elev_share_core:
-	taskset -c 0 shortcut.sh -be --- ./getpid 40000000 &
-	sleep 1
-	taskset -c 0 ./getpid 1
+run_pt: getpid
+	${TASKSET_CMD} 'shortcut.sh -p --- ${WORKLOAD}'
 
-run_shortcut:
-	taskset -c 0 shortcut.sh -be -s "getpid->__do_sys_getpid" --- ./getpid 40000000 &
+run_interpose: getpid
+	${TASKSET_CMD} 'shortcut.sh --- ${WORKLOAD}'
+
+run_elev: getpid
+	${TASKSET_CMD} 'shortcut.sh -be --- ${WORKLOAD}'
+
+run_shortcut: getpid
+	${TASKSET_CMD} 'shortcut.sh -be -s "getpid->__x64_sys_getpid" --- ${WORKLOAD}'
+
+profile_pt: getpid
+	./profile.sh "'shortcut.sh -p --- ${WORKLOAD}'" getpid_pt.svg
+
+profile_interpose: getpid
+	./profile.sh "'shortcut.sh --- ${WORKLOAD}'" getpid_interpose.svg
+
+profile_all: profile_pt profile_interpose
 
 
-run_shortcut_share_core:
-	taskset -c 0 shortcut.sh -be -sc "getpid->__do_sys_getpid" --- ./getpid 40000000 &
-	sleep 1
-	taskset -c 0 ./getpid 1
-
-run_s:
-	taskset -c 0 'shortcut.sh -be -s "getpid->__do_sys_getpid" --- ./getpid 4'
-# taskset -c 0 bash -c 'shortcut.sh -be -s "getpid->__do_sys_getpid" --- ./LinuxPrototypes/getpid/getpid 3000'
 clean:
-	rm -f getpid
+	rm -f getpid *.svg
