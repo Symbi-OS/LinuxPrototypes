@@ -5,7 +5,7 @@ set -x
 
 sudo echo about to start profiling
 
-TASKSET_CMD="taskset -c 1 bash -c"
+TASKSET_CMD="taskset -c 0 bash -c"
 
 # There must be 2 command line arguments
 # The first is the workload command
@@ -24,10 +24,11 @@ eval "$TASKSET_CMD $WORKLOAD_CMD &"
 # Give the workload time to start
 sleep 0.1
 
-PID=$(pgrep -n fio)
+PID=$(pgrep -n wr_loop)
 echo $PID
 
-sudo /usr/share/bcc/tools/profile -p $PID -d -I -af -F 99 10 > profile.out
+#sudo /usr/share/bcc/tools/profile -p $PID -d -I -af -F 999 10 > profile.out
+sudo /usr/share/bcc/tools/profile  -d -I -af -F 99 10 > profile.out
 
 ~/FlameGraph/flamegraph.pl profile.out > $SVG_OUTPUT
 

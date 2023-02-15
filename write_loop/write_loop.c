@@ -34,8 +34,17 @@ int main(int argc, char *argv[]) {
         buffer[i] = 'a';
     }
 
-    // open file /dev/null for writing
-    int fd = open("/dev/null", O_WRONLY);
+    // Check if file ./test exists
+    if (access("./test", F_OK) != -1) {
+        printf("File ./test exists, deleting\n");
+        int rc = remove("./test");
+        // check that remove worked
+        if (rc != 0) {
+            printf("remove failed\n");
+            exit(1);
+        }
+    }
+    int fd = open("./test", O_WRONLY | O_CREAT);
 
     // check open worked
     if (fd == -1) {
