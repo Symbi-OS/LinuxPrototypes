@@ -2,71 +2,85 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-// include for O_WRONLY, O_CREAT, O_TRUNC
 #include <fcntl.h>
 #include <time.h>
+#include <string.h>
 
-int main(int argc, char *argv[]) {
-    // print argc
+struct params {
+    int bytes;
+    int times;
+    char *path;
+};
 
+void parse_args(int argc, char *argv[], struct params *p) {
     // Check that we got 3 arguments total
-    if (argc != 3) {
-        printf("Got %d arguments, expected 3\n", argc);
-        printf("Usage: ./write_loop <num bytes to write> <num times to write>\n");
+    if (argc != 4) {
+        printf("Got %d arguments, expected 4\n", argc);
+        printf("Usage: ./write_loop <num bytes to write> <num times to write> <file path>\n");
         exit(1);
     }
 
-    // First argument is number of bytes to write
-    int bytes = atoi(argv[1]);
-    // Second argument is number of times to write
-    int times = atoi(argv[2]);
+    p->bytes = atoi(argv[1]);
+    p->times = atoi(argv[2]);
+    p->path = argv[3];
 
+}
+
+char *get_buf(struct params *p) {
     // Allocate a buffer of the specified size
-    char *buffer = malloc(bytes);
-    // check that malloc worked
+    char *buffer = malloc(p->bytes);
     if (buffer == NULL) {
         printf("malloc failed\n");
         exit(1);
     }
 
     // fill the buffer with the letter 'a'
-    for (int i = 0; i < bytes; i++) {
+    for (int i = 0; i < p->bytes; i++) {
         buffer[i] = 'a';
     }
 
-    // Check if file ./test exists
-    if (access("./test", F_OK) != -1) {
-        printf("File ./test exists, deleting\n");
-        int rc = remove("./test");
-        // check that remove worked
-        if (rc != 0) {
-            printf("remove failed\n");
-            exit(1);
+    return buffer;
+}
+
+int prepare_file(struct params *p){
+
+    // Skip deletion if it's /dev/null
+    if (strcmp(p->path, "/dev/null") == 0) {
+        printf("Skipping deletion of /dev/null\n");
+    } else {
+        if (access(p->path, F_OK) != -1) {
+            printf("File %s exists, deleting\n", p->path);
+            int rc = remove(p->path);
+            // check that remove worked
+            if (rc != 0) {
+                printf("remove failed\n");
+                exit(1);
+            }
         }
     }
-    int fd = open("./test", O_WRONLY | O_CREAT);
 
-    // check open worked
+    int fd = open(p->path, O_WRONLY | O_CREAT);
     if (fd == -1) {
         printf("open failed\n");
         exit(1);
     }
-    
-    // Write bytes to /dev/null times times
-    int rc;
-    // Start timer
-    time_t start,end, prior, current;
-    start=clock();//predefined  function in c
+    return fd;
+}
+void benchmark(struct params *p){
+    char *buffer = get_buf(p);
 
-    int print_interval = 1<<23;
+    int fd = prepare_file(p);
+    time_t start, end, prior, current;
+    start=clock();
+
+    int print_interval = 1<<20;
 
     // get prior time
     prior = clock();
-
     int verbose = 1;
 
     // Start at 1 to make timer check easier, since we don't want to count the first iteration 
-    for (int i = 1; i < times; i++) {
+    for (int i = 1; i < p->times; i++) {
 
         // This does not seem to pertubate the timing
         if( verbose && ( i % print_interval == 0 ) ){
@@ -77,7 +91,7 @@ int main(int argc, char *argv[]) {
             prior = current;
         }
 
-        rc = write(fd, buffer, bytes);
+        int rc = write(fd, buffer, p->bytes);
         // check write worked
         if (rc == -1) {
             printf("write failed\n");
@@ -86,15 +100,23 @@ int main(int argc, char *argv[]) {
     }
 
     end=clock();
+
     // Subtract start from end to get elapsed time
     double elapsed = (double)(end-start)/CLOCKS_PER_SEC;
     // Print elapsed time
     printf("Elapsed time: %f\n", elapsed);
     // Print throughput
-    printf("Throughput: %f Mb/s\n", (bytes*times)/(elapsed*1024*1024));
-    printf("K Writes/sec: %f \n", (times)/(elapsed*1024));
+    printf("Throughput: %f Mb/s\n", (p->bytes*p->times)/(elapsed*1024*1024));
+    printf("K Writes/sec: %f \n", (p->times)/(elapsed*1024));
 
     free(buffer);
-
     close(fd);
+}
+
+int main(int argc, char *argv[]) {
+    struct params p;
+
+    parse_args(argc, argv, &p); 
+
+    benchmark(&p);
 }

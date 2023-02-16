@@ -9,12 +9,18 @@ CFLAGS=-O4 -g -fomit-frame-pointer
 # all: run run_passthrough run_interposed run_elev_wr_only run_elev run_lower_wr_only \
 # 		run_elev_sc_wr_only run_quick_sc
 EXEC=write_loop
+
 # This is 1<<24
-#ITERATIONS=16777216
+ITER?=16777216
 
-ITERATIONS=3677721
+FPATH?=./test
 
-NR_BYTES_TO_WRITE=1
+# How many bytes to write each iteration
+WR_SZ?=1
+
+SC_SCRIPT=shortcut.sh
+
+APP_AND_ARGS=./$(EXEC) $(WR_SZ) $(ITER) $(FPATH)
 
 write_loop: write_loop.c
 	gcc $(CFLAGS) -o $@ $<
@@ -23,46 +29,45 @@ all: run_elev_wr_only run_elev run_lower_wr_only run_elev_sc_wr_only
 
 # Normal run
 run: $(EXEC)
-	./$(EXEC) $(NR_BYTES_TO_WRITE) $(ITERATIONS)
-
-SHORTCUT_SCRIPT=shortcut.sh
-APP_AND_ARGS=./$(EXEC) $(NR_BYTES_TO_WRITE) $(ITERATIONS)
+	$(APP_AND_ARGS)
 
 # Should be identical to the normal run
 run_passthrough: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v -p --- $(APP_AND_ARGS)
+	$(SC_SCRIPT) -v -p --- $(APP_AND_ARGS)
 
 # Interposing lib used this time, but no elevation or shortcutting
 run_interposed: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v --- $(APP_AND_ARGS)
+	$(SC_SCRIPT) -v --- $(APP_AND_ARGS)
 
 # Uses Interposing lib, starts lowered and elevates on write
 run_elev_wr_only: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v -ewrite --- $(APP_AND_ARGS)
+	$(SC_SCRIPT) -v -ewrite --- $(APP_AND_ARGS)
 
 # Uses Interposing lib, starts elevated then lowers around write
 run_lower_wr_only: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v -be -lwrite --- $(APP_AND_ARGS)
+	$(SC_SCRIPT) -v -be -lwrite --- $(APP_AND_ARGS)
 
 # Whole application runs elevated, no shortcutting
 run_elev: $(EXEC)
-	$(SHORTCUT_SCRIPT) -be --- $(APP_AND_ARGS)
-
-run_elev_long: $(EXEC)
-	$(SHORTCUT_SCRIPT) -be --- ./$(EXEC) $(NR_BYTES_TO_WRITE) 1073741824
+	$(SC_SCRIPT) -be --- $(APP_AND_ARGS)
 
 # Uses Interposing lib, starts elevated, shortcutting write
 run_elev_sc_wr_only: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v -be -s 'write->__x64_sys_write' --- $(APP_AND_ARGS)
-
-run_elev_sc_wr_only_long: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v -be -s 'write->ksys_write' --- ./$(EXEC) 1 1073741824
-
-run_quick_sc: $(EXEC)
-	$(SHORTCUT_SCRIPT) -v -be -s 'write->ksys_write' --- ./$(EXEC) 1 2
+	$(SC_SCRIPT) -v -be -s 'write->__x64_sys_write' --- $(APP_AND_ARGS)
 
 profile:
 	../profile.sh "'shortcut.sh -p --- $(APP_AND_ARGS)'" wr_loop.svg
 
 clean:
 	rm -rf $(EXEC) test
+
+# Depricate:
+
+# run_elev_sc_wr_only_long: $(EXEC)
+# 	$(SC_SCRIPT) -v -be -s 'write->ksys_write' --- ./$(EXEC) 1 1073741824
+
+# run_quick_sc: $(EXEC)
+# 	$(SC_SCRIPT) -v -be -s 'write->ksys_write' --- ./$(EXEC) 1 2
+
+# run_elev_long: $(EXEC)
+# 	$(SC_SCRIPT) -be --- ./$(EXEC) $(WR_SZ) 1073741824
