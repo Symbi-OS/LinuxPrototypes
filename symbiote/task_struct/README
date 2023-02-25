@@ -1,0 +1,10 @@
+Exercises in futility 
+
+I’m trying to make use of linux kernel structs (like the task_struct) from a user program. I’ve attempted two approaches:
+Just #include  the relevant .h file from a built linux directory and provide the necessary include paths and generated .h files. This spirals out of control because:
+Each file includes many others
+structs exist that conflict with structs of the same name in standard libs (using nostdinc seems like a non starter because some definitions are needed from these libs).
+Copy just the struct I care about and try to resolve each component of it by copying in the minimal source that those need
+this explodes nearly as fast as the above, imaging the task_struct for example, which is 1400 lines long & includes (I’d guess) hundreds of other structs within it. 
+I saw this online [https://kernelnewbies.org/KernelHeaders] which seems to suggest rebuilding glibc after doing make headers install. This seems like it could take some experimentation, but might be the “Right” way to do it
+
