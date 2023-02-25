@@ -1,7 +1,7 @@
 obj-m += hello-mod.o
 hello-mod-objs += hello.o toggle.o
 
-LINUX_PATH=../../../linux
+LINUX_PATH=../../linux
 hello_mod:
 	make -C $(LINUX_PATH) M=$(PWD)
 
