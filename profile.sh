@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This is busted, I tried...
-set -x
+set -x -e
 
 sudo echo about to start profiling
 
@@ -24,11 +24,11 @@ eval "$TASKSET_CMD $WORKLOAD_CMD &"
 # Give the workload time to start
 sleep 0.1
 
-PID=$(pgrep -n wr_loop)
+PID=$(pgrep -n write_loop)
 echo $PID
 
-#sudo /usr/share/bcc/tools/profile -p $PID -d -I -af -F 999 10 > profile.out
-sudo /usr/share/bcc/tools/profile --stack-storage-size=$((1<<16)) -d -I -af -F 999 10 > profile.out
+sudo /usr/share/bcc/tools/profile -p $PID -d -I -af -F 999 10 > profile.out
+# sudo /usr/share/bcc/tools/profile --stack-storage-size=$((1<<16)) -d -I -af -F 99 10 > profile.out
 
 ~/FlameGraph/flamegraph.pl profile.out > $SVG_OUTPUT
 
