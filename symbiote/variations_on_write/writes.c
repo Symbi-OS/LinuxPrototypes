@@ -94,7 +94,7 @@ struct params {
     char path[256];
     int test_id;
     unsigned iter;
-    unsigned size;
+    size_t size;
 
     // Derived at runtime
     char *buf;
@@ -271,53 +271,77 @@ uint64_t get_fmask_comp(){
     fprintf(stderr, "after complement rflags: %lx\n", syscall_rflags);
     return ia32_fmask_comp;
 }
+
+inline void __attribute__((always_inline)) get_usr_flags_r11() {
+    asm("pushfq");
+    asm("popq %r11"); // User flags in r11
+}
+
+inline void __attribute__((always_inline)) prepare_hdl_flags(uint64_t ia32_fmask_comp) {
+    // this dirties rax, but who cares, it's overwritten with SYS_write
+    asm("pushfq");
+    asm("popq %rcx");
+    asm("andq %0, %%rcx" : : ""(ia32_fmask_comp));
+    asm("pushq %rcx");
+    asm("popfq"); // rflags = rflags & not(fmask)
+}
+
+// inline fn to put return addr in rcx
+inline void __attribute__((always_inline)) prepare_return_addr() {
+        asm("lea return_point(%rip), %rcx"); 
+}
+// load syscall number
+inline void __attribute__((always_inline)) load_syscall_number(int syscall_number) {
+    asm("mov %0, %%eax" : : "r"(syscall_number));
+}
+// load args 3
+inline void __attribute__((always_inline)) load_args_3(int fd, const void *buf, size_t size) {
+    asm("mov %0, %%edi" : : "r"(fd));
+    asm("mov %0, %%rsi" : : "r"(buf));
+    asm("mov %0, %%rdx" : : "r"(size));
+}
+
+// swap and return
+inline void __attribute__((always_inline)) place_addr_on_stack(uint64_t target) {
+    // we do this to avoid dirtying any regs... maybe there's another way
+    // Select a register randomly, it won't be dirtied
+    asm("push %rax");
+    // move target to rax
+    asm("mov %0, %%rax" : : ""(target));
+    // swap rax and stack
+    // xor val from stack with rax
+    asm("xor (%rsp), %rax");
+    asm("xor %rax, (%rsp)");
+    asm("xor (%rsp), %rax");
+}
+
 void skipping_syscall_instruction(struct params *p) {
-
-    long syscall_number = SYS_write;
-    int file_descriptor = p->fd;
-    const void *buffer = p->buf;
-    size_t buffer_size = p->size;
-
     uint64_t ia32_fmask_comp = get_fmask_comp();
-
+    uint64_t lstar = get_lstar();
     t.start = clock();
-
     sym_elevate();
     for (unsigned i = 0; i < p->iter; i++) {
-        asm("pushfq");
-        asm("popq %r11"); // User flags in r11
+        get_usr_flags_r11();
 
-        asm("pushfq");
-        asm("popq %rcx");
-        asm("andq %0, %%rcx" : : ""(ia32_fmask_comp));
-        asm("pushq %rcx");
-        asm("popfq"); // rflags = rflags & not(fmask)
-
+        prepare_hdl_flags(ia32_fmask_comp);
+ 
         // NOTE: Skip loading ss and cs, should be done from elevating
+        prepare_return_addr();
 
-        // Unconvinced this works...
-        asm("lea return_point(%rip), %rcx"); // Return address in rcx
+        load_syscall_number(SYS_write);
 
-        asm("mov %0, %%rax" : : "r"(syscall_number));
-        asm("mov %0, %%edi" : : "r"(file_descriptor));
-        asm("mov %0, %%rsi" : : "r"(buffer));
-        asm("mov %0, %%rdx" : : "r"(buffer_size));
-        // All args up to the 3rd are in standard location...
+        load_args_3(p->fd, p->buf, p->size);
         
-        // NOTE: if more args, will have to do more work.
-     
-        asm("mov $0xffffffff81e00000, %r10"); 
-        asm("jmp *%r10"); // Update rip to syscall entry point
-        // asm("jmp *0xffffffff81c00000"); // Update rip to syscall entry point
+        place_addr_on_stack(lstar);
+
+        // Send us to the syscall handler
+        asm("ret");
 
         __asm__ volatile("return_point:");
         asm("nop");
-
     }
-    // print survived
     sym_lower();
     t.end = clock();
-    fprintf(stderr, "Survived\n");
 }
 
 int g_fd;
@@ -451,7 +475,7 @@ void check_output(struct params *p) {
     }
 
     fprintf(stderr, "file size: %d\n", file_sz);
-    fprintf(stderr, "expected size: %d\n", p->iter * p->size);
+    fprintf(stderr, "expected size: %ld\n", p->iter * p->size);
 
     assert(file_sz == (int)(p->iter * p->size));
 
