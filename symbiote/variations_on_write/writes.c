@@ -13,6 +13,10 @@
 
 #include "LINF/sym_all.h"
 
+int g_fd;
+char *g_buf;
+size_t g_size = 1;
+
 // Really should include this from linux headers.
 // #error
 // struct fd {
@@ -290,24 +294,26 @@ inline void __attribute__((always_inline)) prepare_hdl_flags(uint64_t ia32_fmask
 inline void __attribute__((always_inline)) prepare_return_addr() {
         asm("lea return_point(%rip), %rcx"); 
 }
+
 // load syscall number
-inline void __attribute__((always_inline)) load_syscall_number(int syscall_number) {
-    asm("mov %0, %%eax" : : "r"(syscall_number));
+inline void __attribute__((always_inline)) load_write_syscall_number() {
+    asm("mov %0, %%eax" : : "r"(SYS_write) : "rax");
 }
+
 // load args 3
-inline void __attribute__((always_inline)) load_args_3(int fd, const void *buf, size_t size) {
-    asm("mov %0, %%edi" : : "r"(fd));
-    asm("mov %0, %%rsi" : : "r"(buf));
-    asm("mov %0, %%rdx" : : "r"(size));
+inline void __attribute__((always_inline)) load_args_3() {
+    asm("mov %0, %%edi" : : ""(g_fd));
+    asm("mov %0, %%rsi" : : ""(g_buf));
+    asm("mov %0, %%rdx" : : ""(g_size));
 }
 
 // swap and return
-inline void __attribute__((always_inline)) place_addr_on_stack(uint64_t target) {
+inline void __attribute__((always_inline)) place_addr_on_stack() {
     // we do this to avoid dirtying any regs... maybe there's another way
     // Select a register randomly, it won't be dirtied
     asm("push %rax");
     // move target to rax
-    asm("mov %0, %%rax" : : ""(target));
+    asm("mov %0, %%rax" : : ""(0xffffffff81e00000) : "rax");
     // swap rax and stack
     // xor val from stack with rax
     asm("xor (%rsp), %rax");
@@ -316,8 +322,12 @@ inline void __attribute__((always_inline)) place_addr_on_stack(uint64_t target) 
 }
 
 void skipping_syscall_instruction(struct params *p) {
+    g_fd=p->fd;
+    g_buf=p->buf;
+
     uint64_t ia32_fmask_comp = get_fmask_comp();
-    uint64_t lstar = get_lstar();
+    // uint64_t lstar = get_lstar();
+
     t.start = clock();
     sym_elevate();
     for (unsigned i = 0; i < p->iter; i++) {
@@ -328,11 +338,13 @@ void skipping_syscall_instruction(struct params *p) {
         // NOTE: Skip loading ss and cs, should be done from elevating
         prepare_return_addr();
 
-        load_syscall_number(SYS_write);
+        // asm("mov %0, %%eax" : : "r"(SYS_write));
 
         load_args_3(p->fd, p->buf, p->size);
-        
-        place_addr_on_stack(lstar);
+
+        place_addr_on_stack();
+
+        load_write_syscall_number();
 
         // Send us to the syscall handler
         asm("ret");
@@ -344,9 +356,7 @@ void skipping_syscall_instruction(struct params *p) {
     t.end = clock();
 }
 
-int g_fd;
-char g_buf[1];
-int g_size = 1;
+
 
 typedef int (*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 void ksys_write_shortcut(struct params *p) {
