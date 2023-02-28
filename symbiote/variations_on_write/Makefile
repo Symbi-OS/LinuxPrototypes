@@ -7,7 +7,7 @@ CFLAGS=-mno-red-zone
 
 CFLAGS+=-O0 -g # -static
 
-CFLAGS=-Wall -Wextra -Werror
+CFLAGS+=-Wall -Wextra -Werror
 CFLAGS+=-Wfatal-errors
 
 CFLAGS+=-Wno-format-overflow

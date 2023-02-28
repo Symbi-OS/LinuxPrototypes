@@ -253,13 +253,7 @@ uint64_t get_fmask() {
 void foo() {
     fprintf(stderr, "foo\n");
 }
-void skipping_syscall_instruction(struct params *p) {
-
-    long syscall_number = SYS_write;
-    int file_descriptor = p->fd;
-    const void *buffer = p->buf;
-    size_t buffer_size = p->size;
-
+uint64_t get_fmask_comp(){
     // Get the syscall entry point from lstar
     // uint64_t sch_entry = get_lstar();
     
@@ -275,65 +269,50 @@ void skipping_syscall_instruction(struct params *p) {
     uint64_t syscall_rflags = old_rflags & ia32_fmask_comp;
 
     fprintf(stderr, "after complement rflags: %lx\n", syscall_rflags);
+    return ia32_fmask_comp;
+}
+void skipping_syscall_instruction(struct params *p) {
+
+    long syscall_number = SYS_write;
+    int file_descriptor = p->fd;
+    const void *buffer = p->buf;
+    size_t buffer_size = p->size;
+
+    uint64_t ia32_fmask_comp = get_fmask_comp();
 
     t.start = clock();
+
     sym_elevate();
     for (unsigned i = 0; i < p->iter; i++) {
-        // r11 holds our rflags to be restored
         asm("pushfq");
-        asm("popq %r11"); // let compiler know we're clobbering r11
+        asm("popq %r11"); // User flags in r11
 
-        // Apply the mask to rflags, rcx gets overwritten later
         asm("pushfq");
-        // pop into rcx
         asm("popq %rcx");
-        // and rcx with ia32_fmask_comp
-        asm("andq %0, %%rcx" : : "r"(ia32_fmask_comp));
-        // push rcx back onto stack
+        asm("andq %0, %%rcx" : : ""(ia32_fmask_comp));
         asm("pushq %rcx");
-        // pop into rflags
-        asm("popfq");
+        asm("popfq"); // rflags = rflags & not(fmask)
 
+        // NOTE: Skip loading ss and cs, should be done from elevating
 
-        // Skip loading ss and cs, should be done from elevating
+        // Unconvinced this works...
+        asm("lea return_point(%rip), %rcx"); // Return address in rcx
 
-        // Disable interrupts, think this is done by mask trick
-        // asm("cli");
-
-        // Get RCX setup this is the retrun instruction.
-
-        // asm("mov $0x401de7, %rcx"); // specify clobber here
-        // move address of return_label: to rcx
-        asm("lea return_point(%rip), %rcx");
-
-        // asm("jmp 0xffffffff81c00010"); // lstar pointer to system call
-        // handler
-        // asm("jmp *0xffffffff81c00010"
-        //     : "+a"(syscall_number)
-        //     : "D"(file_descriptor), "S"(buffer), "d"(buffer_size)
-        //     : "rcx", "r11", "memory");
-        // same jump as above but use lstar
-        // print syscall_number
-        // print file_descriptor
-        // foo();
         asm("mov %0, %%rax" : : "r"(syscall_number));
         asm("mov %0, %%edi" : : "r"(file_descriptor));
         asm("mov %0, %%rsi" : : "r"(buffer));
         asm("mov %0, %%rdx" : : "r"(buffer_size));
-        // asm("jmp *%0" : : "r"(sch_entry) : "rcx", "r11", "memory");
-        // Jmp to hardcoded address 0xffffffff81c00010
-        asm("jmp *0xffffffff81c00000"); // Cant do that with a variable...
+        // All args up to the 3rd are in standard location...
+        
+        // NOTE: if more args, will have to do more work.
+     
+        asm("mov $0xffffffff81e00000, %r10"); 
+        asm("jmp *%r10"); // Update rip to syscall entry point
+        // asm("jmp *0xffffffff81c00000"); // Update rip to syscall entry point
 
-
-        // A label with a symbol that can be used in assembly
         __asm__ volatile("return_point:");
+        asm("nop");
 
-        // Check for error
-        // I think syscall_number is doing double duty here as an input and output...
-        // if (syscall_number == -1) {
-        //     fprintf(stderr, "write() failed: %s\n", strerror(errno));
-        //     exit(1);
-        // }
     }
     // print survived
     sym_lower();
