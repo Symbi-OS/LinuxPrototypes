@@ -16,6 +16,7 @@
 int g_fd;
 char *g_buf;
 size_t g_size = 1;
+uint64_t rsp_squirrel;
 
 // Really should include this from linux headers.
 // #error
@@ -297,7 +298,7 @@ inline void __attribute__((always_inline)) prepare_return_addr() {
 
 // load syscall number
 inline void __attribute__((always_inline)) load_write_syscall_number() {
-    asm("mov %0, %%eax" : : "r"(SYS_write) : "rax");
+    asm("mov %0, %%eax" : : ""(SYS_write) : "rax");
 }
 
 // load args 3
@@ -313,12 +314,25 @@ inline void __attribute__((always_inline)) place_addr_on_stack() {
     // Select a register randomly, it won't be dirtied
     asm("push %rax");
     // move target to rax
-    asm("mov %0, %%rax" : : ""(0xffffffff81e00000) : "rax");
+    asm("mov %0, %%rax" : : ""(0xffffffff81e00000 +0x29) : "rax");
     // swap rax and stack
     // xor val from stack with rax
     asm("xor (%rsp), %rax");
     asm("xor %rax, (%rsp)");
     asm("xor (%rsp), %rax");
+}
+// switch stack
+inline void __attribute__((always_inline)) switch_stack() {
+    // asm("mov  %rsp,%gs:0x6014");
+    // put rsp into rsp_squirrel
+    asm("mov %%rsp, %0" : "=m"(rsp_squirrel));
+    asm("mov  %gs:0x17b90,%rsp");
+}
+
+inline void __attribute__((always_inline)) reverse_switch_stack() {
+    // asm("mov  %gs:0x6014,%rsp");
+    // move rsp_squirrel to rsp
+    asm("mov %0, %%rsp" : : ""(rsp_squirrel));
 }
 
 void skipping_syscall_instruction(struct params *p) {
@@ -340,11 +354,14 @@ void skipping_syscall_instruction(struct params *p) {
 
         // asm("mov %0, %%eax" : : "r"(SYS_write));
 
-        load_args_3(p->fd, p->buf, p->size);
+        load_args_3(); // This messes with rax, so do it before syscall number
+
+        load_write_syscall_number(); // This loads rax
+
+        asm("swapgs");
+        switch_stack();
 
         place_addr_on_stack();
-
-        load_write_syscall_number();
 
         // Send us to the syscall handler
         asm("ret");
@@ -355,8 +372,6 @@ void skipping_syscall_instruction(struct params *p) {
     sym_lower();
     t.end = clock();
 }
-
-
 
 typedef int (*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 void ksys_write_shortcut(struct params *p) {
@@ -379,6 +394,8 @@ void ksys_write_shortcut(struct params *p) {
     // assert(reps > 0);
     /* assert(my_ksys_write != NULL); */
     // int count = 0;
+    t.start = clock();
+    sym_elevate();
     for (unsigned i = 0; i < p->iter; i++) {
 
         if ((i % (10)) == 0) {
@@ -388,16 +405,24 @@ void ksys_write_shortcut(struct params *p) {
                 exit(1);
             }
         } else {
-            sym_elevate();
+            asm("cli");
+            switch_stack();
+            asm("sti");
+
             int rc = my_ksys_write(p->fd, p->buf, p->size);
-            sym_lower();
-            // int rc = my_ksys_write(g_fd, g_buf, g_size);
+
+            asm("cli");
+            reverse_switch_stack();
+            asm("sti");
+
             if (rc < 0) {
                 fprintf(stderr, "write() failed: %s\n", strerror(errno));
                 exit(1);
             }
         }
     }
+    sym_lower();
+    t.end = clock();
 }
 void run_selected_test(struct params *p) {
     switch (p->test_id) {
