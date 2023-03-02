@@ -13,9 +13,9 @@
 
 #include "LINF/sym_all.h"
 
-int g_fd;
-char *g_buf;
-size_t g_size = 1;
+// int g_fd;
+// char *g_buf;
+// size_t g_size = 1;
 uint64_t rsp_squirrel;
 
 // Really should include this from linux headers.
@@ -117,7 +117,6 @@ void parse_args(int argc, char *argv[], struct params *p) {
     if (argc != expected_argc) {
         fprintf(stderr, "want <file_path> <test #> <iterations> <wr size> \n");
         fprintf(stderr, "0: glibc write(), 1 glibc syscall wrapper 2 raw syscall ... 5: ksys_write\n");
-        // print wanted expected_argc, got argc
         fprintf(stderr, "got %d, want %d\n", argc, expected_argc);
         exit(1);
     }
@@ -185,50 +184,7 @@ void raw_syscall_loop(struct params *p) {
 
     t.end = clock();
 }
-/* https://www.cs.fsu.edu/~langley/CNT5605/2017-Summer/assembly-example/assembly.html
- * 64-bit SYSCALL instruction entry. Up to 6 arguments in registers.
- *
- * This is the only entry point used for 64-bit system calls.  The
- * hardware interface is reasonably well designed and the register to
- * argument mapping Linux uses fits well with the registers that are
- * available when SYSCALL is used.
- *
- * SYSCALL instructions can be found inlined in libc implementations as
- * well as some other programs and libraries.  There are also a handful
- * of SYSCALL instructions in the vDSO used, for example, as a
- * clock_gettimeofday fallback.
- *
- * 64-bit SYSCALL saves rip to rcx, clears rflags.RF, then saves rflags to r11,
- * then loads new ss, cs, and rip from previously programmed MSRs.
- * rflags gets masked by a value from another MSR (so CLD and CLAC
- * are not needed). SYSCALL does not save anything on the stack
- * and does not change rsp.
- *
- * Registers on entry:
- * rax  system call number
- * rcx  return address
- * r11  saved rflags (note: r11 is callee-clobbered register in C ABI)
- * rdi  arg0
- * rsi  arg1
- * rdx  arg2
- * r10  arg3 (needs to be moved to rcx to conform to C ABI)
- * r8   arg4
- * r9   arg5
- * (note: r12-r15, rbp, rbx are callee-preserved in C ABI)
- *
- * Only called from user space.
- *
- * When user can change pt_regs->foo always force IRET. That is because
- * it deals with uncanonical addresses better. SYSRET has trouble
- * with them due to bugs in both AMD and Intel CPUs.
- */
-#if 0
-// A function that only returns, do not setup stack or have any
-// side effects. Use gcc attribute
-void __attribute__((naked)) my_nop() {
-    asm volatile("nop");
-}
-#endif
+
 uint64_t get_lstar() {
     uint32_t eax_lower, edx_upper;
     sym_elevate();
@@ -255,9 +211,6 @@ uint64_t get_fmask() {
     uint64_t fmask = ((uint64_t)edx_upper << 32) | eax_lower;
     return fmask;
 }
-void foo() {
-    fprintf(stderr, "foo\n");
-}
 uint64_t get_fmask_comp(){
     // Get the syscall entry point from lstar
     // uint64_t sch_entry = get_lstar();
@@ -265,116 +218,166 @@ uint64_t get_fmask_comp(){
     // Get the old flags, needed for restore
     uint64_t old_rflags;
     sym_elevate(); asm("pushfq"); sym_lower();
-    asm("popq %0" : "=r"(old_rflags));
-    fprintf(stderr, "old_rflags: were %lx\n", old_rflags);
+    asm("popq %0" : "=m"(old_rflags) : : "memory");
 
     // Get masked flags, how they should be for entering syscall handler
     uint64_t ia32_fmask = get_fmask();
     uint64_t ia32_fmask_comp = ~ia32_fmask;
-    uint64_t syscall_rflags = old_rflags & ia32_fmask_comp;
 
-    fprintf(stderr, "after complement rflags: %lx\n", syscall_rflags);
     return ia32_fmask_comp;
 }
 
-inline void __attribute__((always_inline)) get_usr_flags_r11() {
-    asm("pushfq");
-    asm("popq %r11"); // User flags in r11
-}
-
-inline void __attribute__((always_inline)) prepare_hdl_flags(uint64_t ia32_fmask_comp) {
-    // this dirties rax, but who cares, it's overwritten with SYS_write
-    asm("pushfq");
-    asm("popq %rcx");
-    asm("andq %0, %%rcx" : : ""(ia32_fmask_comp));
-    asm("pushq %rcx");
-    asm("popfq"); // rflags = rflags & not(fmask)
-}
-
-// inline fn to put return addr in rcx
-inline void __attribute__((always_inline)) prepare_return_addr() {
-        asm("lea return_point(%rip), %rcx"); 
-}
-
-// load syscall number
-inline void __attribute__((always_inline)) load_write_syscall_number() {
-    asm("mov %0, %%eax" : : ""(SYS_write) : "rax");
-}
-
-// load args 3
-inline void __attribute__((always_inline)) load_args_3() {
-    asm("mov %0, %%edi" : : ""(g_fd));
-    asm("mov %0, %%rsi" : : ""(g_buf));
-    asm("mov %0, %%rdx" : : ""(g_size));
-}
-
-// swap and return
-inline void __attribute__((always_inline)) place_addr_on_stack() {
-    // we do this to avoid dirtying any regs... maybe there's another way
-    // Select a register randomly, it won't be dirtied
-    asm("push %rax");
-    // move target to rax
-    asm("mov %0, %%rax" : : ""(0xffffffff81e00000 +0x29) : "rax");
-    // swap rax and stack
-    // xor val from stack with rax
-    asm("xor (%rsp), %rax");
-    asm("xor %rax, (%rsp)");
-    asm("xor (%rsp), %rax");
-}
 // switch stack
-inline void __attribute__((always_inline)) switch_stack() {
-    // asm("mov  %rsp,%gs:0x6014");
-    // put rsp into rsp_squirrel
-    asm("mov %%rsp, %0" : "=m"(rsp_squirrel));
+inline void __attribute__((always_inline)) stack_switch_to_kern() {
+    asm("mov %%rsp, %0" : "=m"(rsp_squirrel)); // cookie
     asm("mov  %gs:0x17b90,%rsp");
 }
 
-inline void __attribute__((always_inline)) reverse_switch_stack() {
-    // asm("mov  %gs:0x6014,%rsp");
-    // move rsp_squirrel to rsp
-    asm("mov %0, %%rsp" : : ""(rsp_squirrel));
+inline void __attribute__((always_inline)) stack_switch_to_user() {
+    asm("mov %0, %%rsp" : : "m"(rsp_squirrel));
 }
 
-void skipping_syscall_instruction(struct params *p) {
-    g_fd=p->fd;
-    g_buf=p->buf;
+void emulate_syscall_ins(struct params *p){
 
     uint64_t ia32_fmask_comp = get_fmask_comp();
-    // uint64_t lstar = get_lstar();
+    uint64_t lstar = get_lstar();
+
+    int fd = p->fd;
+    char *buf = p->buf;
+    size_t size = p->size;
+    int syscall_number = SYS_write;
 
     t.start = clock();
     sym_elevate();
+    // load syscall number
     for (unsigned i = 0; i < p->iter; i++) {
-        get_usr_flags_r11();
+        asm("mov %0, %%eax" : : "m"(syscall_number) : "rax");
 
-        prepare_hdl_flags(ia32_fmask_comp);
- 
-        // NOTE: Skip loading ss and cs, should be done from elevating
-        prepare_return_addr();
+        // load args
+        asm("mov %0, %%edi" : : "m"(fd) : "rdi");
+        asm("mov %0, %%rsi" : : "m"(buf) : "rsi");
+        asm("mov %0, %%rdx" : : "m"(size) : "rdx");
 
-        // asm("mov %0, %%eax" : : "r"(SYS_write));
+        // load user rflags
+        asm("pushfq");
+        asm("popq %%r11" : : : "r11");
 
-        load_args_3(); // This messes with rax, so do it before syscall number
+        asm("lea return_point(%%rip), %%rcx" : : : "rcx");
 
-        load_write_syscall_number(); // This loads rax
+        // This is the sys call handler
+        asm("push %rax");
+        // move target to rax
+        asm("mov %0, %%rax" : : "m"(lstar) : "rax");
+        // swap rax and stack
+        // xor val from stack with rax
+        asm("xor (%rsp), %rax");
+        asm("xor %rax, (%rsp)");
+        asm("xor (%rsp), %rax");
 
-        asm("swapgs");
-        switch_stack();
-
-        place_addr_on_stack();
+        // Mask out the user flags for the handler
+        asm("push %rcx"); // preserve it
+        asm("pushfq");
+        asm("popq %rcx");
+        asm("andq %0, %%rcx" : : "m"(ia32_fmask_comp));
+        asm("pushq %rcx");
+        asm("popfq");    // rflags = rflags & not(fmask)
+        asm("pop %rcx"); // restore rcx
 
         // Send us to the syscall handler
         asm("ret");
 
         __asm__ volatile("return_point:");
-        asm("nop");
+
+        // asm("nop");
+        // Think no need for sti b/c syscall return should re-enable
+    }
+    sym_lower();
+    t.end = clock();
+}
+// This function is like the above, but it also switches stacks and
+// enters after the syscall handler switches.
+
+// Inline fn push 64 bit val to stack
+inline void __attribute__((always_inline)) push_64(uint64_t val) {
+    asm("push %rax"); // preserve
+
+    asm("mov %0, %%rax" : : "m"(val) : "rax");
+    asm("push %rax");
+
+    asm("pop %rax"); // restore
+}
+void emulate_syscall_ins_and_stack_switch(struct params *p){
+
+    uint64_t ia32_fmask_comp = get_fmask_comp();
+    void *syscall_handler = (void *)sym_get_fn_address("entry_SYSCALL_64_safe_stack");
+    // void *syscall_handler = (void *)sym_get_fn_address("entry_SYSCALL_64");
+    // check it isn't null
+    if (syscall_handler == NULL) {
+        fprintf(stderr, "Failed to get entry_SYSCALL_64_safe_stack\n");
+        exit(1);
+    }
+
+    int fd = p->fd;
+    char *buf = p->buf;
+    size_t size = p->size;
+    int syscall_number = SYS_write;
+
+    t.start = clock();
+    sym_elevate();
+    // load syscall number
+    for (unsigned i = 0; i < p->iter; i++) {
+        asm("mov %0, %%eax" : : "m"(syscall_number) : "rax");
+
+        // load args
+        asm("mov %0, %%edi" : : "m"(fd) : "rdi");
+        asm("mov %0, %%rsi" : : "m"(buf) : "rsi");
+        asm("mov %0, %%rdx" : : "m"(size) : "rdx");
+
+        // load user rflags
+        asm("pushfq");
+        asm("popq %%r11" : : : "r11");
+
+        // return addr
+        asm("lea return_point_stack_switch(%%rip), %%rcx" : : : "rcx");
+
+        asm("swapgs");
+        // stack_switch_to_kern();
+        asm("mov %rsp, %gs:0x6014");
+        asm("mov  %gs:0x17b90,%rsp");
+
+        // Where we're going, the syscall handler
+        asm("push %rax");
+        asm("mov %0, %%rax" : : "m"(syscall_handler) : "rax");
+        asm("xor (%rsp), %rax"); // Swap without dirtying rax
+        asm("xor %rax, (%rsp)");
+        asm("xor (%rsp), %rax");
+
+        // Masked rflags for the handler
+        asm("push %rcx"); // preserve it
+        asm("pushfq");
+        asm("popq %rcx");
+        asm("andq %0, %%rcx" : : "m"(ia32_fmask_comp));
+        asm("pushq %rcx");
+        asm("popfq");    // rflags = rflags & not(fmask)
+        asm("pop %rcx"); // restore rcx
+
+        // Send us to the syscall handler!!!
+        asm("ret");
+
+        // return here after syscall handler!
+        __asm__ volatile("return_point_stack_switch:");
+
+        // Exit code switches us back onto user stack...
     }
     sym_lower();
     t.end = clock();
 }
 
 typedef int (*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
-void ksys_write_shortcut(struct params *p) {
+
+
+
+void ksys_write_shortcut(struct params *p, int do_stack_switch) {
     // ksys_write_t my_ksys_write = NULL;
     // sym_touch_stack(); 
     // my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
@@ -386,14 +389,6 @@ void ksys_write_shortcut(struct params *p) {
 
     ksys_write_t my_ksys_write = (ksys_write_t) 0xffffffff81367220;
 
-
-    // fprintf(stderr, "using non stack version of write args\n");
-    // g_fd = p->fd;
-    // g_buf[0] = 'a';
-
-    // assert(reps > 0);
-    /* assert(my_ksys_write != NULL); */
-    // int count = 0;
     t.start = clock();
     sym_elevate();
     for (unsigned i = 0; i < p->iter; i++) {
@@ -405,15 +400,19 @@ void ksys_write_shortcut(struct params *p) {
                 exit(1);
             }
         } else {
-            asm("cli");
-            switch_stack();
-            asm("sti");
+            if (do_stack_switch) {
+                asm("cli");
+                stack_switch_to_kern();
+                asm("sti");
+            }
 
             int rc = my_ksys_write(p->fd, p->buf, p->size);
 
-            asm("cli");
-            reverse_switch_stack();
-            asm("sti");
+            if (do_stack_switch) {
+                asm("cli");
+                stack_switch_to_user();
+                asm("sti");
+            }
 
             if (rc < 0) {
                 fprintf(stderr, "write() failed: %s\n", strerror(errno));
@@ -440,18 +439,28 @@ void run_selected_test(struct params *p) {
         break;
     case 3:
         fprintf(stderr, "Loop using entry_syscall_64 without syscall ins\n");
-        skipping_syscall_instruction(p);
+        emulate_syscall_ins(p);
         break;
     case 4:
+        fprintf(stderr, "Loop using entry_syscall_64 without syscall ins stack switch\n");
+        emulate_syscall_ins_and_stack_switch(p);
+        break;
+    case 5:
         fprintf(stderr, "Loop using x64_sys_write\n");
         fprintf(stderr, "NYI, exiting\n");
         exit(1);
         break;
-    case 5:
-        fprintf(stderr, "Loop using ksys_write\n");
-        ksys_write_shortcut(p);
-        break;
     case 6:
+        fprintf(stderr, "Loop using ksys_write\n");
+        int do_stack_switch = 0;
+        ksys_write_shortcut(p, do_stack_switch);
+        break;
+    case 7:
+        fprintf(stderr, "Loop using ksys_write with stack switch\n");
+        do_stack_switch = 1;
+        ksys_write_shortcut(p, do_stack_switch);
+        break;
+    case 8:
         fprintf(stderr, "Loop using vfs_write\n");
         fprintf(stderr, "vfs shortcut unsupported\n");
         fprintf(stderr, "NYI, exiting\n");

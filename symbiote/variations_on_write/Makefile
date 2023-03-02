@@ -11,6 +11,9 @@ CFLAGS+=-Wall -Wextra -Werror
 CFLAGS+=-Wfatal-errors
 
 CFLAGS+=-Wno-format-overflow
+# CFLAGS+=-Wunused-function
+# CFLAGS+=-Wno-unused-variable
+CFLAGS+=-Wunused
 
 $(EXEC): $(EXEC).c
 	gcc $(CFLAGS) $(INCLUDE) $(LIB) -o $@ $< 
@@ -23,6 +26,10 @@ SIZE=1
 # TS=taskset -c 
 run: $(EXEC)
 	./writes $(FILE) $(TEST_ID) $(ITER) $(SIZE)
-
+od: $(EXEC)
+	objdump -S $(EXEC) | less
+rebuild:
+	make clean
+	make	
 clean:
 	rm -f $(EXEC)
