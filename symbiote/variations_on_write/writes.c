@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <linux/types.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -9,7 +10,6 @@
 #include <sys/syscall.h>
 #include <time.h>
 #include <unistd.h>
-#include <linux/types.h>
 
 #include "LINF/sym_all.h"
 
@@ -116,7 +116,8 @@ void parse_args(int argc, char *argv[], struct params *p) {
     int expected_argc = 5;
     if (argc != expected_argc) {
         fprintf(stderr, "want <file_path> <test #> <iterations> <wr size> \n");
-        fprintf(stderr, "0: glibc write(), 1 glibc syscall wrapper 2 raw syscall ... 5: ksys_write\n");
+        fprintf(stderr, "0: glibc write(), 1 glibc syscall wrapper 2 raw "
+                        "syscall ... 5: ksys_write\n");
         fprintf(stderr, "got %d, want %d\n", argc, expected_argc);
         exit(1);
     }
@@ -169,11 +170,11 @@ void raw_syscall_loop(struct params *p) {
     t.start = clock();
     for (unsigned i = 0; i < p->iter; i++) {
         long result;
-        asm volatile ("syscall"
-                             : "=a"(result)
-                             : "a"(syscall_number), "D"(file_descriptor),
-                               "S"(buffer), "d"(buffer_size)
-                             : "rcx", "r11", "memory");
+        asm volatile("syscall"
+                     : "=a"(result)
+                     : "a"(syscall_number), "D"(file_descriptor), "S"(buffer),
+                       "d"(buffer_size)
+                     : "rcx", "r11", "memory");
 
         // Check for error
         if (result == -1) {
@@ -211,13 +212,15 @@ uint64_t get_fmask() {
     uint64_t fmask = ((uint64_t)edx_upper << 32) | eax_lower;
     return fmask;
 }
-uint64_t get_fmask_comp(){
+uint64_t get_fmask_comp() {
     // Get the syscall entry point from lstar
     // uint64_t sch_entry = get_lstar();
-    
+
     // Get the old flags, needed for restore
     uint64_t old_rflags;
-    sym_elevate(); asm volatile("pushfq"); sym_lower();
+    sym_elevate();
+    asm volatile("pushfq");
+    sym_lower();
     asm volatile("popq %0" : "=m"(old_rflags) : : "memory");
 
     // Get masked flags, how they should be for entering syscall handler
@@ -248,27 +251,27 @@ inline void __attribute__((always_inline)) stack_switch_to_user() {
 // }
 
 // This doesn't work for rax ...
-// #define push_64(val)                                                           
-//     asm volatile("push %rax");                                                          
-//     asm volatile("mov %0, %%rax" : : "m"(val) : "rax");                                 
-//     asm volatile("push %rax");                                                          
+// #define push_64(val)
+//     asm volatile("push %rax");
+//     asm volatile("mov %0, %%rax" : : "m"(val) : "rax");
+//     asm volatile("push %rax");
 //     asm volatile("pop %rax");
 
 // In this memory model, it appears to be impossible to embed a 64 bit value
 // in text, this is a workaround.
 #define push_64(val)                                                           \
-    asm volatile("push %%rax" : : : "memory");                                                          \
-    asm volatile("mov %0, %%rax" : : "g"(val) : "rax");                                 \
-    asm volatile("xor (%%rsp), %%rax" : : : "rax");                                                   \
-    asm volatile("xor %%rax, (%%rsp)" : : : "memory");                                                   \
-    asm volatile("xor (%%rsp), %%rax" : : : "rax");                                                   \
+    asm volatile("push %%rax" : : : "memory");                                 \
+    asm volatile("mov %0, %%rax" : : "g"(val) : "rax");                        \
+    asm volatile("xor (%%rsp), %%rax" : : : "rax");                            \
+    asm volatile("xor %%rax, (%%rsp)" : : : "memory");                         \
+    asm volatile("xor (%%rsp), %%rax" : : : "rax");
 
 #pragma GCC push_options
 #pragma GCC optimize("-O0")
-// This is only tested to work at O0. 
+// This is only tested to work at O0.
 // It looks like it works at 01, but some regs look bad at the ret, namely r11
 // At 02 it doesn't work at all.
-void emulate_syscall_ins(struct params *p){
+void emulate_syscall_ins(struct params *p) {
     // Syscall handler rip
     uint64_t lstar = get_lstar();
 
@@ -288,7 +291,7 @@ void emulate_syscall_ins(struct params *p){
         asm volatile("pushf" : : : "memory");
         // pop into user_flags
         asm volatile("pop %0" : "=m"(user_flags) : : "memory");
-        
+
         push_64(user_flags);
 
         uint64_t masked_flags = user_flags & ia32_fmask_comp;
@@ -325,12 +328,11 @@ void emulate_syscall_ins(struct params *p){
 
         // Return RIP
         asm volatile("lea return_point(%%rip), %%rcx" : : : "rcx");
-       
+
         // Send us to the syscall handler
         asm volatile("ret" : : : "memory");
 
-        asm volatile  ("return_point:");
-
+        asm volatile("return_point:");
     }
     sym_lower();
     t.end = clock();
@@ -339,11 +341,12 @@ void emulate_syscall_ins(struct params *p){
 // This function is like the above, but it also switches stacks and
 // enters after the syscall handler switches.
 
-void emulate_syscall_ins_and_stack_switch(struct params *p){
+void emulate_syscall_ins_and_stack_switch(struct params *p) {
 
     uint64_t ia32_fmask_comp = get_fmask_comp();
     uint64_t user_flags;
-    void *syscall_handler = (void *)sym_get_fn_address("entry_SYSCALL_64_safe_stack");
+    void *syscall_handler =
+        (void *)sym_get_fn_address("entry_SYSCALL_64_safe_stack");
     // void *syscall_handler = (void *)sym_get_fn_address("entry_SYSCALL_64");
     // check it isn't null
     if (syscall_handler == NULL) {
@@ -365,7 +368,7 @@ void emulate_syscall_ins_and_stack_switch(struct params *p){
         asm volatile("pushf" : : : "memory");
         // pop into user_flags
         asm volatile("pop %0" : "=m"(user_flags) : : "memory");
-        
+
         push_64(user_flags);
 
         uint64_t masked_flags = user_flags & ia32_fmask_comp;
@@ -402,25 +405,21 @@ void emulate_syscall_ins_and_stack_switch(struct params *p){
 
         // Return RIP
         asm volatile("lea return_point_ss(%%rip), %%rcx" : : : "rcx");
-       
+
         // Send us to the syscall handler
         asm volatile("ret" : : : "memory");
 
-        asm volatile  ("return_point_ss:");
-
+        asm volatile("return_point_ss:");
     }
     sym_lower();
     t.end = clock();
- 
 }
 
 typedef int (*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 
-
-
 void ksys_write_shortcut(struct params *p, int do_stack_switch) {
     ksys_write_t my_ksys_write = NULL;
-    sym_touch_stack(); 
+    sym_touch_stack();
     my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
     // check it isn't null
     if (my_ksys_write == NULL) {
@@ -481,7 +480,9 @@ void run_selected_test(struct params *p) {
         emulate_syscall_ins(p);
         break;
     case 4:
-        fprintf(stderr, "Loop using entry_syscall_64 without syscall ins stack switch\n");
+        fprintf(
+            stderr,
+            "Loop using entry_syscall_64 without syscall ins stack switch\n");
         emulate_syscall_ins_and_stack_switch(p);
         break;
     case 5:
