@@ -237,42 +237,54 @@ inline void __attribute__((always_inline)) stack_switch_to_user() {
     asm("mov %0, %%rsp" : : "m"(rsp_squirrel));
 }
 
+// // Inline fn push 64 bit val to stack
+// inline void __attribute__((always_inline)) push_64(uint64_t val) {
+//     asm("push %rax"); // preserve
+
+//     asm("mov %0, %%rax" : : "m"(val) : "rax");
+//     asm("push %rax");
+
+//     asm("pop %rax"); // restore
+// }
+
+// This doesn't work for rax ...
+// #define push_64(val)                                                           
+//     asm("push %rax");                                                          
+//     asm("mov %0, %%rax" : : "m"(val) : "rax");                                 
+//     asm("push %rax");                                                          
+//     asm("pop %rax");
+#define push_64(val)                                                           \
+    asm("push %rax");                                                          \
+    asm("mov %0, %%rax" : : "m"(val) : "rax");                                 \
+    asm("xor (%rsp), %rax");                                                   \
+    asm("xor %rax, (%rsp)");                                                   \
+    asm("xor (%rsp), %rax");
+
 void emulate_syscall_ins(struct params *p){
 
     uint64_t ia32_fmask_comp = get_fmask_comp();
     uint64_t lstar = get_lstar();
 
-    int fd = p->fd;
-    char *buf = p->buf;
-    size_t size = p->size;
-    int syscall_number = SYS_write;
+    // These look useless, but we're forcing the
+    // deref to happen before the inline code
+    // to avoid dirtying regs.
+    uint64_t fd = p->fd;
+    uint64_t buf = (uint64_t) p->buf;
+    uint64_t size = p->size;
+    uint64_t syscall_number = SYS_write;
 
     t.start = clock();
     sym_elevate();
     // load syscall number
     for (unsigned i = 0; i < p->iter; i++) {
-        asm("mov %0, %%eax" : : "m"(syscall_number) : "rax");
 
-        // load args
-        asm("mov %0, %%edi" : : "m"(fd) : "rdi");
-        asm("mov %0, %%rsi" : : "m"(buf) : "rsi");
-        asm("mov %0, %%rdx" : : "m"(size) : "rdx");
+        push_64(lstar);
 
-        // load user rflags
+        // load user rflags, has to come before they get modified.
         asm("pushfq");
-        asm("popq %%r11" : : : "r11");
 
+        // Return RIP in rcx
         asm("lea return_point(%%rip), %%rcx" : : : "rcx");
-
-        // This is the sys call handler
-        asm("push %rax");
-        // move target to rax
-        asm("mov %0, %%rax" : : "m"(lstar) : "rax");
-        // swap rax and stack
-        // xor val from stack with rax
-        asm("xor (%rsp), %rax");
-        asm("xor %rax, (%rsp)");
-        asm("xor (%rsp), %rax");
 
         // Mask out the user flags for the handler
         asm("push %rcx"); // preserve it
@@ -282,6 +294,26 @@ void emulate_syscall_ins(struct params *p){
         asm("pushq %rcx");
         asm("popfq");    // rflags = rflags & not(fmask)
         asm("pop %rcx"); // restore rcx
+
+        // Syscall number
+        push_64(syscall_number);
+
+        // args
+        push_64(fd);
+        push_64((uint64_t)buf);
+        push_64(size);
+        asm("pop %rdx");
+        asm("pop %rsi");
+        asm("pop %rdi");
+
+        asm("pop %rax");
+        // When we ret, rip loaded with this value
+        // DONT POP ME, ret will do it
+
+        asm("popq %r11");
+       
+        // args
+        // syscall no
 
         // Send us to the syscall handler
         asm("ret");
@@ -297,15 +329,7 @@ void emulate_syscall_ins(struct params *p){
 // This function is like the above, but it also switches stacks and
 // enters after the syscall handler switches.
 
-// Inline fn push 64 bit val to stack
-inline void __attribute__((always_inline)) push_64(uint64_t val) {
-    asm("push %rax"); // preserve
 
-    asm("mov %0, %%rax" : : "m"(val) : "rax");
-    asm("push %rax");
-
-    asm("pop %rax"); // restore
-}
 void emulate_syscall_ins_and_stack_switch(struct params *p){
 
     uint64_t ia32_fmask_comp = get_fmask_comp();
