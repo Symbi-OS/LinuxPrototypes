@@ -342,6 +342,7 @@ void emulate_syscall_ins(struct params *p){
 void emulate_syscall_ins_and_stack_switch(struct params *p){
 
     uint64_t ia32_fmask_comp = get_fmask_comp();
+    uint64_t user_flags;
     void *syscall_handler = (void *)sym_get_fn_address("entry_SYSCALL_64_safe_stack");
     // void *syscall_handler = (void *)sym_get_fn_address("entry_SYSCALL_64");
     // check it isn't null
@@ -350,60 +351,67 @@ void emulate_syscall_ins_and_stack_switch(struct params *p){
         exit(1);
     }
 
-    int fd = p->fd;
-    char *buf = p->buf;
-    size_t size = p->size;
-    int syscall_number = SYS_write;
-
     t.start = clock();
     sym_elevate();
     // load syscall number
     for (unsigned i = 0; i < p->iter; i++) {
-        asm volatile("mov %0, %%eax" : : "m"(syscall_number) : "rax");
-
-        // load args
-        asm volatile("mov %0, %%edi" : : "m"(fd) : "rdi");
-        asm volatile("mov %0, %%rsi" : : "m"(buf) : "rsi");
-        asm volatile("mov %0, %%rdx" : : "m"(size) : "rdx");
-
-        // load user rflags
-        asm volatile("pushfq");
-        asm volatile("popq %%r11" : : : "r11");
-
-        // return addr
-        asm volatile("lea return_point_stack_switch(%%rip), %%rcx" : : : "rcx");
-
-        asm volatile("swapgs");
         // stack_switch_to_kern();
         asm volatile("mov %rsp, %gs:0x6014");
         asm volatile("mov  %gs:0x17b90,%rsp");
 
-        // Where we're going, the syscall handler
-        asm volatile("push %rax");
-        asm volatile("mov %0, %%rax" : : "m"(syscall_handler) : "rax");
-        asm volatile("xor (%rsp), %rax"); // Swap without dirtying rax
-        asm volatile("xor %rax, (%rsp)");
-        asm volatile("xor (%rsp), %rax");
+        push_64(syscall_handler);
 
-        // Masked rflags for the handler
-        asm volatile("push %rcx"); // preserve it
-        asm volatile("pushfq");
-        asm volatile("popq %rcx");
-        asm volatile("andq %0, %%rcx" : : "m"(ia32_fmask_comp));
-        asm volatile("pushq %rcx");
-        asm volatile("popfq");    // rflags = rflags & not(fmask)
-        asm volatile("pop %rcx"); // restore rcx
+        // load user rflags, has to come before they get modified.
+        asm volatile("pushf" : : : "memory");
+        // pop into user_flags
+        asm volatile("pop %0" : "=m"(user_flags) : : "memory");
+        
+        push_64(user_flags);
 
-        // Send us to the syscall handler!!!
-        asm volatile("ret");
+        uint64_t masked_flags = user_flags & ia32_fmask_comp;
 
-        // return here after syscall handler!
-        asm volatile ("return_point_stack_switch:");
+        // Put syscall_flags into rflags
+        asm volatile("push %%rax" : : : "memory"); // preserve
+        asm volatile("mov %0, %%rax" : : "m"(masked_flags) : "rax");
+        asm volatile("push %%rax" : : : "memory");
+        asm volatile("popf" : : : "cc");
+        asm volatile("pop %%rax" : : : "rax"); // restore
 
-        // Exit code switches us back onto user stack...
+        // No regs are hot at this point.
+
+        // Syscall number
+        push_64(SYS_write);
+
+        // args
+        push_64((uint64_t)p->fd);
+        push_64((uint64_t)p->buf);
+        push_64(p->size);
+
+        // After this, regs go hot, be careful.
+
+        // Args
+        asm volatile("pop %%rdx" : : : "rdx");
+        asm volatile("pop %%rsi" : : : "rsi");
+        asm volatile("pop %%rdi" : : : "rdi");
+
+        // Syscall number
+        asm volatile("pop %%rax" : : : "rax");
+
+        // Flags
+        asm volatile("pop %%r11" : : : "r11");
+
+        // Return RIP
+        asm volatile("lea return_point_ss(%%rip), %%rcx" : : : "rcx");
+       
+        // Send us to the syscall handler
+        asm volatile("ret" : : : "memory");
+
+        asm volatile  ("return_point_ss:");
+
     }
     sym_lower();
     t.end = clock();
+ 
 }
 
 typedef int (*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
