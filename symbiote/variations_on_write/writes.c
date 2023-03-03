@@ -253,25 +253,24 @@ inline void __attribute__((always_inline)) stack_switch_to_user() {
 //     asm("mov %0, %%rax" : : "m"(val) : "rax");                                 
 //     asm("push %rax");                                                          
 //     asm("pop %rax");
+
+// In this memory model, it appears to be impossible to embed a 64 bit value
+// in text, this is a workaround.
 #define push_64(val)                                                           \
     asm("push %rax");                                                          \
-    asm("mov %0, %%rax" : : "m"(val) : "rax");                                 \
+    asm("mov %0, %%rax" : : "g"(val) : "rax");                                 \
     asm("xor (%rsp), %rax");                                                   \
     asm("xor %rax, (%rsp)");                                                   \
     asm("xor (%rsp), %rax");
 
 void emulate_syscall_ins(struct params *p){
-
-    uint64_t ia32_fmask_comp = get_fmask_comp();
+    // Syscall handler rip
     uint64_t lstar = get_lstar();
 
-    // These look useless, but we're forcing the
-    // deref to happen before the inline code
-    // to avoid dirtying regs.
-    uint64_t fd = p->fd;
-    uint64_t buf = (uint64_t) p->buf;
-    uint64_t size = p->size;
-    uint64_t syscall_number = SYS_write;
+    // What flags should be masked for the syscall handler
+    uint64_t ia32_fmask_comp = get_fmask_comp();
+
+    uint64_t user_flags;
 
     t.start = clock();
     sym_elevate();
@@ -281,10 +280,11 @@ void emulate_syscall_ins(struct params *p){
         push_64(lstar);
 
         // load user rflags, has to come before they get modified.
-        asm("pushfq");
-
-        // Return RIP in rcx
-        asm("lea return_point(%%rip), %%rcx" : : : "rcx");
+        asm("pushfq" : : : "memory");
+        // pop into user_flags
+        asm("popq %0" : "=m"(user_flags) : : "memory");
+        
+        push_64(user_flags);
 
         // Mask out the user flags for the handler
         asm("push %rcx"); // preserve it
@@ -295,33 +295,37 @@ void emulate_syscall_ins(struct params *p){
         asm("popfq");    // rflags = rflags & not(fmask)
         asm("pop %rcx"); // restore rcx
 
+        // No regs are hot at this point.
+
         // Syscall number
-        push_64(syscall_number);
+        push_64(SYS_write);
 
         // args
-        push_64(fd);
-        push_64((uint64_t)buf);
-        push_64(size);
+        push_64((uint64_t)p->fd);
+        push_64((uint64_t)p->buf);
+        push_64(p->size);
+
+        // After this, regs go hot, be careful.
+
+        // Args
         asm("pop %rdx");
         asm("pop %rsi");
         asm("pop %rdi");
 
+        // Syscall number
         asm("pop %rax");
-        // When we ret, rip loaded with this value
-        // DONT POP ME, ret will do it
 
+        // Flags
         asm("popq %r11");
-       
-        // args
-        // syscall no
 
+        // Return RIP
+        asm("lea return_point(%%rip), %%rcx" : : : "rcx");
+       
         // Send us to the syscall handler
         asm("ret");
 
         __asm__ volatile("return_point:");
 
-        // asm("nop");
-        // Think no need for sti b/c syscall return should re-enable
     }
     sym_lower();
     t.end = clock();
