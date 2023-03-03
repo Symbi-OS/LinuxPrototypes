@@ -419,16 +419,14 @@ typedef int (*ksys_write_t)(unsigned int fd, const char *buf, size_t count);
 
 
 void ksys_write_shortcut(struct params *p, int do_stack_switch) {
-    // ksys_write_t my_ksys_write = NULL;
-    // sym_touch_stack(); 
-    // my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
-    // // check it isn't null
-    // if (my_ksys_write == NULL) {
-    //     fprintf(stderr, "Failed to get ksys_write address\n");
-    //     exit(1);
-    // }
-
-    ksys_write_t my_ksys_write = (ksys_write_t) 0xffffffff81367220;
+    ksys_write_t my_ksys_write = NULL;
+    sym_touch_stack(); 
+    my_ksys_write = (ksys_write_t)sym_get_fn_address("ksys_write");
+    // check it isn't null
+    if (my_ksys_write == NULL) {
+        fprintf(stderr, "Failed to get ksys_write address\n");
+        exit(1);
+    }
 
     t.start = clock();
     sym_elevate();
