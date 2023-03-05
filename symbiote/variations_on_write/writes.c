@@ -266,11 +266,6 @@ inline void __attribute__((always_inline)) stack_switch_to_user() {
     asm volatile("xor %%rax, (%%rsp)" : : : "memory");                         \
     asm volatile("xor (%%rsp), %%rax" : : : "rax");
 
-#pragma GCC push_options
-#pragma GCC optimize("-O0")
-// This is only tested to work at O0.
-// It looks like it works at 01, but some regs look bad at the ret, namely r11
-// At 02 it doesn't work at all.
 void emulate_syscall_ins(struct params *p) {
     // Syscall handler rip
     uint64_t lstar = get_lstar();
@@ -300,8 +295,8 @@ void emulate_syscall_ins(struct params *p) {
         asm volatile("push %%rax" : : : "memory"); // preserve
         asm volatile("mov %0, %%rax" : : "m"(masked_flags) : "rax");
         asm volatile("push %%rax" : : : "memory");
-        asm volatile("popf" : : : "cc");
-        asm volatile("pop %%rax" : : : "rax"); // restore
+        asm volatile("popf" : : : "cc", "memory");
+        asm volatile("pop %%rax" : : : "rax", "memory"); // restore
 
         // No regs are hot at this point.
 
@@ -316,15 +311,15 @@ void emulate_syscall_ins(struct params *p) {
         // After this, regs go hot, be careful.
 
         // Args
-        asm volatile("pop %%rdx" : : : "rdx");
-        asm volatile("pop %%rsi" : : : "rsi");
-        asm volatile("pop %%rdi" : : : "rdi");
+        asm volatile("pop %%rdx" : : : "rdx", "memory");
+        asm volatile("pop %%rsi" : : : "rsi", "memory");
+        asm volatile("pop %%rdi" : : : "rdi", "memory");
 
         // Syscall number
-        asm volatile("pop %%rax" : : : "rax");
+        asm volatile("pop %%rax" : : : "rax", "memory");
 
         // Flags
-        asm volatile("pop %%r11" : : : "r11");
+        asm volatile("pop %%r11" : : : "r11", "memory");
 
         // Return RIP
         asm volatile("lea return_point(%%rip), %%rcx" : : : "rcx");
@@ -337,7 +332,6 @@ void emulate_syscall_ins(struct params *p) {
     sym_lower();
     t.end = clock();
 }
-#pragma GCC pop_options
 // This function is like the above, but it also switches stacks and
 // enters after the syscall handler switches.
 
@@ -377,8 +371,8 @@ void emulate_syscall_ins_and_stack_switch(struct params *p) {
         asm volatile("push %%rax" : : : "memory"); // preserve
         asm volatile("mov %0, %%rax" : : "m"(masked_flags) : "rax");
         asm volatile("push %%rax" : : : "memory");
-        asm volatile("popf" : : : "cc");
-        asm volatile("pop %%rax" : : : "rax"); // restore
+        asm volatile("popf" : : : "cc", "memory");
+        asm volatile("pop %%rax" : : : "rax", "memory"); // restore
 
         // No regs are hot at this point.
 
@@ -393,15 +387,15 @@ void emulate_syscall_ins_and_stack_switch(struct params *p) {
         // After this, regs go hot, be careful.
 
         // Args
-        asm volatile("pop %%rdx" : : : "rdx");
-        asm volatile("pop %%rsi" : : : "rsi");
-        asm volatile("pop %%rdi" : : : "rdi");
+        asm volatile("pop %%rdx" : : : "rdx", "memory");
+        asm volatile("pop %%rsi" : : : "rsi", "memory");
+        asm volatile("pop %%rdi" : : : "rdi", "memory");
 
         // Syscall number
-        asm volatile("pop %%rax" : : : "rax");
+        asm volatile("pop %%rax" : : : "rax", "memory");
 
         // Flags
-        asm volatile("pop %%r11" : : : "r11");
+        asm volatile("pop %%r11" : : : "r11", "memory");
 
         // Return RIP
         asm volatile("lea return_point_ss(%%rip), %%rcx" : : : "rcx");
@@ -558,12 +552,12 @@ void check_output(struct params *p) {
         exit(1);
     }
 
-    fprintf(stderr, "file size: %d\n", file_sz);
-    fprintf(stderr, "expected size: %ld\n", p->iter * p->size);
+    // fprintf(stderr, "file size: %d\n", file_sz);
+    // fprintf(stderr, "expected size: %ld\n", p->iter * p->size);
 
     assert(file_sz == (int)(p->iter * p->size));
 
-    fprintf(stderr, "file size: ok\n");
+    // fprintf(stderr, "file size: ok\n");
 
     // print md5sum of file
     char cmd[256];
@@ -575,6 +569,7 @@ void report_time() {
     double time_taken = ((double)(t.end - t.start)) / CLOCKS_PER_SEC;
     fprintf(stderr, "\nTime taken: %f\n", time_taken);
 }
+
 void cleanup(struct params *p) {
     free(p->buf);
     close(p->fd);
@@ -595,10 +590,11 @@ int main(int argc, char *argv[]) {
     init_buffer(p);
     run_selected_test(p);
 
+    report_time();
+
     check_output(p);
     cleanup(p);
 
-    report_time();
 
     return 0;
 }
