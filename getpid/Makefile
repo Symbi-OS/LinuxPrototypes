@@ -7,7 +7,7 @@ getpid: getpid.c
 	gcc -O3	getpid.c -o getpid
 
 # Chosen to take 1 sec.
-ITERATIONS=160000000
+ITERATIONS=$$((1<<23))
 WORKLOAD=./getpid ${ITERATIONS}
 TASKSET_CMD=taskset -c 0 bash -c
 
