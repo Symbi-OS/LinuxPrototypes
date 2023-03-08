@@ -4,3 +4,5 @@ fork/fork
 send/send
 nop/nop
 nop/nop_busted
+getpid/getpid
+symbiote/variations_on_write/writes
