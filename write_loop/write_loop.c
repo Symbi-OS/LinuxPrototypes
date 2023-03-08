@@ -1,10 +1,11 @@
-
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
 #include <string.h>
+#include <stdint.h>
 
 struct params {
     int bytes;
@@ -66,6 +67,72 @@ int prepare_file(struct params *p){
     }
     return fd;
 }
+#define LATENCY
+#ifdef LATENCY
+void process_latencies(struct timespec *times, int count){
+    // If you input count is n, there are n+1 times and n latencies
+    fprintf(stderr, "Processing latencies count is %d\n", count);
+
+    // Calculate the individual latencies
+    // fprintf(stderr, "calloc latencies, count is %d, size of timespec is %d\n", count, sizeof(struct timespec));
+    struct timespec *latencies = calloc(count, sizeof(struct timespec));
+    // check for error
+    if (latencies == NULL) {
+        printf("calloc failed\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < count; i++) {
+        // fprintf(stderr, "times[%d] s:ns %ld:%ld\n", i, times[i].tv_sec, times[i].tv_nsec);
+        // fprintf(stderr, "times[%d] s:ns %ld:%ld\n", i+1, times[i+1].tv_sec, times[i+1].tv_nsec);
+
+        struct timespec diff;
+        // seconds
+        diff.tv_sec = times[i+1].tv_sec - times[i].tv_sec;
+        // ns
+        diff.tv_nsec = times[i+1].tv_nsec - times[i].tv_nsec;
+        // fprintf(stderr, "diff.tv_sec %ld diff.tv_nsec %ld\n", diff.tv_sec, diff.tv_nsec);
+        assert(diff.tv_sec == 0 || diff.tv_sec == 1);
+
+        if (diff.tv_sec == 1) {
+            diff.tv_nsec += 1000 * 1000 *1000;
+        }
+        // fprintf(stderr, "diff.tv_sec %ld diff.tv_nsec %ld\n", diff.tv_sec, diff.tv_nsec);
+
+        // Latencies are in nanoseconds, so calc diff
+
+        latencies[i].tv_nsec = diff.tv_nsec;
+        // fprintf(stderr, "~~~latencies[%d] s:ns %ld:%ld\n", i, latencies[i].tv_sec, latencies[i].tv_nsec);
+        // fprintf(stderr, "latency[%d] is %ld\n", i, latencies[i].tv_nsec);
+    }
+    // if file exists, remove it
+    if (access("latencies.txt", F_OK) != -1) {
+        // printf("File latencies.txt exists, deleting\n");
+        int rc = remove("latencies.txt");
+        // check that remove worked
+        if (rc != 0) {
+            printf("remove failed\n");
+            exit(1);
+        }
+    }
+    // fprintf(stderr, "opening file\n");
+    FILE *fp = fopen("latencies.txt", "w");
+    // check for error
+    if (fp == NULL) {
+        printf("fopen failed\n");
+        exit(1);
+    }
+    // fprintf(stderr, "count is %d, entering print loop\n", count);
+    for (int i = 0; i < count; i++) {
+        // fprintf(stderr, "got here\n");
+        // fprintf(stderr, "latency[%d] is %ld\n", i, latencies[i].tv_nsec);
+        fprintf(fp, "%ld\n", latencies[i].tv_nsec);
+    } 
+    fclose(fp);
+    free(latencies);
+}
+#endif
+
 void benchmark(struct params *p){
     char *buffer = get_buf(p);
 
@@ -79,11 +146,16 @@ void benchmark(struct params *p){
     prior = clock();
     int verbose = 1;
 
-    // Start at 1 to make timer check easier, since we don't want to count the first iteration 
-    for (int i = 1; i < p->times; i++) {
+#ifdef LATENCY
+    // If the user inputs count is n, there are n+1 times.
+    struct timespec *times = calloc(p->times+1, sizeof(struct timespec));
+    clock_gettime(CLOCK_MONOTONIC_RAW, &times[0]); 
+#endif
+
+    for (int i = 0; i < p->times; i++) {
 
         // This does not seem to pertubate the timing
-        if( verbose && ( i % print_interval == 0 ) ){
+        if( verbose && ( (i % print_interval) == (print_interval - 1) ) ){
             // get current time
             current = clock();
             // print time since last print
@@ -97,7 +169,11 @@ void benchmark(struct params *p){
             printf("write failed\n");
             exit(1);
         }
+#ifdef LATENCY
+        clock_gettime(CLOCK_MONOTONIC_RAW, &times[i+1]); 
+#endif
     }
+
 
     end=clock();
 
@@ -108,6 +184,11 @@ void benchmark(struct params *p){
     // Print throughput
     printf("Throughput: %f Mb/s\n", (p->bytes*p->times)/(elapsed*1024*1024));
     printf("K Writes/sec: %f \n", (p->times)/(elapsed*1024));
+
+#ifdef LATENCY
+    process_latencies(times, p->times);
+    free(times);
+#endif
 
     free(buffer);
     close(fd);

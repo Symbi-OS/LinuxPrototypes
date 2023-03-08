@@ -2,7 +2,7 @@
 
 SHELL := /bin/bash
 
-CFLAGS=-O0 -g -fno-omit-frame-pointer -mno-red-zone
+CFLAGS=-O4 -g -fno-omit-frame-pointer -mno-red-zone
 
 .PHONY: all clean run
 
@@ -111,7 +111,8 @@ PERF_CMD+=-e LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches
 perf_stat:
 	$(PERF_CMD) ./write_loop 1 $$(( 1 << 23 )) /tmp/test
 
-
+sudo_decomp:
+	sudo LD_LIBRARY_PATH=/home/sym/Symbi-OS/Symlib/dynam_build:/home/sym/Symbi-OS/Tools/bin/shortcut/deep_sc  BEGIN_ELE=1 SHORTCUT_write_TO___x64_sys_write=1 LD_PRELOAD=/home/sym/Symbi-OS/Tools/bin/shortcut/sc_lib.so  ./write_loop 1 $$((1<<22)) /tmp/test
 # Examples:
 # make profile ITER=$(( 1 << 25 )) FPATH=/tmp/test
 
