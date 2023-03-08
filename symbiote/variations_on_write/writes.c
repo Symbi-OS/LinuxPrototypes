@@ -455,6 +455,42 @@ void ksys_write_shortcut(struct params *p, int do_stack_switch) {
     sym_lower();
     t.end = clock();
 }
+#if 0
+void vfs_write_shortcut(struct params *p) {
+    ksys_write_t my_vfs_write = NULL;
+        my_vfs_write = (ksys_write_t)sym_get_fn_address("vfs_write");
+            if (my_vfs_write == NULL) {
+        fprintf(stderr, "Failed to get ksys_write address\n");
+        exit(1);
+    }
+    t.start = clock();
+    sym_elevate();
+    for (unsigned i = 0; i < p->iter; i++) {
+
+        if ((i % (10)) == 0) {
+            int rc = write(p->fd, p->buf, p->size);
+            if (rc < 0) {
+                fprintf(stderr, "write() failed: %s\n", strerror(errno));
+                exit(1);
+            }
+        } else {
+
+            SYM_ON_KERN_STACK_DO( \
+                #error
+                int rc = my_vfs_write(p->fd, p->buf, p->size); \
+            );
+
+            if (rc < 0) {
+                fprintf(stderr, "write() failed: %s\n", strerror(errno));
+                exit(1);
+            }
+        }
+    }
+    sym_lower();
+    t.end = clock();
+}
+#endif
+
 void run_selected_test(struct params *p) {
     switch (p->test_id) {
     case 0:
@@ -496,7 +532,7 @@ void run_selected_test(struct params *p) {
         break;
     case 8:
         fprintf(stderr, "Loop using vfs_write\n");
-        fprintf(stderr, "vfs shortcut unsupported\n");
+        // vfs_write_shortcut(p);
         fprintf(stderr, "NYI, exiting\n");
         exit(1);
         break;
