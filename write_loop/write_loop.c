@@ -67,7 +67,6 @@ int prepare_file(struct params *p){
     }
     return fd;
 }
-#define LATENCY
 #ifdef LATENCY
 void process_latencies(struct timespec *times, int count){
     // If you input count is n, there are n+1 times and n latencies

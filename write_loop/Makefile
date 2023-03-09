@@ -1,135 +1,108 @@
-# Interposing lib | Always elevated | Elevated on write | Shortcutting write
+#.PHONY= clean results/baseline_xput_ex run_xput
 
 SHELL := /bin/bash
 
 CFLAGS=-O4 -g -fno-omit-frame-pointer -mno-red-zone
 
-.PHONY: all clean run
-
 EXEC=write_loop
 
-# This is 1<<24
-ITER?=$$(( 1 << 24))
+SC_SCRIPT=shortcut.sh
+
+write_loop: write_loop.c
+	gcc $(CFLAGS) -o $@ $<
+
+write_loop_latency: write_loop.c
+	gcc -DLATENCY $(CFLAGS) -o $@ $< 
+
+######### Run all experiments #########
+run_all_ex: run_xput_exs run_lat_exs run_power_ex
+
+######### PARAMETERS #########
+# How many times to repeat each experiment
+RESULT_RUNS=3
+
+ITER?=$$(( 1 << 21))
 
 FPATH?=/tmp/test
 
 # How many bytes to write each iteration
 WR_SZ?=1
 
-SC_SCRIPT=shortcut.sh
+ARGS=$(WR_SZ) $(ITER) $(FPATH)
 
-APP_AND_ARGS=./$(EXEC) $(WR_SZ) $(ITER) $(FPATH)
+######### Throughput experiments #########
+run_xput_exs: results/baseline_xput_ex results/sc_xput_ex
 
-write_loop: write_loop.c
-	gcc $(CFLAGS) -o $@ $<
+results/baseline_xput_ex: results
+	@echo "Running baseline xput experiment"
+	for i in $$(seq 1 $(RESULT_RUNS)); do \
+		echo run $$i; \
+		$(MAKE) run_xput_baseline | grep Throughput | cut -d ' ' -f 2 | tee -a $@; done
 
-all: run_elev_wr_only run_elev run_lower_wr_only run_elev_sc_wr_only
+results/sc_xput_ex: results
+	@echo "Running shortcut xput experiment"
+	for i in $$(seq 1 $(RESULT_RUNS)); do \
+		echo run $$i; \
+		$(MAKE) run_xput_sc | grep Throughput | cut -d ' ' -f 2 | tee -a $@; done
 
-# Normal run
-run: $(EXEC)
-	$(APP_AND_ARGS)
+run_xput_baseline: write_loop
+	./write_loop $(ARGS)
 
-# Should be identical to the normal run
-run_passthrough: $(EXEC)
-	$(SC_SCRIPT) -v -p --- $(APP_AND_ARGS)
+run_xput_sc: write_loop
+	$(SC_SCRIPT) -v -be -s 'write->__x64_sys_write' --- ./write_loop $(ARGS)
 
-# Interposing lib used this time, but no elevation or shortcutting
-run_interposed: $(EXEC)
-	$(SC_SCRIPT) -v --- $(APP_AND_ARGS)
+######### Latency experiments #########
+run_lat_exs: results/baseline_lat_ex results/sc_lat_ex
 
-# Whole application runs elevated, no shortcutting
-run_elev: $(EXEC)
-	$(SC_SCRIPT) -be --- $(APP_AND_ARGS)
+results/baseline_lat_ex: results
+	@echo "Running baseline latency experiment"
+	$(MAKE) run_lat_baseline
+	mv latencies.txt $@
 
-# Uses Interposing lib, starts elevated, shortcutting write
-run_elev_sc_wr_only: $(EXEC)
-	$(SC_SCRIPT) -v -be -s 'write->__x64_sys_write' --- $(APP_AND_ARGS)
+results/sc_lat_ex: results
+	@echo "Running shortcut latency experiment"
+	$(MAKE) run_lat_sc
+	mv latencies.txt $@
 
-profile: $(EXEC)
-	../profile.sh "'shortcut.sh -p --- $(APP_AND_ARGS)'" write_loop.svg
+run_lat_baseline: write_loop_latency
+	./write_loop_latency $(ARGS)
 
-profile_interposed: $(EXEC)
-	../profile.sh "'shortcut.sh --- $(APP_AND_ARGS)'" write_loop_interposed.svg
+run_lat_sc: write_loop_latency
+	$(SC_SCRIPT) -v -be -s 'write->__x64_sys_write' --- ./write_loop_latency $(ARGS)
 
-profile_elev: $(EXEC)
-	../profile.sh "'shortcut.sh -be --- $(APP_AND_ARGS)'" write_loop_elev.svg
+######### Power experiments #########
+run_power_ex: results/baseline_power_ex results/sc_power_ex
 
-profile_sc: $(EXEC)
-	../profile.sh "'shortcut.sh -be -s 'write->__x64_sys_write' --- $(APP_AND_ARGS)'" write_loop_sc.svg
+results/baseline_power_ex: results
+	@echo "Running baseline power experiment"
+	echo NYI
 
-profile_all:
-	make profile
-	make profile_interposed
-	make profile_elev
-	make profile_sc
+results/sc_power_ex: results
+	@echo "Running shortcut power experiment"
+	echo NYI
 
-clean:
-	rm -rf results $(EXEC) test *.svg
 
-# For loop that writes to a file 10 times
-RESULT_RUNS=30
-RESULT_ITER=$$(( 1 << 21 ))
 
-baseline_ex: write_loop
-	rm -f out.test
-	for _ in $$(seq 1 $(RESULT_RUNS)); do make run ITER=$(RESULT_ITER) FPATH=/tmp/test &>> out.test; done
+results:
 	mkdir -p results
-	cat out.test  | grep Throughput | cut -d ' ' -f 2 > results/$@
-	rm -f out.test
 
-interposed_ex: write_loop
-	rm -f out.test
-	for _ in $$(seq 1 $(RESULT_RUNS)); do make run_interposed ITER=$(RESULT_ITER) FPATH=/tmp/test &>> out.test; done
-	mkdir -p results
-	cat out.test  | grep Throughput | cut -d ' ' -f 2 > results/$@
-	rm -f out.test
-
-elev_ex: write_loop
-	rm -f out.test
-	for _ in $$(seq 1 $(RESULT_RUNS)); do make run_elev ITER=$(RESULT_ITER) FPATH=/tmp/test &>> out.test; done
-	mkdir -p results
-	cat out.test  | grep Throughput | cut -d ' ' -f 2 > results/$@
-	rm -f out.test
-
-sc_ex: write_loop
-	rm -f out.test
-	for _ in $$(seq 1 $(RESULT_RUNS)); do make run_elev_sc_wr_only ITER=$(RESULT_ITER) FPATH=/tmp/test &>> out.test; done
-	mkdir -p results
-	cat out.test  | grep Throughput | cut -d ' ' -f 2 > results/$@
-	rm -f out.test
-
-run_ex: write_loop
-	make baseline_ex
-	make interposed_ex
-	make elev_ex
-	make sc_ex
 PERF_CMD=perf stat -d -d -d
 # PERF_CMD+=-e cycles,instructions,cache-references,cache-misses,bus-cycles
 # PERF_CMD+=-e L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores
 PERF_CMD+=-e LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches
 
+profile: write_loop
+	../profile.sh "'shortcut.sh -p --- ./write_loop $(ARGS)'" write_loop.svg
+
+profile_sc: write_loop
+	../profile.sh "'shortcut.sh -be -s 'write->__x64_sys_write' --- ./write_loop $(ARGS)'" ./write_loop_sc.svg
+
+profile_all:
+	make profile
+	make profile_sc
+
 perf_stat:
 	$(PERF_CMD) ./write_loop 1 $$(( 1 << 23 )) /tmp/test
 
-sudo_decomp:
-	sudo LD_LIBRARY_PATH=/home/sym/Symbi-OS/Symlib/dynam_build:/home/sym/Symbi-OS/Tools/bin/shortcut/deep_sc  BEGIN_ELE=1 SHORTCUT_write_TO___x64_sys_write=1 LD_PRELOAD=/home/sym/Symbi-OS/Tools/bin/shortcut/sc_lib.so  ./write_loop 1 $$((1<<22)) /tmp/test
-# Examples:
-# make profile ITER=$(( 1 << 25 )) FPATH=/tmp/test
-
-# Depricate:
-
-# run_elev_sc_wr_only_long: $(EXEC)
-# 	$(SC_SCRIPT) -v -be -s 'write->ksys_write' --- ./$(EXEC) 1 1073741824
-
-# run_quick_sc: $(EXEC)
-# 	$(SC_SCRIPT) -v -be -s 'write->ksys_write' --- ./$(EXEC) 1 2
-
-# run_elev_long: $(EXEC)
-# 	$(SC_SCRIPT) -be --- ./$(EXEC) $(WR_SZ) 1073741824
-# Uses Interposing lib, starts lowered and elevates on write
-# run_elev_wr_only: $(EXEC)
-#	$(SC_SCRIPT) -v -ewrite --- $(APP_AND_ARGS)
-
-# Uses Interposing lib, starts elevated then lowers around write
-# run_lower_wr_only: $(EXEC)
-#	$(SC_SCRIPT) -v -be -lwrite --- $(APP_AND_ARGS)
+clean:
+	rm -rf results write_loop write_loop_latency test *.svg latencies.txt 

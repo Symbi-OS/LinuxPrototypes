@@ -1,5 +1,7 @@
 read_loop/rd_loop
 write_loop/write_loop
+write_loop/write_loop_latency
+write_loop/results
 fork/fork
 send/send
 nop/nop
