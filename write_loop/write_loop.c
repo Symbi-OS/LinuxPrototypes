@@ -70,7 +70,7 @@ int prepare_file(struct params *p){
 #ifdef LATENCY
 void process_latencies(struct timespec *times, int count){
     // If you input count is n, there are n+1 times and n latencies
-    fprintf(stderr, "Processing latencies count is %d\n", count);
+    // fprintf(stderr, "Processing latencies count is %d\n", count);
 
     // Calculate the individual latencies
     // fprintf(stderr, "calloc latencies, count is %d, size of timespec is %d\n", count, sizeof(struct timespec));

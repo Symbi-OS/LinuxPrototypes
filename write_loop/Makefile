@@ -11,7 +11,7 @@ help:
 	@echo this is a tool for studying throughput, latency, and power
 	@echo of a loop doing writes with and without shortcutting
 	@echo the main target of interest is run_all_exs
-	@echo this assumes you're ok with running system wide perf collections
+	@echo this assumes youre ok with running system wide perf collections
 	@echo if you need that, consider the target enable_user_perf
 
 write_loop: write_loop.c
@@ -25,7 +25,7 @@ run_all_exs: run_xput_exs run_lat_exs run_power_exs
 
 ######### PARAMETERS #########
 # How many times to repeat each experiment
-RESULT_RUNS=3
+RESULT_RUNS=30
 
 ITER?=$$(( 1 << 21))
 
@@ -60,15 +60,35 @@ run_xput_sc: write_loop
 ######### Latency experiments #########
 run_lat_exs: results/baseline_lat_ex results/sc_lat_ex
 
-results/baseline_lat_ex: results
+# Run run_lat_baseline 30x each time move the latencies.txt file to be named latencies_<throughput>
+# where throughput is read out of the output. When done, sort the files by throughput and save
+# the median file in results/baseline_lat_ex_median. Delete the rest.
+# There might be an off by one error here, but I don't really care.
+results/baseline_lat_ex: results baseline_tmp_lat
 	@echo "Running baseline latency experiment"
-	$(MAKE) run_lat_baseline
-	mv latencies.txt $@
+	for i in $$(seq 1 $(RESULT_RUNS)); do \
+		echo run $$i; \
+		XPUT=$$($(MAKE) run_lat_baseline | grep Throughput | cut -d ' ' -f 2 ) ; \
+		mv latencies.txt baseline_tmp_lat/latencies_$$XPUT; \
+	done
+	MEDIAN_LAT=$$(ls baseline_tmp_lat/latencies_* | sort -n -k 2 | head -n $$(($(RESULT_RUNS)/2)) | tail -n 1 ); \
+	cp $$MEDIAN_LAT $@;
 
-results/sc_lat_ex: results
+results/sc_lat_ex: results sc_tmp_lat
 	@echo "Running shortcut latency experiment"
-	$(MAKE) run_lat_sc
-	mv latencies.txt $@
+	for i in $$(seq 1 $(RESULT_RUNS)); do \
+		echo run $$i; \
+		XPUT=$$($(MAKE) run_lat_sc | grep Throughput | cut -d ' ' -f 2 ) ; \
+		mv latencies.txt sc_tmp_lat/latencies_$$XPUT; \
+	done
+	MEDIAN_LAT=$$(ls sc_tmp_lat/latencies_* | sort -n -k 2 | head -n $$(($(RESULT_RUNS)/2)) | tail -n 1 ); \
+	cp $$MEDIAN_LAT $@;
+
+# Someone clean up this midnight hacking
+baseline_tmp_lat:
+	mkdir -p $@
+sc_tmp_lat:
+	mkdir -p $@
 
 run_lat_baseline: write_loop_latency
 	./write_loop_latency $(ARGS)
@@ -105,10 +125,10 @@ results:
 enable_user_perf:
 	sudo sh -c 'echo -1 > /proc/sys/kernel/perf_event_paranoid'
 
-PERF_CMD=perf stat -d -d -d
+#PERF_CMD=perf stat -d -d -d
 # PERF_CMD+=-e cycles,instructions,cache-references,cache-misses,bus-cycles
 # PERF_CMD+=-e L1-dcache-loads,L1-dcache-load-misses,L1-dcache-stores
-PERF_CMD+=-e LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches
+#PERF_CMD+=-e LLC-loads,LLC-load-misses,LLC-stores,LLC-prefetches
 
 profile: write_loop
 	../profile.sh "'shortcut.sh -p --- ./write_loop $(ARGS)'" write_loop.svg
@@ -120,8 +140,5 @@ profile_all:
 	make profile
 	make profile_sc
 
-perf_stat:
-	$(PERF_CMD) ./write_loop 1 $$(( 1 << 23 )) /tmp/test
-
 clean:
-	rm -rf results write_loop write_loop_latency test *.svg latencies.txt
+	rm -rf results write_loop write_loop_latency test *.svg latencies.txt baseline_tmp_lat sc_tmp_lat
