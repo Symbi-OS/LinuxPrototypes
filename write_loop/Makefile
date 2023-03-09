@@ -7,6 +7,12 @@ CFLAGS=-O4 -g -fno-omit-frame-pointer -mno-red-zone
 EXEC=write_loop
 
 SC_SCRIPT=shortcut.sh
+help:
+	@echo this is a tool for studying throughput, latency, and power
+	@echo of a loop doing writes with and without shortcutting
+	@echo the main target of interest is run_all_exs
+	@echo this assumes you're ok with running system wide perf collections
+	@echo if you need that, consider the target enable_user_perf
 
 write_loop: write_loop.c
 	gcc $(CFLAGS) -o $@ $<
@@ -15,7 +21,7 @@ write_loop_latency: write_loop.c
 	gcc -DLATENCY $(CFLAGS) -o $@ $< 
 
 ######### Run all experiments #########
-run_all_ex: run_xput_exs run_lat_exs run_power_ex
+run_all_exs: run_xput_exs run_lat_exs run_power_exs
 
 ######### PARAMETERS #########
 # How many times to repeat each experiment
@@ -71,20 +77,33 @@ run_lat_sc: write_loop_latency
 	$(SC_SCRIPT) -v -be -s 'write->__x64_sys_write' --- ./write_loop_latency $(ARGS)
 
 ######### Power experiments #########
-run_power_ex: results/baseline_power_ex results/sc_power_ex
+run_power_exs: results/baseline_power_ex results/sc_power_ex
+PERF=perf stat -e energy-cores -e energy-gpu -e energy-pkg -e energy-psys -e energy-ram 
 
 results/baseline_power_ex: results
 	@echo "Running baseline power experiment"
-	echo NYI
+	for i in $$(seq 1 $(RESULT_RUNS)); do \
+		echo run $$i; \
+		$(MAKE) run_power_baseline |& grep 'Joules energy-cores' | tr -s ' ' | cut -d ' ' -f 2 | tee -a $@; done
 
 results/sc_power_ex: results
 	@echo "Running shortcut power experiment"
-	echo NYI
+	for i in $$(seq 1 $(RESULT_RUNS)); do \
+		echo run $$i; \
+		$(MAKE) run_power_sc |& grep 'Joules energy-cores' | tr -s ' ' | cut -d ' ' -f 2 | tee -a $@; done
 
+run_power_baseline: write_loop
+	$(PERF) ./write_loop $(ARGS)
 
+run_power_sc: write_loop
+	$(PERF) bash -c "$(SC_SCRIPT) -v -be -s 'write->__x64_sys_write' --- ./write_loop $(ARGS)"
 
 results:
 	mkdir -p results
+
+#disable need for sudo with perf
+enable_user_perf:
+	sudo sh -c 'echo -1 > /proc/sys/kernel/perf_event_paranoid'
 
 PERF_CMD=perf stat -d -d -d
 # PERF_CMD+=-e cycles,instructions,cache-references,cache-misses,bus-cycles
@@ -105,4 +124,4 @@ perf_stat:
 	$(PERF_CMD) ./write_loop 1 $$(( 1 << 23 )) /tmp/test
 
 clean:
-	rm -rf results write_loop write_loop_latency test *.svg latencies.txt 
+	rm -rf results write_loop write_loop_latency test *.svg latencies.txt
