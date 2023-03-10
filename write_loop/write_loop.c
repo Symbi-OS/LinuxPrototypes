@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdint.h>
 
+// #define DEBUG 1
 struct params {
     int bytes;
     int times;
@@ -153,6 +154,7 @@ void benchmark(struct params *p){
 
     for (int i = 0; i < p->times; i++) {
 
+#ifdef DEBUG
         // This does not seem to pertubate the timing
         if( verbose && ( (i % print_interval) == (print_interval - 1) ) ){
             // get current time
@@ -161,6 +163,7 @@ void benchmark(struct params *p){
             printf("Time: %f seconds\n", (double)(current-prior)/CLOCKS_PER_SEC);
             prior = current;
         }
+#endif
 
         int rc = write(fd, buffer, p->bytes);
         // check write worked
@@ -172,7 +175,6 @@ void benchmark(struct params *p){
         clock_gettime(CLOCK_MONOTONIC_RAW, &times[i+1]); 
 #endif
     }
-
 
     end=clock();
 

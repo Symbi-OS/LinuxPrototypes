@@ -25,9 +25,9 @@ run_all_exs: run_xput_exs run_lat_exs run_power_exs
 
 ######### PARAMETERS #########
 # How many times to repeat each experiment
-RESULT_RUNS=30
+RESULT_RUNS=3
 
-ITER?=$$(( 1 << 21))
+ITER?=$$(( 1 << 22))
 
 FPATH?=/tmp/test
 
