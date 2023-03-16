@@ -1,7 +1,4 @@
 JAVA_HOME=/usr/lib/jvm/java-17-openjdk-17.0.6.0.10-1.fc36.x86_64/
-# build: Main.java MyClass.java mylibrary.c
-# 	# javac Main.java
-# 	# javac MyClass.java
 
 all: Main.class libmylibrary.so
 
@@ -11,7 +8,7 @@ Main.class: Main.java MyClass.class FooClass.class
 MyClass.class: MyClass.java
 	javac MyClass.java
 
-FooClass.class: FooClass.java libSym.so
+FooClass.class: FooClass.java libFoo.so
 	javac $<
 
 INCLUDES=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/linux
@@ -19,14 +16,14 @@ SOFLAGS=-shared -fPIC
 libmylibrary.so: mylibrary.c
 	gcc $(SOFLAGS) $(INCLUDES) $< -o $@
 
-libSym.so: mysymlib.c
+libFoo.so: mysymlib.c
 	gcc $(SOFLAGS) $(INCLUDES) $< -o $@
 
-run:
+run: Main.class
 	java Main
 
 clean:
-	rm -f MyClass.class libSym.so libmylibrary.so *err* *.class
+	rm -f MyClass.class libmylibrary.so *err* *.class libFoo.so
 
 # prefix_syms: libSym_mod.so
 # 	objcopy --prefix-symbols=Java_MyClass_ libSym_mod.so
