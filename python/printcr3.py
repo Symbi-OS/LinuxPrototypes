@@ -3,7 +3,7 @@ symlib = ctypes.cdll.LoadLibrary('../../Symlib/dynam_build/libSym.so')
 
 print("Hello World")
 
-my_module = ctypes.cdll.LoadLibrary('./my_shared_object.so')
+my_module = ctypes.cdll.LoadLibrary('./getCr3.so')
 # rax = my_module.get42()
 
 # DO_ELEVATED = False

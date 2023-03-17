@@ -1,3 +1,5 @@
+*.o
+*.so
 read_loop/rd_loop
 write_loop/write_loop
 write_loop/write_loop_latency
