@@ -1,0 +1,17 @@
+A reminder:
+
+This JNI crap is annoying. The first thing you tried was
+objcpying a .o (the symlib) fn with Java_<classname> and importing the lib.
+
+It failed with a runtime link issue. 
+
+You thought the issue was missing the other crap in the .o that
+JNI produces, that maybe the runtime linker looked for that shit & gave up.
+
+But you later learned that underscore characters are forbidden from
+Java method naming conventions and the runtime link seemed to fail
+with the same error when you just tried to link to an inocuous 
+method with '_'s in it. 
+
+So maybe that would have worked all along and you can exploit the objcpy
+in the future. idk.
