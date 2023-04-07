@@ -10,3 +10,5 @@ nop/nop
 nop/nop_busted
 getpid/getpid
 symbiote/variations_on_write/writes
+cpp/write_loop
+rust/print_cr3/main
