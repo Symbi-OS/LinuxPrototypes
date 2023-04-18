@@ -12,3 +12,5 @@ getpid/getpid
 symbiote/variations_on_write/writes
 cpp/write_loop
 rust/print_cr3/main
+go/print_cr3/main
+oot_module/replace_fn/.kelevate_module.o.d
