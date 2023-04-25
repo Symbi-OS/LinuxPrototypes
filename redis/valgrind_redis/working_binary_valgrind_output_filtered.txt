@@ -1,0 +1,3249 @@
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   fun:spt_init
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   fun:spt_init
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   fun:spt_init
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   fun:UnknownInlinedFun
+   fun:spt_init
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:UnknownInlinedFun
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:UnknownInlinedFun
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:UnknownInlinedFun
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:subexpr.lto_priv.0
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   fun:UnknownInlinedFun
+   fun:spt_init
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:UnknownInlinedFun
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+   fun:funcargs.lto_priv.0
+   fun:primaryexp
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:field.lto_priv.0
+   fun:primaryexp
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:body.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:field.lto_priv.0
+   fun:primaryexp
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_getfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:field.lto_priv.0
+   fun:primaryexp
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:subexpr.lto_priv.0
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_string
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaF_newLclosure
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaV_execute
+   fun:luaD_call
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:lua_pushstring
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaF_newLclosure
+   fun:luaV_execute
+   fun:luaD_call
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_struct
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_table
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_string
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_string
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_debug
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_struct
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_bit
+   fun:luaD_precall
+   fun:luaD_call
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:open_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:open_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:open_func
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:open_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_struct
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_struct
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:luaM_realloc_
+   fun:close_func
+   fun:body.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+   fun:f_parser
+   fun:luaD_rawrunprotected
+   fun:luaD_pcall
+   fun:UnknownInlinedFun
+   fun:lua_load
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_table
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_debug
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:UnknownInlinedFun
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:allocate_stack
+   fun:pthread_create@@GLIBC_2.34
+   fun:UnknownInlinedFun
+   fun:background_thread_create_signals_masked.constprop.0
+   fun:je_background_thread_create
+   fun:je_background_threads_enable
+   fun:background_thread_ctl
+   fun:je_ctl_byname
+   fun:UnknownInlinedFun
+   fun:InitServerLast
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:stack_init.lto_priv.0
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:luaopen_create
+   fun:luaopen_cmsgpack
+   fun:luaD_precall
+   fun:luaD_call
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaX_newstring
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:assignment
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:luaY_parser
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_bit
+   fun:luaD_precall
+   fun:luaD_call
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_table
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_string
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_bit
+   fun:luaD_precall
+   fun:luaD_call
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_string
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_debug
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:UnknownInlinedFun
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_table
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_string
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_debug
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_bit
+   fun:luaD_precall
+   fun:luaD_call
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:stack_init.lto_priv.0
+   fun:f_luaopen
+   fun:luaD_rawrunprotected
+   fun:lua_newstate
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaopen_base
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:UnknownInlinedFun
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:allocate_stack
+   fun:pthread_create@@GLIBC_2.34
+   fun:bioInit
+   fun:InitServerLast
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_pushcclosure
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:luaH_new
+   fun:UnknownInlinedFun
+   fun:luaL_findtable
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:UnknownInlinedFun
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaX_newstring
+   fun:UnknownInlinedFun
+   fun:llex.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:subexpr.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:explist1.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:chunk.lto_priv.0
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:UnknownInlinedFun
+   fun:lua_newuserdata
+   fun:UnknownInlinedFun
+   fun:lua_cjson_new
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+   fun:initServer
+   fun:main
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:luaS_resize
+   fun:UnknownInlinedFun
+   fun:luaS_newlstr
+   fun:lua_setfield
+   fun:luaL_openlib
+   fun:UnknownInlinedFun
+   fun:luaopen_math
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+   fun:scriptingInit
+}
+{
+   <insert_a_suppression_name_here>
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:realloc
+   fun:luaM_realloc_
+   fun:setnodevector
+   fun:resize
+   fun:UnknownInlinedFun
+   fun:newkey.lto_priv.0
+   fun:luaV_settable
+   fun:lua_setfield
+   fun:luaopen_cjson
+   fun:luaD_precall
+   fun:luaD_call
+   fun:UnknownInlinedFun
+   fun:UnknownInlinedFun
+   fun:luaLoadLibraries
+}
