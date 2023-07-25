@@ -16,32 +16,23 @@ uint64_t read_cr3(void) {
     return cr3_value;
 }
 
-struct pgd* read_pgd(void) {
-    uint64_t cr3_value = read_cr3();
-    struct pgd* pgd = (struct pgd*)(cr3_value & PAGE_MASK);
-    return pgd;
-}
-
 extern int printf(const char* format, ...);
 
-void kwalk(struct task_struct* current_task) {
-    struct vm_area_struct *vma;
-    printf("Beginning kwalk, current_task: %p\n", current_task);
+void pagetable_walk(struct mm_struct* mm, uint64_t* vm_start, uint64_t* vm_end) {
+    // struct vm_area_struct* vma;
+    // struct mm_struct* task_mm;
+    // unsigned long vmpage;
 
-    struct mm_struct* task_mm = current_task->mm;
-    printf("current_task->mm: %p\n", task_mm);
+    // printf("Beginning pagetable_walk, current_task: %p\n", task);
 
-    if ((task_mm && task_mm->mmap))
-    {
-        // int i;
-        // pgd_t *pgd;
-        // pud_t *pud;
-        // pmd_t *pmd;
-        // pte_t *ptep, pte;
+    // task_mm = task->mm;
+    // printf("current_task->mm: %p\n", task_mm);
 
-        vma = task_mm->mmap;
-        printf("vma: %p\n", vma);
-    }
+    printf("k> mmap: %p\n", mm);
+
+    struct vm_area_struct* vma = mm->mmap;
+    *vm_start = vma->vm_start;
+    *vm_end = vma->vm_end;
 }
 
 int init_module(void) {
