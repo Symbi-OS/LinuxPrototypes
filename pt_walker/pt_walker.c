@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <linux/sched.h>
+#include <sys/mman.h>
 #include <LINF/sym_all.h>
 
 #define PAGE_SIZE        4096
@@ -117,52 +117,67 @@ int is_pcide_enabled() {
     return (cr4 >> 17) & 1;
 }
 
-uint64_t walk_pagetables() {
-    uint64_t pages_walked;
-    uint64_t vmpage;
+struct page_table_entry* get_pte(uint64_t addr) {
     uint64_t cr3;
     uint64_t pml4_base;
     struct page_index_dict idx_dict;
     struct page_table *pml4, *pml3, *pml2, *pml1;
-    struct page_table_entry *pml4e, *pml3e, *pml2e, *pml1e;
+    struct page_table_entry *pml4e, *pml3e, *pml2e, *pte;
 
-    for (pages_walked = 0, vmpage = 0; vmpage < 0x00007ffffffff000; vmpage += PAGE_SIZE) {
-        vaddr_to_page_offsets(vmpage, &idx_dict);
+    vaddr_to_page_offsets(addr, &idx_dict);
 
-        cr3 = read_cr3();
-        pml4_base = cr3 & PHYSICAL_PAGE_MASK;
+    cr3 = read_cr3();
+    pml4_base = cr3 & PHYSICAL_PAGE_MASK;
 
-        pml4 = (struct page_table*)get_vaddr(pml4_base);
+    pml4 = (struct page_table*)get_vaddr(pml4_base);
 
-        pml4e = &pml4->entries[idx_dict.pt_lvl_4];
-        if (!pml4e->present)
+    pml4e = &pml4->entries[idx_dict.pt_lvl_4];
+    if (!pml4e->present)
+        return NULL;
+
+    pml3 = (struct page_table*)get_vaddr((uint64_t)pml4e->page_frame_number << 12);
+
+    pml3e = &pml3->entries[idx_dict.pt_lvl_3];
+    if (!pml3e->present)
+        return NULL;
+
+    pml2 = (struct page_table*)get_vaddr((uint64_t)pml3e->page_frame_number << 12);
+
+    pml2e = &pml2->entries[idx_dict.pt_lvl_2];
+    if (!pml2e->present)
+        return NULL;
+
+    pml1 = (struct page_table*)get_vaddr((uint64_t)pml2e->page_frame_number << 12);
+
+    pte = &pml1->entries[idx_dict.pt_lvl_1];
+
+    if (!pte->present)
+        return NULL;
+
+    return pte;
+}
+
+uint64_t walk_pagetables() {
+    uint64_t pages_visited;
+    uint64_t pages_iterated;
+    uint64_t vmpage;
+    struct page_table_entry* pte;
+
+    pages_iterated = 0;
+
+    for (pages_visited = 0, vmpage = 0; vmpage < 0x100000000; vmpage += PAGE_SIZE) {
+        ++pages_iterated;
+
+        pte = get_pte(vmpage);
+
+        if (!pte)
             continue;
 
-        pml3 = (struct page_table*)get_vaddr((uint64_t)pml4e->page_frame_number << 12);
-
-        pml3e = &pml3->entries[idx_dict.pt_lvl_3];
-        if (!pml3e->present)
-            continue;
-
-        pml2 = (struct page_table*)get_vaddr((uint64_t)pml3e->page_frame_number << 12);
-
-        pml2e = &pml2->entries[idx_dict.pt_lvl_2];
-        if (!pml2e->present)
-            continue;
-
-        pml1 = (struct page_table*)get_vaddr((uint64_t)pml2e->page_frame_number << 12);
-
-        pml1e = &pml1->entries[idx_dict.pt_lvl_1];
-
-        if (!pml1e->present)
-            break;
-
-        print_page_table_entry(pml1e);
-
-        ++pages_walked;
+        print_page_table_entry(pte);
+        ++pages_visited;
     }
 
-    return pages_walked;
+    return pages_visited;
 }
 
 int main() {
@@ -172,10 +187,27 @@ int main() {
     sym_elevate();
     printf("Is PCIDE Enabled: %i\n", is_pcide_enabled());
 
-    uint64_t pages_walked = walk_pagetables();
+    uint64_t pages_visited = walk_pagetables();
     printf("\n==============================\n");
-    printf("----- Walked %li Pages -----\n", pages_walked);
-    printf("==============================\n");
+    printf("----- Visited %li Pages -----\n", pages_visited);
+    printf("==============================\n\n");
+
+    unsigned char* ptr = (unsigned char*)malloc(10 * PAGE_SIZE);
+    ptr[1 * PAGE_SIZE] = 'h';
+    ptr[2 * PAGE_SIZE] = 'e';
+    ptr[3 * PAGE_SIZE] = 'l';
+    ptr[4 * PAGE_SIZE] = 'l';
+    ptr[5 * PAGE_SIZE] = 'o';
+    ptr[6 * PAGE_SIZE] = 'w';
+    ptr[7 * PAGE_SIZE] = 'o';
+    ptr[8 * PAGE_SIZE] = 'r';
+    ptr[9 * PAGE_SIZE] = 'l';
+    ptr[10 * PAGE_SIZE] = 'd';
+
+    pages_visited = walk_pagetables();
+    printf("\n==============================\n");
+    printf("----- Visited %li Pages -----\n", pages_visited);
+    printf("==============================\n\n");
 
     sym_lower();
 
