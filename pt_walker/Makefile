@@ -11,8 +11,8 @@ CFLAGS += -I${TX86_INC} -D__KERNEL__
 LINUX_PATH=../../linux
 obj-m += modtest.o
 
-all: pt_walker
-# all: pgm
+# all: pt_walker
+all: pgm
 
 build_all:
 	make modtest
@@ -34,7 +34,10 @@ modtest.o: modtest.c
 	-make modtest
 
 pgm: pt_walker.o modtest.o
-	gcc -o pgm modtest.o pt_walker.o -lSym -L../../Symlib/dynam_build -Xlinker --defsym=boot_cpu_data=0xffffffff82b63640 -Xlinker --defsym=physical_mask=0xffffffff82708310 -Xlinker --defsym=sme_me_mask=0xffffffff8284def8 -Xlinker --defsym=pv_ops=0xffffffff8283cc40 -Xlinker --defsym=page_offset_base=0xffffffff826f1a40 -Xlinker --defsym=pgdir_shift=0xffffffff826f1a4c -Xlinker --defsym=vmemmap_base=0xffffffff826f1a30
+	gcc -o pgm modtest.o pt_walker.o -lSym -L../../Symlib/dynam_build -Xlinker --defsym=boot_cpu_data=0xffffffff82b63640 -Xlinker --defsym=physical_mask=0xffffffff82708310 -Xlinker --defsym=sme_me_mask=0xffffffff8284def8 -Xlinker --defsym=pv_ops=0xffffffff8283cc40 -Xlinker --defsym=page_offset_base=0xffffffff826f1a40 -Xlinker --defsym=pgdir_shift=0xffffffff826f1a4c -Xlinker --defsym=vmemmap_base=0xffffffff826f1a30 -Xlinker --defsym=ioremap=0xffffffff8107d260
+
+walkmod: walkmod.c
+	make -C $(LINUX_PATH) M=$(PWD) modules
 
 run: pt_walker
 	./pt_walker
