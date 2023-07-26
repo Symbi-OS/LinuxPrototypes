@@ -8,7 +8,6 @@
 #define NUM_ENTRIES      512
 #define PAGE_PRESENT     0x1
 
-#define TASK_SIZE           0x00007ffffffff000
 #define PHYSICAL_PAGE_MASK  0x000FFFFFFFFFF000
 #define KERNEL_PAGE_OFFSET  0xffff888000000000
 
@@ -192,7 +191,7 @@ int main() {
     printf("----- Visited %li Pages -----\n", pages_visited);
     printf("==============================\n\n");
 
-    unsigned char* ptr = (unsigned char*)malloc(10 * PAGE_SIZE);
+    unsigned char* ptr = (unsigned char*)malloc(30 * PAGE_SIZE);
     ptr[1 * PAGE_SIZE] = 'h';
     ptr[2 * PAGE_SIZE] = 'e';
     ptr[3 * PAGE_SIZE] = 'l';
@@ -203,6 +202,7 @@ int main() {
     ptr[8 * PAGE_SIZE] = 'r';
     ptr[9 * PAGE_SIZE] = 'l';
     ptr[10 * PAGE_SIZE] = 'd';
+    ptr[25 * PAGE_SIZE] = 'd';
 
     pages_visited = walk_pagetables();
     printf("\n==============================\n");
