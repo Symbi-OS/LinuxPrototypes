@@ -1,5 +1,4 @@
 #!/bin/bash
-echo '.section .data'
 
 awk '
 BEGIN { duplicate_count = 0; }
@@ -14,14 +13,15 @@ BEGIN { duplicate_count = 0; }
 }
 END { print "Warning: " duplicate_count " duplicate symbols found, only the first occurrence was used." > "/dev/stderr"; }
 function print_symbol(addr, type, symbol) {
-  if (type ~ /^[tTrRdDbB]$/) {
+  if (type ~ /^[tT]$/) {
+    print ".section .text";
     print ".global " symbol;
     print symbol ":";
     print "  jmp *" symbol "_my_unique_suffix(%rip)";
     print "  nop";
+    print ".section .data";
     print symbol "_my_unique_suffix:";
     print "  .quad 0x" addr;
   }
 }
 ' /proc/kallsyms
-
