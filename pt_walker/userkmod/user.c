@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <LINF/sym_all.h>
+#include <dlfcn.h>
 
 #define PAGE_SIZE        4096
 #define NUM_ENTRIES      512
@@ -130,10 +131,9 @@ void walk_pagetable(int should_print_pte) {
     printf("==============================\n\n");
 }
 
-int main() {
-    void* ksys_write = sym_get_fn_address("ksys_write");
-    printf("ksys_write is at %p\n", ksys_write);
+extern uint64_t printk;
 
+int main() {
     sym_elevate();
     printf("Is PCIDE Enabled: %i\n", is_pcide_enabled());
 
