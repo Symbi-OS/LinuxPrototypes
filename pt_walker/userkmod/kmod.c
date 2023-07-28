@@ -11,28 +11,9 @@ MODULE_AUTHOR("Albert Slepak");
 MODULE_DESCRIPTION("Page-Walk Module");
 MODULE_VERSION("1.0");
 
-struct page_index_dict {
-    uint64_t pt_lvl_4;      // Page Directory Pointer table index
-    uint64_t pt_lvl_3;      // Page Directory table index
-    uint64_t pt_lvl_2;      // Page Table index
-    uint64_t pt_lvl_1;      // Page index inside the page table
-};
-
-void vaddr_to_page_offsets(
-    uint64_t addr,
-    struct page_index_dict* dict
-) {
-    addr >>= 12;
-    dict->pt_lvl_1 = addr & 0x1ff;
-    addr >>= 9;
-    dict->pt_lvl_2 = addr & 0x1ff;
-    addr >>= 9;
-    dict->pt_lvl_3 = addr & 0x1ff;
-    addr >>= 9;
-    dict->pt_lvl_4 = addr & 0x1ff;
-}
-
 struct vm_area_struct* get_task_base_vma(struct task_struct* task) {
+    printk("get_task_base_vma task: %p\n", task);
+
     struct mm_struct* mm = task->mm;
     return mm->mmap;
 }

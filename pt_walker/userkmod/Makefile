@@ -23,7 +23,7 @@ kmod: kmod.c
 kmod.o: kmod.c
 	-make kmod
 
-pgm: user.o kmod.o
+pgm: user.o kmod.o libkallsyms.so
 	$(CC) $(CFLAGS) -o pgm kmod.o user.o -lSym -L../../../Symlib/dynam_build $(LINKER_KERNEL_SYMDEFS)
 
 run: pgm
