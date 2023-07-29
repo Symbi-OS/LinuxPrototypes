@@ -12,8 +12,6 @@ MODULE_DESCRIPTION("Page-Walk Module");
 MODULE_VERSION("1.0");
 
 struct vm_area_struct* get_task_base_vma(struct task_struct* task) {
-    printk("get_task_base_vma task: %p\n", task);
-
     struct mm_struct* mm = task->mm;
     return mm->mmap;
 }
