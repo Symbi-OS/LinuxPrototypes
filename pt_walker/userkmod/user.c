@@ -132,10 +132,12 @@ void walk_pagetable(int should_print_pte) {
 }
 
 extern uint64_t printk;
+extern void* page_offset_base;
 
 int main() {
     sym_elevate();
     printf("Is PCIDE Enabled: %i\n", is_pcide_enabled());
+    printf("page_offset_base: %p\n", page_offset_base);
 
     walk_pagetable(0);
 

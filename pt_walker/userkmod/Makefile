@@ -24,8 +24,19 @@ kmod.o: kmod.c
 	-make kmod
 
 pgm: user.o kmod.o
-	# $(CC) $(CFLAGS) -o pgm kmod.o user.o -lSym -L../../../Symlib/dynam_build $(LINKER_KERNEL_SYMDEFS)
-	$(CC) $(CFLAGS) -o pgm kmod.o user.o -lSym -L../../../Symlib/dynam_build -T symhelper.ld
+	# $(CC) $(CFLAGS) -o $@ kmod.o user.o -lSym -L../../../Symlib/dynam_build $(LINKER_KERNEL_SYMDEFS)
+	$(CC) $(CFLAGS) -o $@ kmod.o user.o -lSym -L../../../Symlib/dynam_build -T symhelper.ld
+
+pgm_dynam: user.o kmod.o
+	$(CC) $(CFLAGS) -o $@ kmod.o user.o -lSym -L../../../Symlib/dynam_build -L./ -lkallsyms
+
+pgm_dynam_working: user.o kmod.o
+	$(CC) $(CFLAGS) -o $@ kmod.o user.o -lSym -L../../../Symlib/dynam_build -L./ -lkallsyms -u page_offset_base -u pgdir_shift -u boot_cpu_data -u physical_mask -u sme_me_mask -u ptrs_per_p4d -u pv_ops
+
+compilation_test: pgm pgm_dynam pgm_dynam_working
+	nm pgm | grep page_offset_base
+	nm pgm_dynam | grep page_offset_base
+	nm pgm_dynam_working | grep page_offset_base
 
 run: pgm
 	./pgm
