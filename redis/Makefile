@@ -1,9 +1,9 @@
 # Copying this redis junk out of the Symbi-OS makefile.
 
 
-REDIS_CMD=artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no
-
-TASKSET_CMD=taskset -c 0 bash -c
+REDIS_CMD=../../artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no
+# 0 seems pathological. Worst observed performance
+TASKSET_CMD=taskset -c 1 bash -c
 
 run_redis:
 	${TASKSET_CMD} '${REDIS_CMD}' 
@@ -45,3 +45,5 @@ fix:
 	sudo systemctl start systemd-journald
 
 #taskset -c 0 bash -c shortcut.sh -p --- ./LinuxPrototypes/getpid/getpid 1000000
+run_tcp:
+	taskset -c 1 bash -c 'shortcut.sh -be -s "read->tcp_recvmsg" -s "write->tcp_sendmsg" --- ../../artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no'
