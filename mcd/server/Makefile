@@ -13,10 +13,17 @@ MEMCACHED_CMD = $(MEMCACHED) -u $(USER) -t $(THREADS) -l $(IP) -B $(BINARY) -p $
 run:
 	$(TASKSET) $(MEMCACHED_CMD)
 
+# Run with interposition
+run_int:
+	$(TASKSET) bash -c 'shortcut.sh --- $(MEMCACHED_CMD)'
+
 # Run with elevated privilege
 run_be:
 	$(TASKSET) bash -c 'shortcut.sh -be --- $(MEMCACHED_CMD)'
 
 # Run with syscall shortcutting
 run_sc:
-	$(TASKSET) bash -c 'shortcut.sh -be -s "read->__x64_sys_read" --- $(MEMCACHED_CMD)'
+	$(TASKSET) bash -c 'shortcut.sh -be \
+	-s "read->__x64_sys_read" \
+	-s "sendmsg->__x64_sys_sendmsg" \
+	--- $(MEMCACHED_CMD)'
