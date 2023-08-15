@@ -20,4 +20,7 @@ run:
 grep-stats: run
 	@grep -A 10 "ALL STATS" $(OUTPUT_FILE)
 
+clean:
+	rm -f $(OUTPUT_FILE)
+
 .PHONY: run grep-stats
