@@ -26,4 +26,5 @@ run_sc:
 	$(TASKSET) bash -c 'shortcut.sh -be \
 	-s "read->__x64_sys_read" \
 	-s "sendmsg->__x64_sys_sendmsg" \
+	-s "epoll_wait->__x64_sys_epoll_wait" \
 	--- $(MEMCACHED_CMD)'
