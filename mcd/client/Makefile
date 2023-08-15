@@ -1,5 +1,5 @@
 # Common Variables
-SERVER = 127.0.0.1
+SERVER = 172.16.97.208
 PORT = 11211
 PROTOCOL = memcache_text
 THREADS = 4
