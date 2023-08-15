@@ -10,6 +10,8 @@ MEMCACHED = memcached
 # Targets
 run:
 	$(TASKSET) $(MEMCACHED) -u $(USER) -t $(THREADS) -l $(IP) -B $(BINARY) -p $(PORT)
+run_be:
+	${TASKSET} bash -c 'shortcut.sh -be --- ${MEMCACHED} -u ${USER} -t ${THREADS} -l ${IP} -B ${BINARY} -p ${PORT}'
 
 run_sc:
 	${TASKSET} 'shortcut.sh -be  -s "read->__x64_sys_read" --- ${MEMCACHED} -u ${USER} -t ${THREADS} -l ${IP} -B ${BINARY} -p ${PORT}'
