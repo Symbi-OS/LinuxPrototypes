@@ -6,14 +6,17 @@ BINARY = binary
 PORT = 18080
 TASKSET = taskset -c 1
 MEMCACHED = memcached
+MEMCACHED_CMD = $(MEMCACHED) -u $(USER) -t $(THREADS) -l $(IP) -B $(BINARY) -p $(PORT)
 
-# Targets
+# Default target
+.PHONY: run run_be run_sc
 run:
-	$(TASKSET) $(MEMCACHED) -u $(USER) -t $(THREADS) -l $(IP) -B $(BINARY) -p $(PORT)
+	$(TASKSET) $(MEMCACHED_CMD)
+
+# Run with elevated privilege
 run_be:
-	${TASKSET} bash -c 'shortcut.sh -be --- ${MEMCACHED} -u ${USER} -t ${THREADS} -l ${IP} -B ${BINARY} -p ${PORT}'
+	$(TASKSET) bash -c 'shortcut.sh -be --- $(MEMCACHED_CMD)'
 
+# Run with syscall shortcutting
 run_sc:
-	${TASKSET} 'shortcut.sh -be  -s "read->__x64_sys_read" --- ${MEMCACHED} -u ${USER} -t ${THREADS} -l ${IP} -B ${BINARY} -p ${PORT}'
-
-.PHONY: run
+	$(TASKSET) bash -c 'shortcut.sh -be -s "read->__x64_sys_read" --- $(MEMCACHED_CMD)'
