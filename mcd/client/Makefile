@@ -1,7 +1,7 @@
 # Common Variables
 SERVER = 172.16.97.208
 PORT = 18080 
-PROTOCOL = memcache_text
+PROTOCOL = memcache_binary
 THREADS = 4
 CONNECTIONS = 50
 REQUESTS = 5000
