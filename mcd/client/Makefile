@@ -17,6 +17,9 @@ TS= taskset -c 1-4
 # Targets
 run: REQUESTS = 20000
 run:
+	@echo Warmup:
+	$(TS) $(MTB) -s $(SERVER) -p $(PORT) -P $(PROTOCOL) -t $(THREADS) -c $(CONNECTIONS) -n 5000 -R $(RATE) --ratio=$(RATIO) -d $(DATA_SIZE) 
+	@echo Workload:
 	$(TS) $(MTB) -s $(SERVER) -p $(PORT) -P $(PROTOCOL) -t $(THREADS) -c $(CONNECTIONS) -n $(REQUESTS) -R $(RATE) --ratio=$(RATIO) -d $(DATA_SIZE) > $(OUTPUT_FILE)
 
 grep-stats: $(OUTPUT_FILE)
