@@ -1,7 +1,7 @@
 # Copying this redis junk out of the Symbi-OS makefile.
 
 
-REDIS_CMD=../../artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no
+REDIS_CMD=../../../artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no
 # 0 seems pathological. Worst observed performance
 TASKSET_CMD=taskset -c 1 bash -c
 
@@ -23,8 +23,11 @@ run_redis_sc_write:
 run_redis_sc_read:
 	${TASKSET_CMD} 'shortcut.sh -be -s "read->__x64_sys_read" --- ${REDIS_CMD}' 
 
+#run_redis_sc_rw:
+#	${TASKSET_CMD} 'shortcut.sh -be -s "write->__x64_sys_write" -s "read->__x64_sys_read" --- ${REDIS_CMD}' 
+
 run_redis_sc_rw:
-	${TASKSET_CMD} 'shortcut.sh -be -s "write->__x64_sys_write" -s "read->__x64_sys_read" --- ${REDIS_CMD}' 
+	${TASKSET_CMD} 'shortcut.sh -be -s "epoll_wait->__x64_sys_epoll_wait" -s "write->__x64_sys_write" -s "read->__x64_sys_read" --- ${REDIS_CMD}' 
 
 run_redis_tcp:
 	${TASKSET_CMD} 'shortcut.sh -be -s "write->tcp_sendmsg" --- ${REDIS_CMD}' 
@@ -46,4 +49,4 @@ fix:
 
 #taskset -c 0 bash -c shortcut.sh -p --- ./LinuxPrototypes/getpid/getpid 1000000
 run_tcp:
-	taskset -c 1 bash -c 'shortcut.sh -be -s "read->tcp_recvmsg" -s "write->tcp_sendmsg" --- ../../artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no'
+	taskset -c 1 bash -c 'shortcut.sh -be -s "read->tcp_recvmsg" -s "write->tcp_sendmsg" --- ~/Symbi-OS/artifacts/redis/fed36/redis-server --protected-mode no --save '' --appendonly no'
