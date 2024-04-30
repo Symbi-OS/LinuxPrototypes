@@ -7,6 +7,12 @@
 #include <string.h>
 #include <stdint.h>
 
+#ifdef SYM_SHORTCUT
+#include <LINF/sym_all.h>
+
+typedef ssize_t (*write_t)(int fd, const void *buf, size_t count);
+#endif
+
 // #define DEBUG 1
 struct params {
     int bytes;
@@ -133,7 +139,14 @@ void process_latencies(struct timespec *times, int count){
 }
 #endif
 
-void benchmark(struct params *p){
+void benchmark(struct params *p) {
+#ifdef SYM_SHORTCUT
+    write_t sc_write = (write_t)sym_get_fn_address("ksys_write");
+    printf("ksys_write is at %p\n", sc_write);
+
+    sym_elevate();
+#endif
+
     char *buffer = get_buf(p);
 
     int fd = prepare_file(p);
@@ -156,7 +169,7 @@ void benchmark(struct params *p){
 
 #ifdef DEBUG
         // This does not seem to pertubate the timing
-        if( verbose && ( (i % print_interval) == (print_interval - 1) ) ){
+        if (verbose && ( (i % print_interval) == (print_interval - 1) ) ){
             // get current time
             current = clock();
             // print time since last print
@@ -165,7 +178,16 @@ void benchmark(struct params *p){
         }
 #endif
 
+#ifdef SYM_SHORTCUT
+        int rc = 0;
+        if (i % 20 == 0) {
+            rc = write(fd, buffer, p->bytes);
+        } else {
+            rc = sc_write(fd, buffer, p->bytes);
+        }
+#else
         int rc = write(fd, buffer, p->bytes);
+#endif
         // check write worked
         if (rc == -1) {
             printf("write failed\n");
@@ -175,6 +197,10 @@ void benchmark(struct params *p){
         clock_gettime(CLOCK_MONOTONIC_RAW, &times[i+1]); 
 #endif
     }
+
+#ifdef SYM_SHORTCUT
+    sym_lower();
+#endif
 
     end=clock();
 
